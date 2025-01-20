@@ -1,0 +1,19 @@
+
+
+.main {
+    flex: 1 1 auto; /* Permite que el contenido principal ocupe el espacio restante */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto; /* Evita que el contenido desborde */
+}
+
+.main-card {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;  
+    mat-card-header {
+      display: flex;
+      justify-content: center;
+    }
+  }
