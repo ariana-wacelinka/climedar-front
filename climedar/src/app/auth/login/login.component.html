@@ -1,1 +1,18 @@
-<p>login works!</p>
+<app-centered-card>
+    <ng-container main-header>
+        <h1>Login</h1>
+    </ng-container>
+    <ng-container main-content>
+        <mat-form-field [appearance]="'outline'">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" placeholder="Username" name="email" required>
+        </mat-form-field>
+        <mat-form-field [appearance]="'outline'">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" placeholder="Password" name="password" required>
+        </mat-form-field>
+    </ng-container>
+    <ng-container main-actions>
+        <button mat-flat-button color="primary">Login</button>
+    </ng-container>
+</app-centered-card>
