@@ -3,17 +3,19 @@
         <h1>Iniciar sesión</h1>
     </ng-container>
     <ng-container main-content>
+        <form [formGroup]="formgroup">
         <mat-form-field [appearance]="'outline'" class="full-width">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" placeholder="Username" name="email" required>
+            <mat-label>Correo electrónico</mat-label>
+            <input formControlName="email" matInput type="email" placeholder="climedar@climedar.com" name="email" required>
         </mat-form-field>
         <mat-form-field [appearance]="'outline'" class="full-width">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" placeholder="Password" name="password" required>
+            <mat-label>Contraseña</mat-label>
+            <input formControlName="password" matInput type="password" placeholder="Password" name="password" required>
         </mat-form-field>
         <div class="full-width forgot-pass">
             <a href="">¿olvidaste tu contraseña?</a>
         </div>
+    </form>
     </ng-container>
     <ng-container main-actions>
         <button mat-flat-button class="full-width login-button">Iniciar sesión</button>
