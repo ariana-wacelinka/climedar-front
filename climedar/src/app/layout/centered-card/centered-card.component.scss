@@ -9,9 +9,19 @@
 .main-card {
   max-width: 800px;
   margin: auto;
-  padding: 20px;
-  mat-card-header {
+  .card-header, .card-actions{
     display: flex;
     justify-content: center;
+    padding: 30px 50px !important;
+    min-height: fit-content;
   }
+
+  .card-content {
+    padding: 0 50px;
+  }
+}
+
+h2 {
+  margin: 0;
+  padding: 0;
 }

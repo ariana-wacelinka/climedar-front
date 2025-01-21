@@ -1,14 +1,16 @@
 <app-toolbar></app-toolbar>
 <div class="main">
     <mat-card class="main-card">
-        <mat-card-header>
-            <mat-card-title>
-                <h2>Activación de garantía</h2>     
-            </mat-card-title>
+        <mat-card-header class="card-header">
+            <ng-content select="main-header"></ng-content>
         </mat-card-header>
-        <mat-card-content>
-            <h2>Activación de garantía</h2>  
+        
+        <mat-card-content class="card-content" style="display: flex; flex-direction: column; align-items: center;">
+            <ng-content select="main-content"></ng-content>
         </mat-card-content>
+        <mat-card-actions class="card-actions">
+            <ng-content select="main-actions"></ng-content>
+        </mat-card-actions>
         
     </mat-card>
 </div>
