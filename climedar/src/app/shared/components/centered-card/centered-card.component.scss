@@ -8,6 +8,7 @@
 
 .main-card {
   max-width: 800px;
+  min-width: 560px;
   margin: auto;
   .card-header, .card-actions{
     display: flex;

@@ -1,18 +1,21 @@
 <app-centered-card>
     <ng-container main-header>
-        <h1>Login</h1>
+        <h1>Iniciar sesión</h1>
     </ng-container>
     <ng-container main-content>
-        <mat-form-field [appearance]="'outline'">
+        <mat-form-field [appearance]="'outline'" class="full-width">
             <mat-label>Email</mat-label>
             <input matInput type="email" placeholder="Username" name="email" required>
         </mat-form-field>
-        <mat-form-field [appearance]="'outline'">
+        <mat-form-field [appearance]="'outline'" class="full-width">
             <mat-label>Password</mat-label>
             <input matInput type="password" placeholder="Password" name="password" required>
         </mat-form-field>
+        <div class="full-width forgot-pass">
+            <a href="">¿olvidaste tu contraseña?</a>
+        </div>
     </ng-container>
     <ng-container main-actions>
-        <button mat-flat-button color="primary">Login</button>
+        <button mat-flat-button class="full-width login-button">Iniciar sesión</button>
     </ng-container>
 </app-centered-card>
