@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ToolbarComponent } from '../../components/toolbar/toolbar.component';
+import { ToolbarComponent } from '../index';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({

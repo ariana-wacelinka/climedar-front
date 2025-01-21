@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { CenteredCardComponent } from './layout/centered-card/centered-card.component';
+import { CenteredCardComponent } from './shared/components/centered-card/centered-card.component';
 
 export const routes: Routes = [
     {path: '', component: CenteredCardComponent},
