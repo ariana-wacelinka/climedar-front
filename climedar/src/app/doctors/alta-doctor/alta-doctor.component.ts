@@ -1,11 +1,32 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
+import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
+import { MatFormField } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatLabel } from '@angular/material/form-field';
+import { DatosContactoComponent, DatosDireccionComponent, DatosPersonalesComponent } from '../../shared/components';
+import { DatosProfesionalesComponent } from './datos-profesionales/datos-profesionales.component';
 
 @Component({
   selector: 'app-alta-doctor',
-  imports: [],
+  imports: [
+    CenteredCardComponent,
+    MatFormField,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatLabel,
+    DatosPersonalesComponent,
+    DatosContactoComponent,
+    DatosDireccionComponent,
+    DatosProfesionalesComponent
+  ],
   templateUrl: './alta-doctor.component.html',
   styleUrl: './alta-doctor.component.scss'
 })
 export class AltaDoctorComponent {
-
+  
 }
