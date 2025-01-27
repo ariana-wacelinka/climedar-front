@@ -1,1 +1,43 @@
-<p>datos-profesionales works!</p>
+<div class="full-width">
+  <mat-label>Informacion laboral</mat-label>
+  <mat-divider></mat-divider>
+  <div class="section">
+    <div class="inner-section-1">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Sitio de compra</mat-label>
+        <mat-select [formControl]="infoLaboral.controls.especialidad">
+          @for (especialidad of especialidades; track especialidad.id) {
+          <mat-option value="{{ especialidad.id }}">{{
+            especialidad.nombre
+          }}</mat-option>
+          }
+        </mat-select>
+        @if (!infoLaboral.controls.especialidad.valid &&
+        infoLaboral.controls.especialidad.touched) {
+        <mat-error>Por favor, seleccione un sitio de compra</mat-error>
+        }
+      </mat-form-field>
+      <button
+        mat-flat-button
+        class="nueva-especialidad"
+        (click)="nueva_especialidad()"
+      >
+        Añadir especialidad
+      </button>
+    </div>
+    <div class="inner-section-2">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Sueldo</mat-label>
+        <input
+          type="text"
+          [formControl]="infoLaboral.controls.sueldo"
+          matInput
+        />
+        @if (!infoLaboral.controls.sueldo.valid &&
+        infoLaboral.controls.sueldo.touched) {
+        <mat-error>Por favor, especifique el sitio de compra</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+</div>

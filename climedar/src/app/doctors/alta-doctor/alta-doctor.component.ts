@@ -13,12 +13,10 @@ import { DatosProfesionalesComponent } from './datos-profesionales/datos-profesi
   selector: 'app-alta-doctor',
   imports: [
     CenteredCardComponent,
-    MatFormField,
     MatInputModule,
     MatIconModule,
     MatButtonModule,
     ReactiveFormsModule,
-    MatLabel,
     DatosPersonalesComponent,
     DatosContactoComponent,
     DatosDireccionComponent,
