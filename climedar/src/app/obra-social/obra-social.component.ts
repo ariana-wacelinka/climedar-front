@@ -14,15 +14,15 @@ import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
+import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatButton} from '@angular/material/button';
 
-// noinspection AngularUnusedComponentImport
 @Component({
   selector: 'app-obra-social',
   imports: [
     CenteredCardComponent,
     MatTable,
+    MatSortModule,
     MatTableModule,
     MatColumnDef,
     MatPaginatorModule,
@@ -33,14 +33,14 @@ import {MatButton} from '@angular/material/button';
     MatLabel,
     MatFormField,
     MatInput,
-    MatIcon,
+    MatButton,
     MatPaginator,
     MatSort,
     MatHeaderCellDef,
     MatCellDef,
     MatHeaderRowDef,
     MatRowDef,
-    MatButton,
+    MatIcon,
   ],
   templateUrl: './obra-social.component.html',
   styleUrl: './obra-social.component.scss'
@@ -57,6 +57,13 @@ export class ObraSocialComponent implements AfterViewInit {
     {nombre: 'PAMI'},
     {nombre: 'IOMA'},
     {nombre: 'OSECAC'},
+    {nombre: 'OSMATA'},
+    {nombre: 'OSSEG'},
+    {nombre: 'OSDIPP'},
+    {nombre: 'OSDOP'},
+    {nombre: 'OSDOSIM'},
+    {nombre: 'OSDOS'},
+    {nombre: 'OSDOSIM'},
   ]);
 
   constructor() {}
