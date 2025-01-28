@@ -1,11 +1,19 @@
 <app-centered-card>
     <ng-container main-header>
-        <h1>Añadir médico</h1>
+            <h1>Añadir médico</h1>
     </ng-container>
     <ng-container main-content>
-        <app-datos-personales></app-datos-personales>
-        <app-datos-contacto></app-datos-contacto>
-        <app-datos-direccion></app-datos-direccion>
-        <app-datos-profesionales></app-datos-profesionales>
+        <div class="content">
+            <app-datos-personales></app-datos-personales>
+            <app-datos-contacto></app-datos-contacto>
+            <app-datos-direccion></app-datos-direccion>
+            <app-datos-profesionales></app-datos-profesionales>
+        </div>
+    </ng-container>
+    <ng-container main-actions>
+        <div class="actions">
+            <button mat-flat-button class="warn" (click)="cancelar()">Cancelar</button>
+            <button mat-flat-button class="primary" (click)="guardar()">Guardar</button>
+        </div>
     </ng-container>
 </app-centered-card>

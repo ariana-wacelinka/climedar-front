@@ -26,5 +26,13 @@ import { DatosProfesionalesComponent } from './datos-profesionales/datos-profesi
   styleUrl: './alta-doctor.component.scss'
 })
 export class AltaDoctorComponent {
+ 
   
+  public guardar(){
+    return;
+  }
+
+  public cancelar(){
+    return;
+  }
 }

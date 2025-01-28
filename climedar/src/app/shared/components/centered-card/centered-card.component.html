@@ -1,6 +1,12 @@
 <app-toolbar></app-toolbar>
 <div class="main">
     <mat-card class="main-card">
+        @if (true) { 
+            <!-- solo para logueados -->
+            <button mat-icon-button class="arrow-back">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+        }
         <mat-card-header class="card-header">
             <ng-content select="[main-header]"></ng-content>
         </mat-card-header>

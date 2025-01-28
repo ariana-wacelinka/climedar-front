@@ -1,1 +1,32 @@
-<p>datos-contacto works!</p>
+<div class="full-width">
+  <h4>Informacion de contacto</h4>
+  <mat-divider></mat-divider>
+  <div class="section">
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Sueldo mensual</mat-label>
+      <input
+        type="number"
+        [formControl]="infoLaboral.controls.sueldo"
+        matInput
+      />
+      @if (!infoLaboral.controls.sueldo.valid &&
+      infoLaboral.controls.sueldo.touched) {
+      <mat-error>Por favor, especifique el sueldo</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Sueldo mensual</mat-label>
+      <input
+        type="number"
+        [formControl]="infoLaboral.controls.sueldo"
+        matInput
+      />
+      @if (!infoLaboral.controls.sueldo.valid &&
+      infoLaboral.controls.sueldo.touched) {
+      <mat-error>Por favor, especifique el sueldo</mat-error>
+      }
+    </mat-form-field>
+  </div>
+</div>

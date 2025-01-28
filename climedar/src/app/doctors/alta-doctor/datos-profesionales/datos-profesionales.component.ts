@@ -32,8 +32,8 @@ export class DatosProfesionalesComponent {
   especialidades: {id: string, nombre: string}[] = []
 
   infoLaboral = new FormGroup({
-    especialidad: new FormControl('', Validators.required),
-    sueldo: new FormControl('', Validators.required),
+    especialidad: new FormControl('', [Validators.required]),
+    sueldo: new FormControl('', [Validators.required, Validators.min(0)]),
   })
 
   public nueva_especialidad(){

@@ -1,28 +1,43 @@
 .main {
   display: flex;
-  height: 100vh;
-  align-items: center;
-  justify-content: center;
-  overflow-y: hidden;
+  justify-content: center; /* Centra horizontalmente */
+  padding: 100px 0 50px 0; /* Espaciado alrededor del contenido */
+  overflow-y: auto; /* Habilita el scroll vertical si es necesario */
+  height: 100vh; /* Altura completa de la ventana */
+  box-sizing: border-box; /* Incluye padding dentro del tamaño total */
 }
 
 .main-card {
-  // max-width: 800px;
-  min-width: 560px;
-  margin: auto;
-  .card-header, .card-actions{
-    display: flex;
-    justify-content: center;
-    padding: 30px 50px !important;
-    min-height: fit-content;
-  }
+  min-width: 400px;
+  margin: auto; /* Centra horizontal y verticalmente en pantallas grandes */
+  overflow-y: auto; /* Habilita scroll interno en caso de contenido grande */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+  border-radius: 8px; /* Esquinas redondeadas */
+}
 
-  .card-content {
-    padding: 0 50px;
-  }
+.card-header,
+.card-actions {
+  display: flex;
+  justify-content: center;
+  padding: 30px 50px;
+}
+
+.card-content {
+  padding: 0 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h2 {
   margin: 0;
   padding: 0;
+}
+
+
+.arrow-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
 }

@@ -1,10 +1,10 @@
 <div class="full-width">
-  <mat-label>Informacion laboral</mat-label>
+  <h4>Informacion laboral</h4>
   <mat-divider></mat-divider>
   <div class="section">
     <div class="inner-section-1">
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Sitio de compra</mat-label>
+        <mat-label>Especialidad</mat-label>
         <mat-select [formControl]="infoLaboral.controls.especialidad">
           @for (especialidad of especialidades; track especialidad.id) {
           <mat-option value="{{ especialidad.id }}">{{
@@ -14,7 +14,7 @@
         </mat-select>
         @if (!infoLaboral.controls.especialidad.valid &&
         infoLaboral.controls.especialidad.touched) {
-        <mat-error>Por favor, seleccione un sitio de compra</mat-error>
+        <mat-error>Por favor, seleccione la especialidad</mat-error>
         }
       </mat-form-field>
       <button
@@ -26,16 +26,16 @@
       </button>
     </div>
     <div class="inner-section-2">
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Sueldo</mat-label>
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Sueldo mensual</mat-label>
         <input
-          type="text"
+          type="number"
           [formControl]="infoLaboral.controls.sueldo"
           matInput
         />
         @if (!infoLaboral.controls.sueldo.valid &&
         infoLaboral.controls.sueldo.touched) {
-        <mat-error>Por favor, especifique el sitio de compra</mat-error>
+        <mat-error>Por favor, especifique el sueldo</mat-error>
         }
       </mat-form-field>
     </div>
