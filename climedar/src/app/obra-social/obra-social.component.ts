@@ -88,6 +88,6 @@ export class ObraSocialComponent implements AfterViewInit {
   }
 
   createObraSocial(){
-
+    alert('Crear obra social');
   }
 }
