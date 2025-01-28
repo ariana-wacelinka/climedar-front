@@ -37,7 +37,7 @@ export class DatosContactoComponent implements OnInit {
 
   infoContacto = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    telefono: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]),
+    telefono: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]),
   })
 
   ngOnInit(): void {

@@ -46,7 +46,7 @@
         <input
           matInput
           [matDatepicker]="picker"
-          [formControl]="infoPersonal.controls.fechaNacimiento"
+            (dateChange)="infoPersonal.controls.fechaNacimiento.setValue($event.value!.toISOString().split('T')[0])"
           [matDatepickerFilter]="dateFilter"
         />
         <mat-hint style="color: #004454">DD/MM/YYYY</mat-hint>

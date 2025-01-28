@@ -56,7 +56,7 @@ export class DatosPersonalesComponent implements OnInit {
     nombre: new FormControl('', [Validators.required]),
     apellido: new FormControl('', [Validators.required, Validators.min(0)]),
     dni: new FormControl('', [Validators.required, Validators.min(0)]),
-    fechaNacimiento: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/)]),
+    fechaNacimiento: new FormControl('', [Validators.required]),
   })
 
   ngOnInit(): void {

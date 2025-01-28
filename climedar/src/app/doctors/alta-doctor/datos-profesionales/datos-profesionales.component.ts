@@ -32,7 +32,11 @@ export class DatosProfesionalesComponent implements OnInit{
   
   @Output() datosProfesionales = new EventEmitter<any>();
 
-  especialidades: {id: string, nombre: string}[] = []
+  especialidades: {id: string, nombre: string}[] = [
+    {id: '1', nombre: 'Cardiología'},
+    {id: '2', nombre: 'Dermatología'},
+    {id: '3', nombre: 'Endocrinología'},
+  ]
 
   infoLaboral = new FormGroup({
     especialidad: new FormControl('', [Validators.required]),
