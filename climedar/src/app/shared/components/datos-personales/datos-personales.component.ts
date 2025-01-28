@@ -11,6 +11,8 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter
 import {MatDatepickerInputEvent, MatDatepickerIntl, MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDivider} from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
+import 'moment/locale/es';
 
 @Component({
   selector: 'app-datos-personales',
@@ -23,7 +25,12 @@ import { MatButtonModule } from '@angular/material/button';
           ReactiveFormsModule,
           MatDatepickerModule,
           MatDivider,
-          MatButtonModule
+          MatButtonModule,
+          MatDatepickerModule
+    ],
+    providers: [
+      {provide: MAT_DATE_LOCALE, useValue: 'es-AR'},
+      provideMomentDateAdapter(),
     ],
   templateUrl: './datos-personales.component.html',
   styleUrl: './datos-personales.component.scss'
@@ -32,14 +39,39 @@ export class DatosPersonalesComponent implements OnInit {
 
   @Output() datosPersonales = new EventEmitter<any>();
 
-  especialidades: {id: string, nombre: string}[] = []
+  especialidades: {id: string, nombre: string}[] = [];
 
-  infoLaboral = new FormGroup({
-    especialidad: new FormControl('', [Validators.required]),
-    sueldo: new FormControl('', [Validators.required, Validators.min(0)]),
+  private readonly _adapter = inject<DateAdapter<unknown, unknown>>(DateAdapter);
+  private readonly _intl = inject(MatDatepickerIntl);
+  private readonly _locale = signal(inject<unknown>(MAT_DATE_LOCALE));
+
+  readonly dateFormatString = computed(() => {
+    if (this._locale() === 'es') {
+      return 'DD/MM/YYYY';
+    }
+    return '';
+  });
+
+  infoPersonal = new FormGroup({
+    nombre: new FormControl('', [Validators.required]),
+    apellido: new FormControl('', [Validators.required, Validators.min(0)]),
+    dni: new FormControl('', [Validators.required, Validators.min(0)]),
+    fechaNacimiento: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/)]),
   })
 
   ngOnInit(): void {
-    this.datosPersonales.emit(this.infoLaboral);
+    this.datosPersonales.emit(this.infoPersonal);
+  }
+
+  constructor() { 
+    this._locale.set('es');
+    this._adapter.setLocale(this._locale());
+    this._intl.changes.next();
+  }
+
+  dateFilter = (date: Date | null): boolean => {
+    const today = new Date();
+    if (!date) return false;
+    return date < today;
   }
 }

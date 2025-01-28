@@ -35,13 +35,13 @@ export class DatosContactoComponent implements OnInit {
 
   especialidades: {id: string, nombre: string}[] = []
 
-  infoLaboral = new FormGroup({
-    especialidad: new FormControl('', [Validators.required]),
-    sueldo: new FormControl('', [Validators.required, Validators.min(0)]),
+  infoContacto = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    telefono: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]),
   })
 
   ngOnInit(): void {
-    this.datosContacto.emit(this.infoLaboral);
+    this.datosContacto.emit(this.infoContacto);
   }
 
 }

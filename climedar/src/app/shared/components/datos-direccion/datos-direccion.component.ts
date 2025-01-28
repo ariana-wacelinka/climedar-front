@@ -33,13 +33,15 @@ export class DatosDireccionComponent implements OnInit {
   @Output() datosDireccion = new EventEmitter<any>();
   especialidades: { id: string, nombre: string }[] = []
 
-  infoLaboral = new FormGroup({
-    especialidad: new FormControl('', [Validators.required]),
-    sueldo: new FormControl('', [Validators.required, Validators.min(0)]),
+  infoDireccion = new FormGroup({
+    calle: new FormControl('', [Validators.required]),
+    numero: new FormControl('', [Validators.required]),
+    piso: new FormControl(''),
+    departamento: new FormControl(''),
   })
 
   ngOnInit(): void {
-    this.datosDireccion.emit(this.infoLaboral);
+    this.datosDireccion.emit(this.infoDireccion);
   }
 
 }
