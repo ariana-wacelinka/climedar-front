@@ -1,0 +1,32 @@
+<div class="main">
+    <h4>Obra social</h4>
+    <mat-divider></mat-divider>
+    <div class="section">
+        <div class="inner-section-1">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Obra social</mat-label>
+          <mat-select [formControl]="infoObraSocial.controls.obraSocial">
+            @for (obraSocial of obrasSociales; track obraSocial.id) {
+            <mat-option value="{{ obraSocial.id }}">{{
+              obraSocial.nombre
+            }}</mat-option>
+            }
+          </mat-select>
+          @if (!infoObraSocial.controls.obraSocial.valid &&
+          infoObraSocial.controls.obraSocial.touched) {
+          <mat-error>Por favor, seleccione la obra social</mat-error>
+          }
+        </mat-form-field>
+    </div>
+    <div class="inner-section-2">
+        <button
+          mat-flat-button
+          class="nueva-obraSocial"
+          (click)="nueva_obra_social()"
+        >
+          Añadir obraSocial
+        </button>
+    </div>
+    </div>
+  </div>
+  

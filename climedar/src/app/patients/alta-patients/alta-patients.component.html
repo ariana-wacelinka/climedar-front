@@ -1,13 +1,13 @@
 <app-centered-card>
     <ng-container main-header>
-            <h1>Añadir médico</h1>
+            <h1>Añadir paciente</h1>
     </ng-container>
     <ng-container main-content>
         <div class="content">
             <app-datos-personales (datosPersonales)="onFormChanges($event)"></app-datos-personales>
             <app-datos-contacto (datosContacto)="onFormChanges($event)"></app-datos-contacto>
             <app-datos-direccion (datosDireccion)="onFormChanges($event)"></app-datos-direccion>
-            <app-datos-profesionales (datosProfesionales)="onFormChanges($event)"></app-datos-profesionales>
+            <app-datos-obra-social (datosObraSocial)="onFormChanges($event)"></app-datos-obra-social>
         </div>
     </ng-container>
     <ng-container main-actions>

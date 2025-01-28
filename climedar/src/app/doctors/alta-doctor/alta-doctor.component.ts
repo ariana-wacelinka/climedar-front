@@ -1,4 +1,4 @@
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
 import { MatFormField } from '@angular/material/form-field';
@@ -26,13 +26,24 @@ import { DatosProfesionalesComponent } from './datos-profesionales/datos-profesi
   styleUrl: './alta-doctor.component.scss'
 })
 export class AltaDoctorComponent {
- 
+
+  public doctorForm = new FormGroup({});
   
   public guardar(){
-    return;
+    if(this.doctorForm.invalid){
+      this.doctorForm.markAllAsTouched();
+      return;
+    }
+    console.log(this.doctorForm.value);
   }
 
   public cancelar(){
     return;
+  }
+
+  onFormChanges(form: FormGroup){
+    Object.keys(form.controls).forEach(key => {
+      this.doctorForm.addControl(key, form.controls[key]);
+    });
   }
 }

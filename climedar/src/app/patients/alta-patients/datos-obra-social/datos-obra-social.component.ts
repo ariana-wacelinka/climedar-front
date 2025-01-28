@@ -13,42 +13,41 @@ import {MatDivider} from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-datos-profesionales',
+  selector: 'app-datos-obra-social',
   imports: [
-    MatSelectModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule,
-    MatDatepickerModule,
-    MatDivider,
-    MatButtonModule
-  ],
-  templateUrl: './datos-profesionales.component.html',
-  styleUrl: './datos-profesionales.component.scss'
+      MatSelectModule,
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatAutocompleteModule,
+      ReactiveFormsModule,
+      MatDatepickerModule,
+      MatDivider,
+      MatButtonModule
+    ],
+  templateUrl: './datos-obra-social.component.html',
+  styleUrl: './datos-obra-social.component.scss'
 })
-export class DatosProfesionalesComponent implements OnInit{
+export class DatosObraSocialComponent {
+
+  @Output() datosObraSocial = new EventEmitter<any>();
   
-  @Output() datosProfesionales = new EventEmitter<any>();
-
-  especialidades: {id: string, nombre: string}[] = [
-    {id: '1', nombre: 'Cardiología'},
-    {id: '2', nombre: 'Dermatología'},
-    {id: '3', nombre: 'Endocrinología'},
-  ]
-
-  infoLaboral = new FormGroup({
-    especialidad: new FormControl('', [Validators.required]),
-    sueldo: new FormControl('', [Validators.required, Validators.min(0)]),
-  })
-
-  public nueva_especialidad(){
-    return;
-  }
-
-  ngOnInit(){
-    this.datosProfesionales.emit(this.infoLaboral);
-  }
+    obrasSociales: {id: string, nombre: string}[] = [
+      {id: '1', nombre: 'osde'},
+      {id: '2', nombre: 'swiss medical'},
+      {id: '3', nombre: 'galeno'},
+    ]
+  
+    infoObraSocial = new FormGroup({
+      obraSocial: new FormControl('', [Validators.required]),
+    })
+  
+    public nueva_obra_social(){
+      return;
+    }
+  
+    ngOnInit(){
+      this.datosObraSocial.emit(this.infoObraSocial);
+    }
 
 }

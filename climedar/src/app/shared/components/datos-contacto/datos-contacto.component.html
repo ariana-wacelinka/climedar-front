@@ -1,31 +1,31 @@
 <div class="full-width">
-  <h4>Informacion de contacto</h4>
+  <h4>Datos de contacto</h4>
   <mat-divider></mat-divider>
   <div class="section">
 
     <mat-form-field class="full-width" appearance="outline">
-      <mat-label>Sueldo mensual</mat-label>
+      <mat-label>Correo electronico</mat-label>
       <input
-        type="number"
-        [formControl]="infoLaboral.controls.sueldo"
+        type="email"
+        [formControl]="infoContacto.controls.email"
         matInput
       />
-      @if (!infoLaboral.controls.sueldo.valid &&
-      infoLaboral.controls.sueldo.touched) {
-      <mat-error>Por favor, especifique el sueldo</mat-error>
+      @if (!infoContacto.controls.email.valid &&
+      infoContacto.controls.email.touched) {
+      <mat-error>Por favor, especifique el correo electronico</mat-error>
       }
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
-      <mat-label>Sueldo mensual</mat-label>
+      <mat-label>Telefono</mat-label>
       <input
-        type="number"
-        [formControl]="infoLaboral.controls.sueldo"
+        type="text"
+        [formControl]="infoContacto.controls.telefono"
         matInput
       />
-      @if (!infoLaboral.controls.sueldo.valid &&
-      infoLaboral.controls.sueldo.touched) {
-      <mat-error>Por favor, especifique el sueldo</mat-error>
+      @if (!infoContacto.controls.telefono.valid &&
+      infoContacto.controls.telefono.touched) {
+      <mat-error>Por favor, especifique el numero de telefono</mat-error>
       }
     </mat-form-field>
   </div>

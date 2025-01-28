@@ -1,57 +1,49 @@
 <div class="full-width">
-    <h4>Informacion laboral</h4>
+    <h4>Dirección</h4>
     <mat-divider></mat-divider>
     <div class="section">
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Sueldo mensual</mat-label>
+        <mat-label>Calle</mat-label>
         <input
-          type="number"
-          [formControl]="infoLaboral.controls.sueldo"
+          type="text"
+          [formControl]="infoDireccion.controls.calle"
           matInput
         />
-        @if (!infoLaboral.controls.sueldo.valid &&
-        infoLaboral.controls.sueldo.touched) {
-        <mat-error>Por favor, especifique el suelo</mat-error>
+        @if (!infoDireccion.controls.calle.valid &&
+        infoDireccion.controls.calle.touched) {
+        <mat-error>Por favor, especifique la calle</mat-error>
         }
       </mat-form-field>
   
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Sueldo mensual</mat-label>
+        <mat-label>Numero</mat-label>
         <input
-          type="number"
-          [formControl]="infoLaboral.controls.sueldo"
+          type="text"
+          [formControl]="infoDireccion.controls.numero"
           matInput
         />
-        @if (!infoLaboral.controls.sueldo.valid &&
-        infoLaboral.controls.sueldo.touched) {
-        <mat-error>Por favor, especifique el sueldo</mat-error>
+        @if (!infoDireccion.controls.numero.valid &&
+        infoDireccion.controls.numero.touched) {
+        <mat-error>Por favor, especifique el numero</mat-error>
         }
       </mat-form-field>
   
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Sueldo mensual</mat-label>
+        <mat-label>Piso</mat-label>
         <input
-          type="number"
-          [formControl]="infoLaboral.controls.sueldo"
+          type="text"
+          [formControl]="infoDireccion.controls.piso"
           matInput
         />
-        @if (!infoLaboral.controls.sueldo.valid &&
-        infoLaboral.controls.sueldo.touched) {
-        <mat-error>Por favor, especifique el sueldo</mat-error>
-        }
       </mat-form-field>
   
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Sueldo mensual</mat-label>
+        <mat-label>Departamento</mat-label>
         <input
-          type="number"
-          [formControl]="infoLaboral.controls.sueldo"
+          type="text"
+          [formControl]="infoDireccion.controls.departamento"
           matInput
         />
-        @if (!infoLaboral.controls.sueldo.valid &&
-        infoLaboral.controls.sueldo.touched) {
-        <mat-error>Por favor, especifique el sueldo</mat-error>
-        }
       </mat-form-field>
     </div>
   </div>

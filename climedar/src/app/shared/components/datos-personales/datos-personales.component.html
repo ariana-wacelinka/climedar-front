@@ -1,58 +1,62 @@
 <div class="full-width">
-    <h4>Informacion laboral</h4>
+    <h4>Datos personales</h4>
     <mat-divider></mat-divider>
     <div class="section">
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Sueldo mensual</mat-label>
+        <mat-label>Nombre</mat-label>
         <input
-          type="number"
-          [formControl]="infoLaboral.controls.sueldo"
+          type="text"
+          [formControl]="infoPersonal.controls.nombre"
           matInput
         />
-        @if (!infoLaboral.controls.sueldo.valid &&
-        infoLaboral.controls.sueldo.touched) {
-        <mat-error>Por favor, especifique el suelo</mat-error>
+        @if (!infoPersonal.controls.nombre.valid &&
+        infoPersonal.controls.nombre.touched) {
+        <mat-error>Por favor, especifique el nombre</mat-error>
         }
       </mat-form-field>
   
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Sueldo mensual</mat-label>
+        <mat-label>Apellido</mat-label>
         <input
-          type="number"
-          [formControl]="infoLaboral.controls.sueldo"
+          type="text"
+          [formControl]="infoPersonal.controls.apellido"
           matInput
         />
-        @if (!infoLaboral.controls.sueldo.valid &&
-        infoLaboral.controls.sueldo.touched) {
-        <mat-error>Por favor, especifique el sueldo</mat-error>
+        @if (!infoPersonal.controls.apellido.valid &&
+        infoPersonal.controls.apellido.touched) {
+        <mat-error>Por favor, especifique el apellido</mat-error>
         }
       </mat-form-field>
   
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Sueldo mensual</mat-label>
+        <mat-label>DNI</mat-label>
         <input
           type="number"
-          [formControl]="infoLaboral.controls.sueldo"
+          [formControl]="infoPersonal.controls.dni"
           matInput
         />
-        @if (!infoLaboral.controls.sueldo.valid &&
-        infoLaboral.controls.sueldo.touched) {
-        <mat-error>Por favor, especifique el sueldo</mat-error>
+        @if (!infoPersonal.controls.dni.valid &&
+        infoPersonal.controls.dni.touched) {
+        <mat-error>Por favor, especifique el dni</mat-error>
         }
       </mat-form-field>
   
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Sueldo mensual</mat-label>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Fecha de nacimiento</mat-label>
         <input
-          type="number"
-          [formControl]="infoLaboral.controls.sueldo"
           matInput
+          [matDatepicker]="picker"
+            (dateChange)="infoPersonal.controls.fechaNacimiento.setValue($event.value!.toISOString().split('T')[0])"
+          [matDatepickerFilter]="dateFilter"
         />
-        @if (!infoLaboral.controls.sueldo.valid &&
-        infoLaboral.controls.sueldo.touched) {
-        <mat-error>Por favor, especifique el sueldo</mat-error>
+        <mat-hint style="color: #004454">DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker startView="month"></mat-datepicker>
+        @if (infoPersonal.controls.fechaNacimiento.invalid && infoPersonal.controls.fechaNacimiento.touched) {
+          <mat-error>Por favor, ingrese una fecha válida en formato DD/MM/YYYY</mat-error>
         }
       </mat-form-field>
+
     </div>
   </div>
   
