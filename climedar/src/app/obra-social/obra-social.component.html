@@ -2,12 +2,18 @@
   <ng-container main-header>
     <h1>Listado de obras sociales</h1>
   </ng-container>
+
   <ng-container main-content>
 
-    <mat-form-field class="full-width" appearance="outline">
-      <mat-label>Filter</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
-    </mat-form-field>
+    <div class="row full-width">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Ingrese una obra social</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+      </mat-form-field>
+
+      <button mat-flat-button (click)="openDialog()">Añadir obra social</button>
+    </div>
+
 
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource" matSort>
@@ -17,17 +23,11 @@
           <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
         </ng-container>
 
-<!--        <ng-container matColumnDef="edit">-->
-<!--          <td mat-cell> <mat-icon>Edit</mat-icon> </td>-->
-<!--          <td mat-cell *matCellDef="let row"> {{row.edit}} </td>-->
-<!--        </ng-container>-->
-
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-        <!-- Row shown when there is no matching data. -->
         <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          <td class="mat-cell" colspan="4">No se han encontrado coincidencias con "{{input.value}}"</td>
         </tr>
       </table>
 

@@ -6,6 +6,10 @@ table {
   width: 100%;
   }
 
+.row{
+  display: flex;
+  }
+
 .mat-mdc-form-field {
   font-size: 14px;
   width: 100%;
@@ -13,4 +17,9 @@ table {
 
 td, th {
   width: 25%;
+  }
+
+button {
+  height: 55px;
+  border-radius: 10px;
   }

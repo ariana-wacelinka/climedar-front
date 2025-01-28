@@ -15,6 +15,7 @@ import {MatInput} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
+import {MatButton} from '@angular/material/button';
 
 // noinspection AngularUnusedComponentImport
 @Component({
@@ -39,6 +40,7 @@ import {MatSort} from '@angular/material/sort';
     MatCellDef,
     MatHeaderRowDef,
     MatRowDef,
+    MatButton,
   ],
   templateUrl: './obra-social.component.html',
   styleUrl: './obra-social.component.scss'
@@ -71,5 +73,9 @@ export class ObraSocialComponent implements AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  openDialog() {
+
   }
 }
