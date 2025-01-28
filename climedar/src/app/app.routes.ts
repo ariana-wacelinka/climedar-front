@@ -10,6 +10,6 @@ export const routes: Routes = [
     {path: 'home', component: CenteredCardComponent},
     {path: 'login', component: LoginComponent},
     {path: 'doctor/nuevo', component: AltaDoctorComponent},
-    {path: 'paciente/nuevo', component: AltaPatientsComponent}
+    {path: 'paciente/nuevo', component: AltaPatientsComponent},
     {path: 'obra-social/listado', component: ObraSocialComponent}
 ];

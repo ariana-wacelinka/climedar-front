@@ -12,7 +12,8 @@
           <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese una obra social" #input>
         </mat-form-field>
 
-        <button mat-flat-button style="min-width: max-content !important;" (click)="openDialog()">Añadir obra social</button>
+        <button mat-flat-button style="min-width: max-content !important;" (click)="createObraSocial()">Añadir obra
+          social</button>
       </div>
 
 
@@ -21,7 +22,14 @@
 
           <ng-container matColumnDef="nombre">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-            <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+            <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
+          </ng-container>
+
+          <ng-container class="edit" matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element" style="text-align: right;"> <button><mat-icon
+              (click)="editObraSocial(element.number)">edit
+            </mat-icon></button></td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

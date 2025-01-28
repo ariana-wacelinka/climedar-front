@@ -12,7 +12,7 @@ import {
 } from '@angular/material/table';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
-import {MatIcon} from '@angular/material/icon';
+import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatButton} from '@angular/material/button';
@@ -35,12 +35,13 @@ import {MatButton} from '@angular/material/button';
     MatInput,
     MatButton,
     MatPaginator,
+    MatIcon,
+    MatIconModule,
     MatSort,
     MatHeaderCellDef,
     MatCellDef,
     MatHeaderRowDef,
     MatRowDef,
-    MatIcon,
   ],
   templateUrl: './obra-social.component.html',
   styleUrl: './obra-social.component.scss'
@@ -50,20 +51,20 @@ export class ObraSocialComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator;
   @ViewChild(MatSort) sort: MatSort = new MatSort;
 
-  displayedColumns: string[] = ['nombre'];
+  displayedColumns: string[] = ["nombre", "edit"];
   dataSource = new MatTableDataSource([
-    {nombre: 'OSPE'},
-    {nombre: 'OSDE'},
-    {nombre: 'PAMI'},
-    {nombre: 'IOMA'},
-    {nombre: 'OSECAC'},
-    {nombre: 'OSMATA'},
-    {nombre: 'OSSEG'},
-    {nombre: 'OSDIPP'},
-    {nombre: 'OSDOP'},
-    {nombre: 'OSDOSIM'},
-    {nombre: 'OSDOS'},
-    {nombre: 'OSDOSIM'},
+    {nombre: 'OSDOSIM', number: 0},
+    {nombre: 'OSPE', number: 1},
+    {nombre: 'OSDE', number: 2},
+    {nombre: 'PAMI', number: 3},
+    {nombre: 'IOMA', number: 4},
+    {nombre: 'OSECAC', number: 5},
+    {nombre: 'OSMATA', number: 6},
+    {nombre: 'OSSEG', number: 7},
+    {nombre: 'OSDIPP', number: 8},
+    {nombre: 'OSDOP', number: 9},
+    {nombre: 'OSDOSIM', number: 10},
+    {nombre: 'OSDOS', number: 11},
   ]);
 
   constructor() {}
@@ -82,7 +83,11 @@ export class ObraSocialComponent implements AfterViewInit {
     }
   }
 
-  openDialog() {
+  editObraSocial(number: number) {
+    alert('Editando obra social ' + number);
+  }
+
+  createObraSocial(){
 
   }
 }
