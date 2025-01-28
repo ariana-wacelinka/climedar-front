@@ -30,6 +30,10 @@ export class AltaDoctorComponent {
   public doctorForm = new FormGroup({});
   
   public guardar(){
+    if(this.doctorForm.invalid){
+      this.doctorForm.markAllAsTouched();
+      return;
+    }
     console.log(this.doctorForm.value);
   }
 
