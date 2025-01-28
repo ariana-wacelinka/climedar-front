@@ -6,20 +6,37 @@ table {
   width: 100%;
   }
 
+h1{
+  padding-left: 100px;
+  padding-right: 100px;
+  }
+
+.content{
+  width: 100%;
+  }
+
 .row{
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+
+  button {
+    height: 55px;
+    border-radius: 5px;
+    }
   }
 
 .mat-mdc-form-field {
   font-size: 14px;
-  width: 100%;
+  width: 120%;
   }
 
 td, th {
   width: 25%;
+  font-size: 18px;
   }
 
-button {
-  height: 55px;
-  border-radius: 10px;
+mat-paginator{
+  font-size: 16px;
   }
