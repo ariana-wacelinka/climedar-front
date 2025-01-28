@@ -28,7 +28,10 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './datos-profesionales.component.html',
   styleUrl: './datos-profesionales.component.scss'
 })
-export class DatosProfesionalesComponent {
+export class DatosProfesionalesComponent implements OnInit{
+  
+  @Output() datosProfesionales = new EventEmitter<any>();
+
   especialidades: {id: string, nombre: string}[] = []
 
   infoLaboral = new FormGroup({
@@ -38,6 +41,10 @@ export class DatosProfesionalesComponent {
 
   public nueva_especialidad(){
     return;
+  }
+
+  ngOnInit(){
+    this.datosProfesionales.emit(this.infoLaboral);
   }
 
 }

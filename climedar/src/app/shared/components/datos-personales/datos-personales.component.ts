@@ -28,7 +28,9 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './datos-personales.component.html',
   styleUrl: './datos-personales.component.scss'
 })
-export class DatosPersonalesComponent {
+export class DatosPersonalesComponent implements OnInit {
+
+  @Output() datosPersonales = new EventEmitter<any>();
 
   especialidades: {id: string, nombre: string}[] = []
 
@@ -37,4 +39,7 @@ export class DatosPersonalesComponent {
     sueldo: new FormControl('', [Validators.required, Validators.min(0)]),
   })
 
+  ngOnInit(): void {
+    this.datosPersonales.emit(this.infoLaboral);
+  }
 }
