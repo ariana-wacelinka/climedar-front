@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Añadir obra social</h2>
+<div mat-dialog-content>
+  <form action="">
+    <mat-form-field class="full-width" appearance="outline">
+      <input matInput placeholder="Nombre" formControlName="Nombre">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onClose()">Cerrar</button>
+  <button mat-button (click)="onSubmit()">Guardar</button>
+</div>
