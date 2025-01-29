@@ -16,6 +16,8 @@ import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatButton} from '@angular/material/button';
+import {DialogObrasocialComponent} from './dialog-obrasocial/dialog-obrasocial.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-obra-social',
@@ -67,7 +69,7 @@ export class ObraSocialComponent implements AfterViewInit {
     {nombre: 'OSDOS', number: 11},
   ]);
 
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -88,6 +90,11 @@ export class ObraSocialComponent implements AfterViewInit {
   }
 
   createObraSocial(){
-    alert('Crear obra social');
+
+    this.dialog.open(DialogObrasocialComponent, {
+      width:'670px',
+      minWidth: '350px',
+      maxWidth: '90vw',
+    });
   }
 }
