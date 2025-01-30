@@ -1,0 +1,31 @@
+@if (pages > 1) {
+  <div id="app" class="container">
+    <ul class="page">
+      <li class="page__btn" (click)="movePreviousPage()" [class.disabled]="currentPage === 1">
+        <span class="material-icons">chevron_left</span>
+      </li>
+      @if(currentPage > 2) {
+        <li (click)="moveToPage(1)" class="page__numbers">1</li>
+      }
+      @if(currentPage > 3) {
+        <li class="page__dots">...</li>
+      }
+      @if (currentPage > 1) {
+        <li (click)="moveToPage(previousPage)" class="page__numbers">{{ previousPage }}</li>
+      }
+      <li class="page__numbers active">{{ currentPage }}</li>
+      @if ( currentPage < pages) {
+        <li (click)="moveToPage(followingPage)" class="page__numbers">{{ followingPage }}</li>
+      }
+      @if (currentPage < pages - 2) {
+        <li class="page__dots">...</li>
+      }
+      @if (currentPage < pages - 1) {
+        <li (click)="moveToPage(pages)" class="page__numbers">{{ pages }}</li>
+      }
+      <li class="page__btn" (click)="moveFollowingPage()" [class.disabled]="currentPage === pages">
+        <span class="material-icons">chevron_right</span>
+      </li>
+    </ul>
+  </div>
+}

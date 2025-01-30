@@ -45,7 +45,8 @@
   </ng-container>
 
   <ng-container main-actions>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" aria-label="Selecciona una página"></mat-paginator>
+    <app-paginator [pages]="totalPages" [currentPage]="currentPage"
+                    (pageChange)="onPageChange($event)"></app-paginator>
   </ng-container>
 
 </app-centered-card>

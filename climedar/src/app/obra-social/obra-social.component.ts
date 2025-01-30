@@ -18,6 +18,7 @@ import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatButton} from '@angular/material/button';
 import {DialogObrasocialComponent} from './dialog-obrasocial/dialog-obrasocial.component';
 import {MatDialog} from '@angular/material/dialog';
+import {PaginatorComponent} from '../shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'app-obra-social',
@@ -44,13 +45,33 @@ import {MatDialog} from '@angular/material/dialog';
     MatCellDef,
     MatHeaderRowDef,
     MatRowDef,
+    PaginatorComponent,
   ],
   templateUrl: './obra-social.component.html',
   styleUrl: './obra-social.component.scss'
 })
 export class ObraSocialComponent implements AfterViewInit {
+  currentPage = 1;
+  pageSize = 5;
+  totalItems = 30;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator;
+  onPageChange(page: number) {
+    this.currentPage = page;
+    // this.fetchData(page);
+  }
+
+  // fetchData(page: number) {
+  //   this.apiService.getObrasSociales(page, this.pageSize).subscribe(response => {
+  //     this.dataSource.data = response.items;
+  //     this.totalItems = response.totalItems;
+  //   });
+  // }
+
+
+  get totalPages(): number {
+    return Math.ceil(this.totalItems / this.pageSize);
+  }
+
   @ViewChild(MatSort) sort: MatSort = new MatSort;
 
   displayedColumns: string[] = ["nombre", "edit"];
@@ -59,20 +80,12 @@ export class ObraSocialComponent implements AfterViewInit {
     {nombre: 'OSPE', number: 1},
     {nombre: 'OSDE', number: 2},
     {nombre: 'PAMI', number: 3},
-    {nombre: 'IOMA', number: 4},
-    {nombre: 'OSECAC', number: 5},
-    {nombre: 'OSMATA', number: 6},
-    {nombre: 'OSSEG', number: 7},
-    {nombre: 'OSDIPP', number: 8},
-    {nombre: 'OSDOP', number: 9},
-    {nombre: 'OSDOSIM', number: 10},
-    {nombre: 'OSDOS', number: 11},
+    {nombre: 'IOMA', number: 4}
   ]);
 
   constructor(private dialog: MatDialog) {}
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
@@ -90,11 +103,12 @@ export class ObraSocialComponent implements AfterViewInit {
   }
 
   createObraSocial(){
-
     this.dialog.open(DialogObrasocialComponent, {
       width:'670px',
       minWidth: '350px',
       maxWidth: '90vw',
     });
   }
+
+  protected readonly Math = Math;
 }
