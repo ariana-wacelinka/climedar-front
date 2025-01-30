@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Turnos para el {{ data.fecha | date:'longDate':'':'es' }}</h2>
+    <mat-dialog-content class="mat-typography">
+      <div class="turnos-container">
+        <ng-container *ngIf="data.turnos.length === 0">
+          <p class="no-turnos">No hay turnos disponibles para este día</p>
+        </ng-container>
+        <mat-card *ngFor="let turno of data.turnos" class="turno-card">
+          <mat-card-content>
+            <div class="turno-info">
+              <h3>{{ turno.medico }}</h3>
+              <p class="especialidad">{{ turno.especialidad }}</p>
+              <p class="hora">{{ turno.hora }} ({{ turno.duracion }} min)</p>
+            </div>
+            <button mat-raised-button color="primary">Reservar</button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-dialog-content>

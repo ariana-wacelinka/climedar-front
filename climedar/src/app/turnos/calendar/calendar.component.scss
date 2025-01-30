@@ -1,0 +1,123 @@
+.app-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #60a5fa, #1e40af);
+  }
+
+  .header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .calendar-container {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .month-navigation {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .month-label {
+    min-width: 140px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .filters {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .filters {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .calendar {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+  }
+
+  .calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  .calendar-cell {
+    aspect-ratio: 1;
+    padding: 0.75rem;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .header-cell {
+    padding: 0.75rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  .day-cell {
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .day-cell:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  .other-month {
+    color: rgba(0, 0, 0, 0.38);
+  }
+
+  .day-number {
+    font-size: 0.875rem;
+  }
+
+  .turnos-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #1976d2;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
