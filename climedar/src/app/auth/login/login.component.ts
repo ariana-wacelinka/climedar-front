@@ -1,10 +1,11 @@
+import { AuthService } from './../service/auth.service';
 import { Component } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, FormsModule, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors} from '@angular/forms';
 @Component({
   selector: 'app-login',
   imports: [
@@ -20,9 +21,16 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 })
 export class LoginComponent {
 
+  constructor(private authService: AuthService) { }
+
   formgroup: FormGroup = new FormGroup({
     email: new FormControl('', Validators.email),
     password: new FormControl('')
   });
+
+  public login(): void {
+    console.log("Login");
+    this.authService.login(this.formgroup.controls['email'].value, this.formgroup.controls['password'].value);
+  }
 
 }
