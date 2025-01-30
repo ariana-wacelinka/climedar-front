@@ -28,7 +28,7 @@ export class AuthService {
       domain: environment.auth0.domain,
       clientID: environment.auth0.clientId,
       audience: environment.auth0.audience,
-      redirectUri: "http://localhost:4200/",
+      redirectUri: "http://localhost:4200/home",
       responseType: 'token id_token'
     })
     this.loadSession();
@@ -42,9 +42,14 @@ export class AuthService {
       audience: environment.auth0.audience
     }, (err: any, result: any) => {
       if (err.code == "access_denied") {
+        console.log("Usuario o contraseña incorrectos");
         // this.dialog.open(ErrorDialogComponent, {data: {message: "Usuario o contraseña incorrectos"}});
       } else if (err) {
+        console.log("error");
         // this.dialog.open(ErrorDialogComponent, {data: {message: "Ha ocurrido un error, intente nuevamente"}});
+      }
+      if (result) {
+        console.log("result: ", result);
       }
     });
   }
