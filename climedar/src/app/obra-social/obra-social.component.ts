@@ -13,7 +13,6 @@ import {
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatButton} from '@angular/material/button';
 import {DialogObrasocialComponent} from './dialog-obrasocial/dialog-obrasocial.component';
@@ -28,7 +27,6 @@ import {PaginatorComponent} from '../shared/components/paginator/paginator.compo
     MatSortModule,
     MatTableModule,
     MatColumnDef,
-    MatPaginatorModule,
     MatHeaderCell,
     MatCell,
     MatHeaderRow,
@@ -37,7 +35,6 @@ import {PaginatorComponent} from '../shared/components/paginator/paginator.compo
     MatFormField,
     MatInput,
     MatButton,
-    MatPaginator,
     MatIcon,
     MatIconModule,
     MatSort,

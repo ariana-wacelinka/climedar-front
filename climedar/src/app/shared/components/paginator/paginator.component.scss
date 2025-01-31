@@ -71,7 +71,6 @@ ul {
   align-items: center;
   border-radius: 0.6rem;
   background-color: #F9F9F9;
-  box-shadow: 0 0.8rem 2rem rgba(#5a6181, 0.05);
 
   &__numbers,
   &__btn,
@@ -110,6 +109,7 @@ ul {
 .active {
   color: #F9F9F9;
   background-color: #2b60a1;
+  border-radius: 50px;
   font-weight: 600;
   border: 1px solid #2b60a1;
 
