@@ -96,15 +96,20 @@ export class ObraSocialComponent implements AfterViewInit {
   }
 
   editObraSocial(number: number) {
-    alert('Editando obra social ' + number);
+    this.dialog.open(DialogObrasocialComponent, {
+      width:'670px',
+      minWidth: '350px',
+      maxWidth: '90vw',
+      data: {id: number, nombre: this.dataSource.data[number].nombre}
+    });
   }
 
   createObraSocial(){
     this.dialog.open(DialogObrasocialComponent, {
       width:'670px',
       minWidth: '350px',
-      maxWidth: '90vw',
-    });
+      maxWidth: '90vw'
+      });
   }
 
   protected readonly Math = Math;
