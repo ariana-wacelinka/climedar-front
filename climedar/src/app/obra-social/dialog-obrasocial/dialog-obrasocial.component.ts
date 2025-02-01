@@ -31,6 +31,7 @@ export class DialogObrasocialComponent {
   formGroup = new FormGroup({
     nombre: new FormControl ('', Validators.required)
   });
+
   formGroup2 = new FormGroup({
     nombreEditar: new FormControl ('', Validators.required)
   });
@@ -40,28 +41,25 @@ export class DialogObrasocialComponent {
     @Inject(MAT_DIALOG_DATA) public data: { id?: number, nombre?: string }
   ) {
     if (data.nombre != null) {
-      this.formGroup.setValue({ nombre: data.nombre });
+      this.formGroup2.setValue({ nombreEditar: data.nombre });
+    } else {
     }
   }
 
   onClose() {
-    if (this.data.id != null && this.formGroup2.value.nombreEditar == ''){
-      alert('Debe rellenar el campo')
-    } else if (this.data.id != null && this.formGroup2.value.nombreEditar != '') {
-      this.dialogRef.close();
-    } else {
-      this.dialogRef.close();
-    }
+    this.dialogRef.close();
   }
 
   onSubmit() {
     if (this.data.id == null){
-      if (this.formGroup2.valid){
+      if (this.formGroup.valid){
         alert('Obra social creada: ' + this.formGroup.value.nombre);
-      } else {}
+      } else {
+      }
     } else {
       if (this.formGroup2.valid){
         alert('Obra social editada: ' + this.formGroup2.value.nombreEditar);
+      } else {
       }
     }
   }

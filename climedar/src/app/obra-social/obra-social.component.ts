@@ -56,6 +56,7 @@ export class ObraSocialComponent implements AfterViewInit {
     this.currentPage = page;
   }
 
+  //Esto despues se reemplaza por el sort que hizo Lu
   @ViewChild(MatSort) sort: MatSort = new MatSort;
 
   displayedColumns: string[] = ["nombre", "edit"];
@@ -95,7 +96,8 @@ export class ObraSocialComponent implements AfterViewInit {
     this.dialog.open(DialogObrasocialComponent, {
       width:'670px',
       minWidth: '350px',
-      maxWidth: '90vw'
+      maxWidth: '90vw',
+      data: {}
       });
   }
 
