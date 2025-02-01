@@ -1,5 +1,4 @@
 import {Component, Inject} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
 import {
   MAT_DIALOG_DATA, MatDialog,
@@ -8,9 +7,6 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from '@angular/material/dialog';
-import {MatFormField, MatHint, MatLabel, MatPrefix} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
-import {NgxMaskDirective} from 'ngx-mask';
 import {DialogServicioComponent} from '../dialog-servicio/dialog-servicio.component';
 
 interface Servicio {
@@ -24,18 +20,10 @@ interface Servicio {
 @Component({
   selector: 'app-info-servicio',
   imports: [
-    FormsModule,
     MatButton,
     MatDialogActions,
     MatDialogContent,
     MatDialogTitle,
-    MatFormField,
-    MatHint,
-    MatInput,
-    MatLabel,
-    MatPrefix,
-    NgxMaskDirective,
-    ReactiveFormsModule
   ],
   templateUrl: './info-servicio.component.html',
   styleUrl: './info-servicio.component.scss'
