@@ -18,6 +18,7 @@ import {MatButton} from '@angular/material/button';
 import {DialogObrasocialComponent} from './dialog-obrasocial/dialog-obrasocial.component';
 import {MatDialog} from '@angular/material/dialog';
 import {PaginatorComponent} from '../shared/components/paginator/paginator.component';
+import {MatMenuModule} from '@angular/material/menu';
 
 @Component({
   selector: 'app-obra-social',
@@ -43,6 +44,7 @@ import {PaginatorComponent} from '../shared/components/paginator/paginator.compo
     MatHeaderRowDef,
     MatRowDef,
     PaginatorComponent,
+    MatMenuModule,
   ],
   templateUrl: './obra-social.component.html',
   styleUrl: './obra-social.component.scss'
