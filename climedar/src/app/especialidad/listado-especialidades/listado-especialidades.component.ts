@@ -10,9 +10,9 @@ import {
   MatHeaderRowDef, MatNoDataRow,
   MatRow, MatRowDef, MatTable, MatTableDataSource
 } from "@angular/material/table";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatIcon} from "@angular/material/icon";
-import {MatInput} from "@angular/material/input";
+import {MatFormField, MatFormFieldModule, MatLabel} from "@angular/material/form-field";
+import {MatIcon, MatIconModule} from "@angular/material/icon";
+import {MatInput, MatInputModule} from "@angular/material/input";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {PaginatorComponent} from "../../shared/components/paginator/paginator.component";
@@ -29,6 +29,9 @@ import {DialogEspecialidadComponent} from '../dialog-especialidad/dialog-especia
     MatColumnDef,
     MatFormField,
     MatHeaderCell,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
     MatHeaderRow,
     MatHeaderRowDef,
     MatIcon,

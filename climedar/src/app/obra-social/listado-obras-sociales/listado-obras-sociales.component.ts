@@ -10,8 +10,8 @@ import {
   MatTable,
   MatTableDataSource, MatTableModule
 } from '@angular/material/table';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MatFormField, MatFormFieldModule, MatLabel} from '@angular/material/form-field';
+import {MatInput, MatInputModule} from '@angular/material/input';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatButton} from '@angular/material/button';
@@ -37,7 +37,9 @@ import {MatMenuModule} from '@angular/material/menu';
     MatInput,
     MatButton,
     MatIcon,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatSort,
     MatHeaderCellDef,
     MatCellDef,
