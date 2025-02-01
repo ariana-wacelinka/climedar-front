@@ -1,1 +1,74 @@
-<p>listado-servicios works!</p>
+<app-centered-card>
+  <ng-container main-header>
+    <h2>Listado de servicios</h2>
+  </ng-container>
+
+  <ng-container main-content>
+    <div class="content">
+
+      <div class="row full-width">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
+          <mat-label>Ingrese un servicio</mat-label>
+          <input matInput
+                 placeholder="Ingrese un servicio"
+                 (keyup)="applyFilter($event)"
+                 #input>
+        </mat-form-field>
+
+
+        <button mat-flat-button style="min-width: max-content !important;" (click)="createServicio()">Añadir
+          servicio</button>
+      </div>
+
+
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+            <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="precio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
+            <td mat-cell class="precio" *matCellDef="let element">$ {{element.precio}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="tiempo_estimado">
+            <th mat-header-cell class="tiempo_estimado" *matHeaderCellDef mat-sort-header> Tiempo estimado </th>
+            <td mat-cell class="tiempo_estimado" *matCellDef="let element"><i>{{element.tiempo_estimado}}</i></td>
+          </ng-container>
+
+          <ng-container class="edit" matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef></th>
+
+            <td id="edit" mat-cell *matCellDef="let element" style="text-align: right;">
+              <button id="menu"
+                      [matMenuTriggerFor]="menu"><mat-icon style="color: black; font-size: 22px; margin-top: 5px">menu
+              </mat-icon></button>
+              <mat-menu #menu="matMenu">
+                <button (click)="editServicio(element.number)" mat-menu-item>Modificar</button>
+                <button mat-menu-item>Eliminar</button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No se han encontrado coincidencias con "{{input.value}}"</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <ng-container main-actions>
+    <app-paginator [totalItems]="totalItems" [pageSize]="pageSize"
+                   (pageChange)="onPageChange($event)"></app-paginator>
+  </ng-container>
+
+</app-centered-card>

@@ -7,14 +7,16 @@ import { CalendarComponent } from './turnos/calendar/calendar.component';
 import {ListadoObrasSocialesComponent} from './obra-social/listado-obras-sociales/listado-obras-sociales.component';
 import {PaginatorComponent} from './shared/components/paginator/paginator.component';
 import {ListadoEspecialidadesComponent} from './especialidad/listado-especialidades/listado-especialidades.component';
+import {ListadoServiciosComponent} from './servicio/listado-servicios/listado-servicios.component';
 
 export const routes: Routes = [
-    {path: '', component: CalendarComponent},
-    {path: 'home', component: CenteredCardComponent},
-    {path: 'login', component: LoginComponent},
-    {path: 'doctor/nuevo', component: AltaDoctorComponent},
-    {path: 'paciente/nuevo', component: AltaPatientsComponent},
-    {path: 'obra-social/listado', component: ListadoObrasSocialesComponent},
+  {path: '', component: CalendarComponent},
+  {path: 'home', component: CenteredCardComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'doctor/nuevo', component: AltaDoctorComponent},
+  {path: 'paciente/nuevo', component: AltaPatientsComponent},
+  {path: 'obra-social/listado', component: ListadoObrasSocialesComponent},
   {path: 'especialidad/listado', component: ListadoEspecialidadesComponent},
-  {path: 'paginator', component: PaginatorComponent}
+  {path: 'servicio/listado', component: ListadoServiciosComponent},
+  {path: 'paginator', component: PaginatorComponent},
 ];
