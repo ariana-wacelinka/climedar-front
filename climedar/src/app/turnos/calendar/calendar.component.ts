@@ -9,6 +9,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-calendar',
@@ -21,8 +23,10 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    DatePipe
-  ],
+    DatePipe,
+    CenteredCardComponent,
+    MatButtonModule
+],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
 })
@@ -61,15 +65,28 @@ export class CalendarComponent {
   updateCalendar() {
     const firstDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
     const lastDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0);
-    
+  
+    // Generar los días del mes
     this.monthDays = Array.from(
       { length: lastDay.getDate() },
       (_, i) => new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), i + 1)
     );
-
-    const firstDayOfWeek = firstDay.getDay() || 7;
+  
+    // Días vacíos al inicio
+    const firstDayOfWeek = firstDay.getDay() || 7; // Ajustar inicio para lunes
     this.emptyDays = Array(firstDayOfWeek - 1).fill(0);
+  
+    // Días sobrantes al final
+    const lastDayOfWeek = lastDay.getDay() || 7;
+    const remainingDays = 7 - lastDayOfWeek;
+    this.monthDays = [
+      ...this.monthDays,
+      ...Array.from({ length: remainingDays }, (_, i) => 
+        new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, i + 1)
+      )
+    ];
   }
+  
 
   changeMonth(direction: 'prev' | 'next') {
     this.currentDate = new Date(

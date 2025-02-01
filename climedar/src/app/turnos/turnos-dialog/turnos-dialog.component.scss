@@ -13,6 +13,11 @@
   .turno-card:last-child {
     margin-bottom: 0;
   }
+
+  .mat-typography {
+    overflow: hidden;
+  }
+
   mat-card-content {
     display: flex;
     justify-content: space-between;

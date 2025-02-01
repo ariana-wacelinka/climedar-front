@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/materia
 import { Turno } from '../models/turno.models';
 import { MatCardModule } from '@angular/material/card';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-turnos-dialog',
@@ -11,7 +12,8 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
     MatCardModule,
     NgIf,
     NgFor,
-    DatePipe
+    DatePipe,
+    MatButtonModule
   ],
   templateUrl: './turnos-dialog.component.html',
   styleUrl: './turnos-dialog.component.scss'

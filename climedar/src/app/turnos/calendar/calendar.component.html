@@ -1,28 +1,23 @@
-<div class="app-container">
-    <mat-toolbar color="primary" class="header">
-      <div class="logo">
-        <mat-icon>local_hospital</mat-icon>
-        <span>Climedar</span>
+<app-centered-card>
+
+  <ng-container main-header>
+    <div class="header">
+      <span></span>
+      <h2 class="titulo">Turnos disponibles</h2>
+      <div class="month-navigation">
+        <button mat-icon-button (click)="changeMonth('prev')">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span class="month-label">{{ currentDate | date:'MMMM yyyy' }}</span>
+        <button mat-icon-button (click)="changeMonth('next')">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
       </div>
-      <button mat-button>Cerrar sesión</button>
-    </mat-toolbar>
+    </div>
+    </ng-container>
 
-    <div class="content">
-      <mat-card class="calendar-container">
-        <mat-card-header>
-          <mat-card-title>Turnos disponibles</mat-card-title>
-          <div class="month-navigation">
-            <button mat-icon-button (click)="changeMonth('prev')">
-              <mat-icon>chevron_left</mat-icon>
-            </button>
-            <span class="month-label">{{ currentDate | date:'MMMM yyyy' }}</span>
-            <button mat-icon-button (click)="changeMonth('next')">
-              <mat-icon>chevron_right</mat-icon>
-            </button>
-          </div>
-        </mat-card-header>
-
-        <mat-card-content>
+    <ng-container main-content>
+      <div class="content">
           <div class="filters">
             <mat-form-field appearance="outline">
               <mat-label>Especialidad</mat-label>
@@ -58,15 +53,15 @@
               </ng-container>
 
               <div *ngFor="let day of monthDays" 
-                   class="calendar-cell day-cell"
-                   [class.other-month]="!isSameMonth(day)"
-                   (click)="openTurnosDialog(day)">
-                <span class="day-number">{{day | date:'d'}}</span>
-                <div *ngIf="tieneTurnos(day)" class="turnos-indicator"></div>
-              </div>
+     class="calendar-cell day-cell"
+     [class.other-month]="!isSameMonth(day)"
+     [class.clickable]="isSameMonth(day)"
+     (click)="isSameMonth(day) && openTurnosDialog(day)">
+  <span class="day-number">{{ day | date:'d' }}</span>
+  <div *ngIf="tieneTurnos(day)" class="turnos-indicator"></div>
+</div>
             </div>
           </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
+        </div>
+    </ng-container>
+  </app-centered-card>
