@@ -17,7 +17,7 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatSort, MatSortHeader} from '@angular/material/sort';
 import {PaginatorComponent} from '../../shared/components/paginator/paginator.component';
 import {MatDialog} from '@angular/material/dialog';
-import {DialogObrasocialComponent} from '../../obra-social/dialog-obrasocial/dialog-obrasocial.component';
+import {DialogServicioComponent} from '../dialog-servicio/dialog-servicio.component';
 
 @Component({
   selector: 'app-listado-servicios',
@@ -90,7 +90,7 @@ export class ListadoServiciosComponent {
   }
 
   editServicio(number: number) {
-    this.dialog.open(DialogObrasocialComponent, {
+    this.dialog.open(DialogServicioComponent, {
       width:'670px',
       minWidth: '350px',
       maxWidth: '90vw',
@@ -99,7 +99,7 @@ export class ListadoServiciosComponent {
   }
 
   createServicio(){
-    this.dialog.open(DialogObrasocialComponent, {
+    this.dialog.open(DialogServicioComponent, {
       width:'670px',
       minWidth: '350px',
       maxWidth: '90vw',

@@ -1,1 +1,44 @@
-<p>dialog-servicio works!</p>
+@if (this.data.id == null) {
+  <h2 mat-dialog-title>Añadir servicio</h2>
+
+  <div mat-dialog-content>
+    <form [formGroup]="formGroup">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre" formControlName="nombre" required>
+      </mat-form-field>
+
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput placeholder="Descripción" formControlName="descripcion" required></textarea>
+      </mat-form-field>
+
+      <mat-form-field floatLabel="always" appearance="outline">
+        <mat-label>Precio</mat-label>
+        <input matInput type="number" class="example-right-align" placeholder="0" />
+        <span matTextPrefix>$&nbsp;</span>
+      </mat-form-field>
+    </form>
+  </div>
+
+  <div style="padding-top: 0" mat-dialog-actions>
+    <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
+    <button mat-flat-button (click)="onSubmit()">Guardar</button>
+  </div>
+} @else {
+  <h2 mat-dialog-title>Modificar servicio</h2>
+
+  <div mat-dialog-content>
+    <form [formGroup]="formGroup2">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre" formControlName="nombreEditar" required>
+      </mat-form-field>
+    </form>
+  </div>
+
+  <div style="padding-top: 0" mat-dialog-actions>
+    <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
+    <button mat-flat-button (click)="onSubmit()">Guardar</button>
+  </div>
+}
