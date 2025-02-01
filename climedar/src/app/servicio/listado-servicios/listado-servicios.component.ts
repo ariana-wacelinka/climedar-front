@@ -18,6 +18,7 @@ import {MatSort, MatSortHeader} from '@angular/material/sort';
 import {PaginatorComponent} from '../../shared/components/paginator/paginator.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogServicioComponent} from '../dialog-servicio/dialog-servicio.component';
+import {infoServicioComponent} from '../info-servicio/info-servicio.component';
 
 @Component({
   selector: 'app-listado-servicios',
@@ -108,11 +109,7 @@ export class ListadoServiciosComponent {
   }
 
   servicioInfo(number: number) {
-    this.dialog.open(DialogServicioComponent, {
-      width:'670px',
-      minWidth: '350px',
-      maxWidth: '90vw',
-      data: {id: number, nombre: this.dataSource.data[number].nombre, descripcion: this.dataSource.data[number].descripcion, precio: this.dataSource.data[number].precio, duracionEstimada: this.dataSource.data[number].duracionEstimada}
+    this.dialog.open(infoServicioComponent, {data: {id: number, nombre: this.dataSource.data[number].nombre, descripcion: this.dataSource.data[number].descripcion, precio: this.dataSource.data[number].precio, duracionEstimada: this.dataSource.data[number].duracionEstimada}
     });
   }
 }
