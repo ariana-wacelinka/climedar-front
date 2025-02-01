@@ -45,7 +45,7 @@
   </ng-container>
 
   <ng-container main-actions>
-    <app-paginator [pages]="totalPages" [currentPage]="currentPage"
+    <app-paginator [totalItems]="totalItems" [pageSize]="pageSize"
                     (pageChange)="onPageChange($event)"></app-paginator>
   </ng-container>
 

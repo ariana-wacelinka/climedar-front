@@ -44,7 +44,7 @@ export class DialogObrasocialComponent {
     }
   }
 
-  onClose(): void {
+  onClose() {
     if (this.data.id != null && this.formGroup2.value.nombreEditar == ''){
       alert('Debe rellenar el campo')
     } else if (this.data.id != null && this.formGroup2.value.nombreEditar != '') {

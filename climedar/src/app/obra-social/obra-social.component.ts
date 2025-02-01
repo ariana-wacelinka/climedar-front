@@ -54,19 +54,6 @@ export class ObraSocialComponent implements AfterViewInit {
 
   onPageChange(page: number) {
     this.currentPage = page;
-    // this.fetchData(page);
-  }
-
-  // fetchData(page: number) {
-  //   this.apiService.getObrasSociales(page, this.pageSize).subscribe(response => {
-  //     this.dataSource.data = response.items;
-  //     this.totalItems = response.totalItems;
-  //   });
-  // }
-
-
-  get totalPages(): number {
-    return Math.ceil(this.totalItems / this.pageSize);
   }
 
   @ViewChild(MatSort) sort: MatSort = new MatSort;
