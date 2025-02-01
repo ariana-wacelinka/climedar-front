@@ -3,6 +3,13 @@
   margin-top: 5px;
   }
 
+.row{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+  }
+
 button {
   border-radius: 5px;
   }
@@ -16,4 +23,8 @@ h2{
 .warn {
   background-color: #811b1dc9 !important;
   margin-right: 10px;
+  }
+
+textarea {
+  resize: none;
   }

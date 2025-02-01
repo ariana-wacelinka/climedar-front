@@ -65,13 +65,13 @@ export class ListadoServiciosComponent {
   //Esto despues se reemplaza por el sort que hizo Lu
   @ViewChild(MatSort) sort: MatSort = new MatSort;
 
-  displayedColumns: string[] = ["nombre", "precio", "tiempo_estimado", "edit"];
+  displayedColumns: string[] = ["nombre", "precio", "duracionEstimada", "edit"];
   dataSource = new MatTableDataSource([
-    {nombre: 'Consulta General', precio: 500, tiempo_estimado: '30min', number: 0},
-    {nombre: 'Radiografía', precio: 800, tiempo_estimado: '45min', number: 1},
-    {nombre: 'Análisis de Sangre', precio: 300, tiempo_estimado: '20min', number: 2},
-    {nombre: 'Ecografía', precio: 1000, tiempo_estimado: '60min', number: 3},
-    {nombre: 'Fisioterapia', precio: 600, tiempo_estimado: '40min', number: 4}
+    {nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30', number: 0},
+    {nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30', number: 1},
+    {nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30', number: 2},
+    {nombre: 'Ecografía', descripcion: 'Ecografía de cualquier parte del cuerpo', precio: 1000, duracionEstimada: '01:00', number: 3},
+    {nombre: 'Fisioterapia', descripcion: 'Sesión de fisioterapia', precio: 600, duracionEstimada: '01:00', number: 4}
   ]);
 
   constructor(private dialog: MatDialog) {}
@@ -94,7 +94,7 @@ export class ListadoServiciosComponent {
       width:'670px',
       minWidth: '350px',
       maxWidth: '90vw',
-      data: {id: number, nombre: this.dataSource.data[number].nombre}
+      data: {id: number, nombre: this.dataSource.data[number].nombre, descripcion: this.dataSource.data[number].descripcion, precio: this.dataSource.data[number].precio, duracionEstimada: this.dataSource.data[number].duracionEstimada}
     });
   }
 

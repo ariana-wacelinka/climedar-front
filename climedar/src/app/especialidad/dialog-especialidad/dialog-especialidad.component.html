@@ -10,10 +10,6 @@
     </form>
   </div>
 
-  <div style="padding-top: 0" mat-dialog-actions>
-    <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
-    <button mat-flat-button (click)="onSubmit()">Guardar</button>
-  </div>
 } @else {
   <h2 mat-dialog-title>Modificar especialidad</h2>
 
@@ -25,9 +21,9 @@
       </mat-form-field>
     </form>
   </div>
+}
 
   <div style="padding-top: 0" mat-dialog-actions>
     <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
     <button mat-flat-button (click)="onSubmit()">Guardar</button>
   </div>
-}

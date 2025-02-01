@@ -24,6 +24,7 @@
     "@auth0/auth0-angular": "2.2.3",
     "auth0-js": "^9.28.0",
     "jwt-decode": "^4.0.0",
+    "ngx-mask": "^19.0.6",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

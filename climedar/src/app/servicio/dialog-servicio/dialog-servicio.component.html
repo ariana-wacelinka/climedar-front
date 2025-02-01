@@ -11,19 +11,25 @@
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Descripción</mat-label>
         <textarea matInput placeholder="Descripción" formControlName="descripcion" required></textarea>
+        <mat-hint align="end">{{formGroup.get('descripcion')?.value?.length || 0}} / 150</mat-hint>
       </mat-form-field>
 
-      <mat-form-field floatLabel="always" appearance="outline">
-        <mat-label>Precio</mat-label>
-        <input matInput type="number" class="example-right-align" placeholder="0" />
-        <span matTextPrefix>$&nbsp;</span>
-      </mat-form-field>
+      <div class="row">
+
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Duración estimada</mat-label>
+          <input matInput maxlength="5" placeholder="HH:MM" mask="00:00">
+          <mat-hint align="start">HH:MM</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="full-width" appearance="outline">
+          <input matInput type="number" placeholder="0">
+          <span matTextPrefix>$&nbsp; </span>
+        </mat-form-field>
+
+      </div>
+
     </form>
-  </div>
-
-  <div style="padding-top: 0" mat-dialog-actions>
-    <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
-    <button mat-flat-button (click)="onSubmit()">Guardar</button>
   </div>
 } @else {
   <h2 mat-dialog-title>Modificar servicio</h2>
@@ -34,11 +40,33 @@
         <mat-label>Nombre</mat-label>
         <input matInput placeholder="Nombre" formControlName="nombreEditar" required>
       </mat-form-field>
+
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput placeholder="Descripción" formControlName="descripcionEditar" required></textarea>
+        <mat-hint align="end">{{formGroup.get('descripcion')?.value?.length || 0}} / 150</mat-hint>
+      </mat-form-field>
+
+      <div class="row">
+
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Duración estimada</mat-label>
+          <input matInput maxlength="5" placeholder="HH:MM" mask="00:00" required formControlName="duracionEEditar">
+          <mat-hint align="start">HH:MM</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="full-width" appearance="outline">
+          <input matInput type="number" placeholder="0" required formControlName="precioEditar">
+          <span matTextPrefix>$&nbsp; </span>
+        </mat-form-field>
+
+      </div>
+
     </form>
   </div>
+}
 
-  <div style="padding-top: 0" mat-dialog-actions>
+  <div style="padding-top: 20px; padding-bottom: 30px" mat-dialog-actions>
     <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
     <button mat-flat-button (click)="onSubmit()">Guardar</button>
   </div>
-}
