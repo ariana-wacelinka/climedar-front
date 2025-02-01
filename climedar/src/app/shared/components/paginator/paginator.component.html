@@ -11,7 +11,8 @@
           <span class="material-icons">chevron_left</span>
         </li>
       } @else {
-        <li class="page__btn" (click)="movePreviousPage()">
+        <li class="page__btn" matRipple [matRippleColor]="'rgba(0,0,0,0.2)'" style="border-radius: 50px"
+            (click)="movePreviousPage()">
           <span class="material-icons">chevron_left</span>
         </li>
       }
@@ -21,7 +22,8 @@
           <span class="material-icons">chevron_right</span>
         </li>
       } @else {
-        <li class="page__btn" (click)="moveFollowingPage()">
+        <li class="page__btn" matRipple [matRippleColor]="'rgba(0,0,0,0.2)'" style="border-radius: 50px"
+            (click)="moveFollowingPage()">
           <span class="material-icons">chevron_right</span>
         </li>
       }

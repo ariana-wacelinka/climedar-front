@@ -23,6 +23,11 @@ li {
 
 .page {
   border-radius: 50px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 
   &__btn{
     margin: 0.8rem;

@@ -1,8 +1,12 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import {MatRipple} from '@angular/material/core';
 
 @Component({
   selector: 'app-paginator',
   templateUrl: './paginator.component.html',
+  imports: [
+    MatRipple
+  ],
   styleUrls: ['./paginator.component.scss']
 })
 export class PaginatorComponent {
