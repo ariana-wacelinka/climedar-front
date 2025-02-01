@@ -5,9 +5,9 @@ import {
   MatCell,
   MatCellDef,
   MatColumnDef,
-  MatHeaderCell,
+  MatHeaderCell, MatHeaderCellDef,
   MatHeaderRow,
-  MatHeaderRowDef,
+  MatHeaderRowDef, MatNoDataRow,
   MatRow, MatRowDef, MatTable, MatTableDataSource
 } from "@angular/material/table";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -42,7 +42,9 @@ import {DialogEspecialidadComponent} from '../dialog-especialidad/dialog-especia
     MatSortHeader,
     MatTable,
     PaginatorComponent,
-    MatMenuTrigger
+    MatMenuTrigger,
+    MatHeaderCellDef,
+    MatNoDataRow
   ],
   templateUrl: './listado-especialidades.component.html',
   styleUrl: './listado-especialidades.component.scss'

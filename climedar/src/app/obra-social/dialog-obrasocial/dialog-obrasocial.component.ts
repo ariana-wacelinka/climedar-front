@@ -54,12 +54,12 @@ export class DialogObrasocialComponent {
     if (this.data.id == null){
       if (this.formGroup.valid){
         alert('Obra social creada: ' + this.formGroup.value.nombre);
-      } else {
+        this.onClose();
       }
     } else {
       if (this.formGroup2.valid){
         alert('Obra social editada: ' + this.formGroup2.value.nombreEditar);
-      } else {
+        this.onClose();
       }
     }
   }
