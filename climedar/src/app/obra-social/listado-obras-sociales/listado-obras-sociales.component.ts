@@ -46,10 +46,10 @@ import {MatMenuModule} from '@angular/material/menu';
     PaginatorComponent,
     MatMenuModule,
   ],
-  templateUrl: './obra-social.component.html',
-  styleUrl: './obra-social.component.scss'
+  templateUrl: './listado-obras-sociales.component.html',
+  styleUrl: './listado-obras-sociales.component.scss'
 })
-export class ObraSocialComponent implements AfterViewInit {
+export class ListadoObrasSocialesComponent implements AfterViewInit {
   currentPage = 1;
   pageSize = 5;
   totalItems = 30;

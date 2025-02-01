@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ObraSocialComponent } from './obra-social.component';
+import { ListadoObrasSocialesComponent } from './listado-obras-sociales.component';
 
 describe('ObraSocialComponent', () => {
-  let component: ObraSocialComponent;
-  let fixture: ComponentFixture<ObraSocialComponent>;
+  let component: ListadoObrasSocialesComponent;
+  let fixture: ComponentFixture<ListadoObrasSocialesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ObraSocialComponent]
+      imports: [ListadoObrasSocialesComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ObraSocialComponent);
+    fixture = TestBed.createComponent(ListadoObrasSocialesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
