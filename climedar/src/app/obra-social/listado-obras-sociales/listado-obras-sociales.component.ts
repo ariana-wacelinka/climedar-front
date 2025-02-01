@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {CenteredCardComponent} from '../shared/components';
+import {CenteredCardComponent} from '../../shared/components';
 import {
   MatCell, MatCellDef,
   MatColumnDef,
@@ -15,9 +15,9 @@ import {MatInput} from '@angular/material/input';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatButton} from '@angular/material/button';
-import {DialogObrasocialComponent} from './dialog-obrasocial/dialog-obrasocial.component';
+import {DialogObrasocialComponent} from '../dialog-obrasocial/dialog-obrasocial.component';
 import {MatDialog} from '@angular/material/dialog';
-import {PaginatorComponent} from '../shared/components/paginator/paginator.component';
+import {PaginatorComponent} from '../../shared/components/paginator/paginator.component';
 import {MatMenuModule} from '@angular/material/menu';
 
 @Component({
