@@ -102,6 +102,4 @@ export class ListadoObrasSocialesComponent implements AfterViewInit {
       data: {}
       });
   }
-
-  protected readonly Math = Math;
 }

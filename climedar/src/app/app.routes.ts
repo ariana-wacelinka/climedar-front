@@ -6,6 +6,7 @@ import { AltaPatientsComponent } from './patients/alta-patients/alta-patients.co
 import { CalendarComponent } from './turnos/calendar/calendar.component';
 import {ListadoObrasSocialesComponent} from './obra-social/listado-obras-sociales/listado-obras-sociales.component';
 import {PaginatorComponent} from './shared/components/paginator/paginator.component';
+import {ListadoEspecialidadesComponent} from './especialidad/listado-especialidades/listado-especialidades.component';
 
 export const routes: Routes = [
     {path: '', component: CalendarComponent},
@@ -14,5 +15,6 @@ export const routes: Routes = [
     {path: 'doctor/nuevo', component: AltaDoctorComponent},
     {path: 'paciente/nuevo', component: AltaPatientsComponent},
     {path: 'obra-social/listado', component: ListadoObrasSocialesComponent},
+  {path: 'especialidad/listado', component: ListadoEspecialidadesComponent},
   {path: 'paginator', component: PaginatorComponent}
 ];
