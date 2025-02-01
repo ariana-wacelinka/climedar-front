@@ -106,4 +106,13 @@ export class ListadoServiciosComponent {
       data: {}
     });
   }
+
+  servicioInfo(number: number) {
+    this.dialog.open(DialogServicioComponent, {
+      width:'670px',
+      minWidth: '350px',
+      maxWidth: '90vw',
+      data: {id: number, nombre: this.dataSource.data[number].nombre, descripcion: this.dataSource.data[number].descripcion, precio: this.dataSource.data[number].precio, duracionEstimada: this.dataSource.data[number].duracionEstimada}
+    });
+  }
 }
