@@ -4,15 +4,6 @@
 @use '@angular/material' as mat;
 @use '../_theme-colors.scss' as my-theme;
 
-$theme: (
-  color: (
-    primary: my-theme.$primary-palette,
-    tertiary: my-theme.$tertiary-palette,
-  ),
-  typography: Roboto,
-  density: 0,
-);
-
 html {
   @include mat.theme((
     color: (

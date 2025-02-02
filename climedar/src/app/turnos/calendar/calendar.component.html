@@ -1,67 +1,65 @@
 <app-centered-card>
-
   <ng-container main-header>
     <div class="header">
-      <span></span>
-      <h2 class="titulo">Turnos disponibles</h2>
+        <mat-form-field appearance="outline">
+          <mat-label>Especialidad</mat-label>
+          <mat-select [formControl]="especialidadControl">
+            <mat-option>Todas</mat-option>
+            <mat-option *ngFor="let esp of especialidades" [value]="esp">
+              {{ esp }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Médico</mat-label>
+          <mat-select [formControl]="medicoControl">
+            <mat-option>Todos</mat-option>
+            <mat-option *ngFor="let med of medicos" [value]="med">
+              {{ med }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
       <div class="month-navigation">
         <button mat-icon-button (click)="changeMonth('prev')">
           <mat-icon>chevron_left</mat-icon>
         </button>
-        <span class="month-label">{{ currentDate | date:'MMMM yyyy' }}</span>
+        <span class="month-label">{{ currentDate | date : "MMMM yyyy" }}</span>
         <button mat-icon-button (click)="changeMonth('next')">
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
     </div>
-    </ng-container>
+  </ng-container>
 
-    <ng-container main-content>
-      <div class="content">
-          <div class="filters">
-            <mat-form-field appearance="outline">
-              <mat-label>Especialidad</mat-label>
-              <mat-select [formControl]="especialidadControl">
-                <mat-option>Todas</mat-option>
-                <mat-option *ngFor="let esp of especialidades" [value]="esp">
-                  {{esp}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+  <ng-container main-content>
+    <div class="content">
 
-            <mat-form-field appearance="outline">
-              <mat-label>Médico</mat-label>
-              <mat-select [formControl]="medicoControl">
-                <mat-option>Todos</mat-option>
-                <mat-option *ngFor="let med of medicos" [value]="med">
-                  {{med}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <div class="calendar">
-            <div class="calendar-header">
-              <div *ngFor="let dia of diasSemana" class="calendar-cell header-cell">
-                {{dia}}
-              </div>
-            </div>
-
-            <div class="calendar-grid">
-              <ng-container *ngFor="let empty of emptyDays">
-                <div class="calendar-cell empty-cell"></div>
-              </ng-container>
-
-              <div *ngFor="let day of monthDays" 
-     class="calendar-cell day-cell"
-     [class.other-month]="!isSameMonth(day)"
-     [class.clickable]="isSameMonth(day)"
-     (click)="isSameMonth(day) && openTurnosDialog(day)">
-  <span class="day-number">{{ day | date:'d' }}</span>
-  <div *ngIf="tieneTurnos(day)" class="turnos-indicator"></div>
-</div>
-            </div>
+      <div class="calendar">
+        <div class="calendar-header">
+          <div *ngFor="let dia of diasSemana" class="calendar-cell header-cell">
+            {{ dia }}
           </div>
         </div>
-    </ng-container>
-  </app-centered-card>
+
+        <div class="calendar-grid">
+          <ng-container *ngFor="let empty of emptyDays">
+            <div class="calendar-cell empty-cell"></div>
+          </ng-container>
+
+          <div
+            *ngFor="let day of monthDays"
+            class="calendar-cell day-cell"
+            [class.other-month]="!isSameMonth(day)"
+            [class.clickable]="isSameMonth(day)"
+            (click)="isSameMonth(day) && openTurnosDialog(day)"
+          >
+            <span class="day-number">{{ day | date : "d" }}</span>
+            <div *ngIf="tieneTurnos(day)" class="turnos-indicator"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</app-centered-card>
