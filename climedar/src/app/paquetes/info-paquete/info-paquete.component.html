@@ -1,1 +1,35 @@
-<p>info-paquete works!</p>
+<h1 mat-dialog-title>Información del paquete</h1>
+
+<div class="column" mat-dialog-content>
+  <div>
+    <div><b>Nombre:</b> {{paquete.nombre}}</div>
+    <div><b>Precio:</b> $ {{paquete.precio}}</div>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+          <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="precio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
+          <td mat-cell class="precio" *matCellDef="let element">$ {{element.precio}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="duracionEstimada">
+          <th mat-header-cell class="duracionEstimada" *matHeaderCellDef mat-sort-header> Duración estimada </th>
+          <td mat-cell class="duracionEstimada" *matCellDef="let element"><i>{{element.duracionEstimada}}</i></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="column" mat-dialog-actions>
+  <button mat-flat-button (click)="onModify()">Modificar</button>
+  <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
+</div>

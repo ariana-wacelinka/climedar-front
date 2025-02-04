@@ -19,6 +19,7 @@ import {PaginatorComponent} from '../../shared/components/paginator/paginator.co
 import {MatDialog} from '@angular/material/dialog';
 import {DialogServicioComponent} from '../../servicio/dialog-servicio/dialog-servicio.component';
 import {infoServicioComponent} from '../../servicio/info-servicio/info-servicio.component';
+import {InfoPaqueteComponent} from '../info-paquete/info-paquete.component';
 
 @Component({
   selector: 'app-listado-paquetes',
@@ -65,11 +66,11 @@ export class ListadoPaquetesComponent {
 
   displayedColumns: string[] = ["nombre", "precio", "edit"];
   dataSource = new MatTableDataSource([
-    {id: 0, nombre: 'Paquete Básico', descripcion: 'Incluye Consulta General y Análisis de Sangre', precio: 700, servicios: ['Consulta General', 'Análisis de Sangre']},
-    {id: 1, nombre: 'Paquete Radiografía', descripcion: 'Incluye Radiografía y Consulta General', precio: 1200, servicios: ['Radiografía', 'Consulta General']},
-    {id: 2, nombre: 'Paquete Completo', descripcion: 'Incluye Consulta General, Radiografía y Análisis de Sangre', precio: 1500, servicios: ['Consulta General', 'Radiografía', 'Análisis de Sangre']},
-    {id: 3, nombre: 'Paquete Ecografía', descripcion: 'Incluye Ecografía y Consulta General', precio: 1300, servicios: ['Ecografía', 'Consulta General']},
-    {id: 4, nombre: 'Paquete Fisioterapia', descripcion: 'Incluye Fisioterapia y Consulta General', precio: 1000, servicios: ['Fisioterapia', 'Consulta General']}
+    {id: 0, nombre: 'Paquete Básico', descripcion: 'Incluye Consulta General y Análisis de Sangre', precio: 700, servicios: [{id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30'}, {id: 2, nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30'}]},
+    {id: 1, nombre: 'Paquete Radiografía', descripcion: 'Incluye Radiografía y Consulta General', precio: 1200, servicios: [{id: 1, nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30'}, {id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30'}]},
+    {id: 2, nombre: 'Paquete Completo', descripcion: 'Incluye Consulta General, Radiografía y Análisis de Sangre', precio: 1500, servicios: [{id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30'}, {id: 1, nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30'}, {id: 2, nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30'}]},
+    {id: 3, nombre: 'Paquete Ecografía', descripcion: 'Incluye Ecografía y Consulta General', precio: 1300, servicios: [{id: 3, nombre: 'Ecografía', descripcion: 'Ecografía de cualquier parte del cuerpo', precio: 1000, duracionEstimada: '00:30'}, {id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30'}]},
+    {id: 4, nombre: 'Paquete Fisioterapia', descripcion: 'Incluye Fisioterapia y Consulta General', precio: 1000, servicios: [{id: 4, nombre: 'Fisioterapia', descripcion: 'Sesión de fisioterapia', precio: 600, duracionEstimada: '00:30'}, {id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30'}]}
   ]);
 
   constructor(private dialog: MatDialog) {}
@@ -106,7 +107,13 @@ export class ListadoPaquetesComponent {
   }
 
   paqueteInfo(number: number) {
-    // this.dialog.open(infoPaqueteComponent, {data: {id: number, nombre: this.dataSource.data[number].nombre, descripcion: this.dataSource.data[number].descripcion, precio: this.dataSource.data[number].precio, duracionEstimada: this.dataSource.data[number].duracionEstimada}
-    // });
+    this.dialog.open(InfoPaqueteComponent, {
+      data: {
+        id: number,
+        nombre: this.dataSource.data[number].nombre,
+        precio: this.dataSource.data[number].precio,
+        servicios: this.dataSource.data[number].servicios
+      }
+    });
   }
 }

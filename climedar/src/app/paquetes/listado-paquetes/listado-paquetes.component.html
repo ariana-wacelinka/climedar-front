@@ -43,8 +43,8 @@
                       [matMenuTriggerFor]="menu"><mat-icon style="color: black; font-size: 22px; margin-top: 5px">menu
               </mat-icon></button>
               <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="paqueteInfo(element.number)">Ver más</button>
-                <button (click)="editPaquete(element.number)" mat-menu-item>Modificar</button>
+                <button mat-menu-item (click)="paqueteInfo(element.id)">Ver más</button>
+                <button (click)="editPaquete(element.id)" mat-menu-item>Modificar</button>
                 <button mat-menu-item>Eliminar</button>
               </mat-menu>
             </td>

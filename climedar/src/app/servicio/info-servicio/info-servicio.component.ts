@@ -9,14 +9,6 @@ import {
 } from '@angular/material/dialog';
 import {DialogServicioComponent} from '../dialog-servicio/dialog-servicio.component';
 
-interface Servicio {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  precio: number;
-  duracionEstimada: number;
-}
-
 @Component({
   selector: 'app-info-servicio',
   imports: [
