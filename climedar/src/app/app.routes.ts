@@ -8,6 +8,7 @@ import {ListadoObrasSocialesComponent} from './obra-social/listado-obras-sociale
 import {PaginatorComponent} from './shared/components/paginator/paginator.component';
 import {ListadoEspecialidadesComponent} from './especialidad/listado-especialidades/listado-especialidades.component';
 import {ListadoServiciosComponent} from './servicio/listado-servicios/listado-servicios.component';
+import {ListadoPaquetesComponent} from './paquetes/listado-paquetes/listado-paquetes.component';
 
 export const routes: Routes = [
   {path: '', component: CalendarComponent},
@@ -18,5 +19,6 @@ export const routes: Routes = [
   {path: 'obra-social/listado', component: ListadoObrasSocialesComponent},
   {path: 'especialidad/listado', component: ListadoEspecialidadesComponent},
   {path: 'servicio/listado', component: ListadoServiciosComponent},
+  {path: 'paquetes/listado', component: ListadoPaquetesComponent},
   {path: 'paginator', component: PaginatorComponent},
 ];
