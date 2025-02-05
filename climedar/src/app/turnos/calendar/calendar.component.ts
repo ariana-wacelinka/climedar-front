@@ -148,10 +148,12 @@ export class CalendarComponent implements OnInit {
 
   openTurnosDialog(fecha: Date) {
     // const turnos = this.turnosService.getTurnosDelDia(fecha);
-    const especialidad = this.especialidadControl.value;
-    const doctor = this.doctorControl.value;
+    const fechaFormat = fecha.toISOString().split('T')[0];
+    console.log('openTurnosDialog', fechaFormat);
+    const especialidad = typeof this.especialidadControl.value === 'string' || this.especialidadControl.value === '' ? null : this.especialidadControl.value as Especialidad;
+    const doctor = typeof this.doctorControl.value === 'string' || this.doctorControl.value === '' ? null : this.doctorControl.value as Doctor;
     this.dialog.open(TurnosDialogComponent, {
-      data: { fecha, especialidad, doctor },
+      data: { fechaFormat , especialidad, doctor },
       width: '600px',
       maxWidth: '90vw',
       maxHeight: '80vh'

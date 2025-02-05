@@ -1,15 +1,46 @@
-<h2 mat-dialog-title>Turnos para el {{ data.fecha | date:'longDate':'':'es' }}</h2>
+<h2 mat-dialog-title>{{ data.fechaFormat | date:'mediumDate':'':'es' }}</h2>
     <mat-dialog-content class="mat-typography">
+      <div class="buscadores">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Especialidad</mat-label>
+          <input type="text" matInput [formControl]="especialidadControl" [matAutocomplete]="autoEsp">
+          <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad" (optionSelected)="selectedEspeciality($event)">
+            @for (option of filteredEspecialidadOptions | async; track option?.code) {
+              <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+        
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Medico</mat-label>
+          <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="autoDoc" >
+          <mat-autocomplete #autoDoc="matAutocomplete" [displayWith]="displayDoctor" (optionSelected)="selectedDoctor($event)">
+            @for (option of filteredDoctorOptions | async; track option.id) {
+              @if (option.gender == "MALE") {
+                <mat-option [value]="option" style="padding: 8px">Dr. {{option.surname}} {{option.name}}</mat-option>  
+              }
+              @else {
+                <mat-option [value]="option" style="padding: 8px">Dra. {{option.surname}} {{option.name}}</mat-option>
+              }
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
       <div class="turnos-container">
-        <ng-container *ngIf="data.turnos.length === 0">
+        <ng-container *ngIf="turnos().length === 0">
           <p class="no-turnos">No hay turnos disponibles para este día</p>
         </ng-container>
-        <mat-card *ngFor="let turno of data.turnos" class="turno-card">
+        <mat-card *ngFor="let turno of turnos()" class="turno-card">
           <mat-card-content>
             <div class="turno-info">
-              <h3>{{ turno.medico }}</h3>
-              <p class="especialidad">{{ turno.especialidad }}</p>
-              <p class="hora">{{ turno.hora }} ({{ turno.duracion }} min)</p>
+              @if (turno.doctor.gender == "MALE") {
+                <h3>Dr. {{ turno.doctor.surname }} {{ turno.doctor.name }}</h3>
+              }
+              @else {
+                <h3>Dra. {{ turno.doctor.surname }} {{ turno.doctor.name }}</h3>
+              }
+              <p class="especialidad">{{ turno.place }}</p>
+              <p class="hora">{{ turno.startTime }} ({{ turno.timeOfShifts }} min)</p>
             </div>
             <button mat-flat-button color="primary">Reservar</button>
           </mat-card-content>

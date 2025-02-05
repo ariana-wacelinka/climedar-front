@@ -1,8 +1,12 @@
+import { Doctor } from "../../doctors/models/doctor.models";
+
 export interface Turno {
-    id: number;
-    medico: string;
-    especialidad: string;
-    fecha: string;
-    hora: string;
-    duracion: number;
-  }
+    id: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    state: string;
+    timeOfShifts: string;
+    place: string;
+    doctor: Doctor;
+}
