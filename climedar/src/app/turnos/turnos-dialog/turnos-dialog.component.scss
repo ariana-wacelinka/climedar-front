@@ -1,5 +1,5 @@
 .turnos-container {
-    max-height: 60vh;
+    max-height: 50vh;
     overflow-y: auto;
     padding: 16px;
   }
@@ -14,13 +14,15 @@
   }
   .turno-card {
     margin-bottom: 16px;
+    
   }
-  .turno-card:last-child {
-    margin-bottom: 0;
+  :root {
+    height: 100%;
   }
 
   .mat-typography {
     overflow: hidden;
+    height: 100vh;
   }
 
   mat-card-content {

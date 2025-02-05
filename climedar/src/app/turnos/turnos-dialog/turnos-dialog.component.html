@@ -30,20 +30,21 @@
         <ng-container *ngIf="turnos().length === 0">
           <p class="no-turnos">No hay turnos disponibles para este día</p>
         </ng-container>
-        <mat-card *ngFor="let turno of turnos()" class="turno-card">
+        @for(turno of turnos(); track turno.id) {
+        <mat-card class="turno-card">
           <mat-card-content>
             <div class="turno-info">
-              @if (turno.doctor.gender == "MALE") {
+              @if (turno.doctor.gender === "MALE") {
                 <h3>Dr. {{ turno.doctor.surname }} {{ turno.doctor.name }}</h3>
-              }
-              @else {
+              }@else {
                 <h3>Dra. {{ turno.doctor.surname }} {{ turno.doctor.name }}</h3>
               }
               <p class="especialidad">{{ turno.place }}</p>
-              <p class="hora">{{ turno.startTime }} ({{ turno.timeOfShifts }} min)</p>
+              <p class="hora">{{ turno.startTime }} ({{ convertDuration(turno.timeOfShifts) }})</p>
             </div>
             <button mat-flat-button color="primary">Reservar</button>
           </mat-card-content>
         </mat-card>
+      }
       </div>
     </mat-dialog-content>

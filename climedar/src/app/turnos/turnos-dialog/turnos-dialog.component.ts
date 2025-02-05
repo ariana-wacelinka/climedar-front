@@ -10,13 +10,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { CenteredCardComponent } from '../../shared/components';
 import { Especialidad, EspecialidadService } from '../../especialidad';
 import { Doctor } from '../../doctors/models/doctor.models';
 import { startWith, filter, debounceTime, switchMap, map, Observable } from 'rxjs';
 import { DoctorService } from '../../doctors/service/doctor.service';
 import { TurnosService } from '../services/turnos-service/turnos.service';
+import { Duration } from 'luxon';
 
 @Component({
   selector: 'app-turnos-dialog',
@@ -24,7 +23,6 @@ import { TurnosService } from '../services/turnos-service/turnos.service';
     MatDialogModule,
     MatCardModule,
     NgIf,
-    NgFor,
     DatePipe,
     MatButtonModule,
     MatIconModule,
@@ -136,6 +134,10 @@ export class TurnosDialogComponent implements OnInit {
         console.log('selected', event.option.value);
         this.especialidadControl.setValue(event.option.value);
         this.doctorControl.setValue('');
+      }
+
+      convertDuration(duration: string): string {
+        return Duration.fromISO(duration).as('minutes') + ' min';
       }
     
 }

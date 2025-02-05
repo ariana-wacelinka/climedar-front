@@ -156,7 +156,7 @@ export class CalendarComponent implements OnInit {
       data: { fechaFormat , especialidad, doctor },
       width: '600px',
       maxWidth: '90vw',
-      maxHeight: '80vh'
+      maxHeight: '90vh'
     });
   }
 

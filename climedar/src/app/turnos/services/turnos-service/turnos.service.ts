@@ -21,7 +21,7 @@ export class TurnosService {
     const body = {
       query: `{
                 getAllShifts(
-                  pageRequest: {page: 1, size: 10},
+                  pageRequest: {page: 1, size: 10, order: { field: "startTime", direction: ASC}},
                   specification: { date: "${date}", doctorId: "${doctor.id}" }
                 ) {
                       pageInfo {
@@ -40,6 +40,7 @@ export class TurnosService {
                               id
                               name
                               surname
+                              gender
                           }
                       }
                   }
