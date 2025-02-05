@@ -1,25 +1,31 @@
 <app-centered-card>
   <ng-container main-header>
     <div class="header">
-        <mat-form-field appearance="outline">
-          <mat-label>Especialidad</mat-label>
-          <mat-select [formControl]="especialidadControl">
-            <mat-option>Todas</mat-option>
-            <mat-option *ngFor="let esp of especialidades" [value]="esp">
-              {{ esp }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Especialidad</mat-label>
+        <input type="text" matInput [formControl]="especialidadControl" [matAutocomplete]="autoEsp">
+        <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad" (optionSelected)="selectedEspeciality($event)">
+          @for (option of filteredEspecialidadOptions | async; track option?.code) {
+            <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Médico</mat-label>
-          <mat-select [formControl]="medicoControl">
-            <mat-option>Todos</mat-option>
-            <mat-option *ngFor="let med of medicos" [value]="med">
-              {{ med }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Medico</mat-label>
+        <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="autoDoc" >
+        <mat-autocomplete #autoDoc="matAutocomplete" [displayWith]="displayDoctor" (optionSelected)="selectedDoctor($event)">
+          @for (option of filteredDoctorOptions | async; track option.id) {
+            @if (option.gender == "MALE") {
+              <mat-option [value]="option" style="padding: 8px">Dr. {{option.surname}} {{option.name}}</mat-option>  
+            }
+            @else {
+              <mat-option [value]="option" style="padding: 8px">Dra. {{option.surname}} {{option.name}}</mat-option>
+            }
+          }
+        </mat-autocomplete>
+      </mat-form-field>
 
       <div class="month-navigation">
         <button mat-icon-button (click)="changeMonth('prev')">
