@@ -19,29 +19,29 @@
         </mat-form-field>
       </div>
 
-    <div class="mat-elevation-z8">
-      <table style="padding: 0 10px; background-color: #F9F9F9" mat-table
-             [dataSource]="dataSource">
+      <div class="mat-elevation-z8">
+        <table style="padding: 0 10px; background-color: #F9F9F9" mat-table
+               [dataSource]="dataSource">
 
-        <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef> Nombre </th>
-          <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
-        </ng-container>
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="precio">
-          <th mat-header-cell *matHeaderCellDef> Precio </th>
-          <td mat-cell class="precio" *matCellDef="let element">$ {{element.precio}} </td>
-        </ng-container>
+          <ng-container matColumnDef="precio">
+            <th mat-header-cell *matHeaderCellDef> Precio </th>
+            <td mat-cell class="precio" *matCellDef="let element">$ {{element.precio}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="duracionEstimada">
-          <th mat-header-cell class="duracionEstimada" *matHeaderCellDef> Duración estimada </th>
-          <td mat-cell class="duracionEstimada" *matCellDef="let element"><i>{{element.duracionEstimada}}</i></td>
-        </ng-container>
+          <ng-container matColumnDef="duracionEstimada">
+            <th mat-header-cell class="duracionEstimada" *matHeaderCellDef> Duración estimada </th>
+            <td mat-cell class="duracionEstimada" *matCellDef="let element"><i>{{element.duracionEstimada}}</i></td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </div>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>

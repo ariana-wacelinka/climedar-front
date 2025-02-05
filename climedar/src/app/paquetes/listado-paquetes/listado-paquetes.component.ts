@@ -20,6 +20,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {DialogServicioComponent} from '../../servicio/dialog-servicio/dialog-servicio.component';
 import {infoServicioComponent} from '../../servicio/info-servicio/info-servicio.component';
 import {InfoPaqueteComponent} from '../info-paquete/info-paquete.component';
+import {DialogPaqueteComponent} from '../dialog-paquete/dialog-paquete.component';
 
 @Component({
   selector: 'app-listado-paquetes',
@@ -108,13 +109,27 @@ export class ListadoPaquetesComponent {
     // });
   }
 
-  createPaquete(){
-    // this.dialog.open(DialogPaqueteComponent, {
-    //   width:'670px',
-    //   minWidth: '350px',
-    //   maxWidth: '90vw',
-    //   data: {}
-    // });
+  createPaquete(): void {
+    const allServices = [
+      { id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30' },
+      { id: 1, nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30' },
+      { id: 2, nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30' },
+      { id: 3, nombre: 'Ecografía', descripcion: 'Ecografía de cualquier parte del cuerpo', precio: 1000, duracionEstimada: '00:30' },
+      { id: 4, nombre: 'Fisioterapia', descripcion: 'Sesión de fisioterapia', precio: 600, duracionEstimada: '00:30' },
+    ];
+
+    const dialogRef = this.dialog.open(DialogPaqueteComponent, {
+      width: '670px',
+      minWidth: '350px',
+      maxWidth: '90vw',
+      data: { servicios: allServices },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Nuevo paquete creado:', result);
+      }
+    });
   }
 
   paqueteInfo(number: number) {
