@@ -58,6 +58,15 @@ export class TurnosDialogComponent implements OnInit {
     this.fecha = data.fechaFormat;
     this.especialidadControl.setValue(data.especialidad);
     this.doctorControl.setValue(data.doctor);
+    if (data.doctor) {
+      this.turnosService.getTurnosByDate(this.fecha, data.doctor, '08:00', '20:00', 1).pipe(
+        map((turno: Turno[]) => {
+          return turno;
+        })
+      ).subscribe(turnos => {
+        this.turnos.set(turnos);
+      });
+    }
    }
 
   async ngOnInit() {
