@@ -66,7 +66,18 @@ export class ListadoPaquetesComponent {
 
   displayedColumns: string[] = ["nombre", "precio", "edit"];
   dataSource = new MatTableDataSource([
-    {id: 0, nombre: 'Paquete Básico', descripcion: 'Incluye Consulta General y Análisis de Sangre', precio: 700, servicios: [{id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30'}, {id: 2, nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30'}]},
+    {id: 0, nombre: 'Paquete Básico', descripcion: 'Incluye Consulta General y Análisis de Sangre', precio: 700, servicios: [
+      {id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30'},
+      {id: 1, nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30'},
+      {id: 2, nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30'},
+      {id: 3, nombre: 'Ecografía', descripcion: 'Ecografía de cualquier parte del cuerpo', precio: 1000, duracionEstimada: '00:30'},
+      {id: 4, nombre: 'Fisioterapia', descripcion: 'Sesión de fisioterapia', precio: 600, duracionEstimada: '00:30'},
+      {id: 5, nombre: 'Consulta Especialista', descripcion: 'Consulta con especialista', precio: 700, duracionEstimada: '00:45'},
+      {id: 6, nombre: 'Terapia Ocupacional', descripcion: 'Sesión de terapia ocupacional', precio: 400, duracionEstimada: '00:30'},
+      {id: 7, nombre: 'Terapia Física', descripcion: 'Sesión de terapia física', precio: 500, duracionEstimada: '00:30'},
+      {id: 8, nombre: 'Consulta Nutricional', descripcion: 'Consulta con nutricionista', precio: 300, duracionEstimada: '00:30'},
+      {id: 9, nombre: 'Consulta Psicológica', descripcion: 'Consulta con psicólogo', precio: 600, duracionEstimada: '00:45'}
+    ]},
     {id: 1, nombre: 'Paquete Radiografía', descripcion: 'Incluye Radiografía y Consulta General', precio: 1200, servicios: [{id: 1, nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30'}, {id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30'}]},
     {id: 2, nombre: 'Paquete Completo', descripcion: 'Incluye Consulta General, Radiografía y Análisis de Sangre', precio: 1500, servicios: [{id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30'}, {id: 1, nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30'}, {id: 2, nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30'}]},
     {id: 3, nombre: 'Paquete Ecografía', descripcion: 'Incluye Ecografía y Consulta General', precio: 1300, servicios: [{id: 3, nombre: 'Ecografía', descripcion: 'Ecografía de cualquier parte del cuerpo', precio: 1000, duracionEstimada: '00:30'}, {id: 0, nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30'}]},

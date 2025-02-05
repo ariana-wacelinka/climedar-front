@@ -3,28 +3,45 @@
 <div class="column" mat-dialog-content>
   <div>
     <div><b>Nombre:</b> {{paquete.nombre}}</div>
-    <div><b>Precio:</b> $ {{paquete.precio}}</div>
+    <div style="margin-bottom: 10px"><b>Precio:</b> $ {{paquete.precio}}</div>
+    <div class="contenedor-tabla">
+
+      <div class="titulo-tabla"><b>Servicios</b></div>
+
+      <div class="form-field">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
+          <mat-label>Ingrese un servicio</mat-label>
+          <input matInput
+                 placeholder="Ingrese un servicio"
+                 (keyup)="applyFilter($event)"
+                 #input>
+        </mat-form-field>
+      </div>
+
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource" matSort>
+      <table style="padding: 0 10px; background-color: #F9F9F9" mat-table
+             [dataSource]="dataSource">
 
         <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+          <th mat-header-cell *matHeaderCellDef> Nombre </th>
           <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
         </ng-container>
 
         <ng-container matColumnDef="precio">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
+          <th mat-header-cell *matHeaderCellDef> Precio </th>
           <td mat-cell class="precio" *matCellDef="let element">$ {{element.precio}} </td>
         </ng-container>
 
         <ng-container matColumnDef="duracionEstimada">
-          <th mat-header-cell class="duracionEstimada" *matHeaderCellDef mat-sort-header> Duración estimada </th>
+          <th mat-header-cell class="duracionEstimada" *matHeaderCellDef> Duración estimada </th>
           <td mat-cell class="duracionEstimada" *matCellDef="let element"><i>{{element.duracionEstimada}}</i></td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
+    </div>
     </div>
   </div>
 </div>

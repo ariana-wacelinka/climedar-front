@@ -18,6 +18,9 @@ import {
 import {MatIcon} from '@angular/material/icon';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatSort, MatSortHeader} from '@angular/material/sort';
+import {MatDivider} from '@angular/material/divider';
+import {MatFormField, MatLabel, MatPrefix} from '@angular/material/form-field';
+import {MatInput} from '@angular/material/input';
 
 interface Servicio {
   id: number;
@@ -50,7 +53,12 @@ interface Servicio {
     MatTable,
     MatHeaderCellDef,
     MatMenuTrigger,
-    MatNoDataRow
+    MatNoDataRow,
+    MatDivider,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatPrefix
   ],
   templateUrl: './info-paquete.component.html',
   styleUrl: './info-paquete.component.scss'
@@ -90,5 +98,14 @@ export class InfoPaqueteComponent {
   }
 
   onModify() {
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }
