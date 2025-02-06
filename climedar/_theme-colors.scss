@@ -74,7 +74,7 @@ $_palettes: (
     80: #cac6c3,
     90: #e6e1df,
     95: #f5f0ed,
-    98: #fef8f6,
+    98: #F9F9F9,
     99: #fffbff,
     100: #ffffff,
     4: #0f0e0d,
@@ -84,9 +84,9 @@ $_palettes: (
     22: #363433,
     24: #3b3937,
     87: #ded9d6,
-    92: #ece7e5,
-    94: #f2edea,
-    96: #f8f2f0,
+    92: #E6E6E6,
+    94: #F4F4F4,
+    96: #F9F9F9,
   ),
   neutral-variant: (
     0: #000000,
@@ -146,7 +146,7 @@ $tertiary-palette: map.merge(map.get($_palettes, tertiary), $_rest);
   @if ($theme-type == color-scheme) {
     @return light-dark(#{$light}, #{$dark});
   }
-  
+
   @error 'Unknown theme-type #{$theme-type}. Expected light, dark, or color-scheme';
 }
 

@@ -1,0 +1,60 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  }
+
+.container{
+  margin-right: 20px;
+  }
+
+.label{
+  align-content: center;
+  margin-bottom: -2.5px;
+  }
+
+ul {
+  list-style-type: none;
+  display: flex;
+  gap: 5px;
+  flex-direction: row;
+  }
+
+li {
+  margin: 0 !important; ;
+  }
+
+.page {
+  border-radius: 50px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  &__btn{
+    margin: 0.8rem;
+    cursor: pointer;
+    span {
+      border-radius: 50px;
+      padding: 5px;
+      &:hover {
+        background-color: #f0f0f0;
+        cursor: pointer;
+        }
+      }
+    &:hover{
+      cursor: pointer;
+      }
+    }
+
+  &__disabled__btn{
+    cursor: default;
+    span {
+      border-radius: 50px;
+      padding: 5px;
+      color: rgba(0, 0, 0, 0.43);
+      }
+    }
+  }

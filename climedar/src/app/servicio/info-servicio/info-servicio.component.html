@@ -1,0 +1,19 @@
+  <h1 mat-dialog-title>Información del servicio</h1>
+
+  <div class="column" mat-dialog-content>
+    <div>
+      <div><b>Nombre:</b> {{servicio.nombre}}</div>
+      <div><b>Descripción:</b> {{servicio.descripcion}}</div>
+      <div><b>Precio:</b> $ {{servicio.precio}}</div>
+        @if (this.horas === '00') {
+          <div><b>Duración:</b> {{this.minutos}}mins</div>
+        } @else {
+          <div><b>Duración:</b> {{this.horas}}h {{this.minutos}}min</div>
+        }
+    </div>
+  </div>
+
+  <div class="column" mat-dialog-actions>
+    <button mat-flat-button (click)="onModify()">Modificar</button>
+    <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
+  </div>

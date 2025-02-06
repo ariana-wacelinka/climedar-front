@@ -1,0 +1,63 @@
+:host ::ng-deep .card-actions {
+  justify-content: right !important;
+  }
+//Importante para que el paginator esté abajo a la derecha
+
+.full-width {
+  width: 100%;
+  }
+
+.buscador{
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  }
+
+table {
+  width: 100%;
+  }
+
+h2{
+  padding-left: 140px;
+  padding-right: 140px;
+  }
+
+.content{
+  width: 100%;
+  min-height: 392px;
+  }
+
+.row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+
+  button {
+    height: 55px;
+    border-radius: 5px;
+    }
+  }
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 120%;
+  }
+
+td, th {
+  width: 25%;
+  font-size: 18px;
+  }
+
+#menu{
+  border: 0;
+  border-radius: 50px;
+  background-color: #F9F9F9;
+  height: 36px;
+  width: 36px;
+
+  &:hover{
+    background-color: #F1F1F1;
+    cursor: pointer;
+    }
+  }

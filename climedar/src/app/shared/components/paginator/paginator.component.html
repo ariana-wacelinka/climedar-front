@@ -1,0 +1,32 @@
+@if (pages > 1) {
+  <div id="app" class="container">
+    <ul class="page">
+      @if (currentPage() == pages) {
+        <p class="label">{{currentPage() * 5 - 4}} - {{totalItems}} de {{totalItems}}</p>
+      } @else {
+        <p class="label">{{currentPage() * 5 - 4}} - {{currentPage() * 5}} de {{totalItems}}</p>
+      }
+      @if (disabled1()) {
+        <li class="page__disabled__btn">
+          <span class="material-icons">chevron_left</span>
+        </li>
+      } @else {
+        <li class="page__btn" matRipple [matRippleColor]="'rgba(0,0,0,0.2)'" style="border-radius: 50px"
+            (click)="movePreviousPage()">
+          <span class="material-icons">chevron_left</span>
+        </li>
+      }
+
+      @if (disabled2()) {
+        <li class="page__disabled__btn">
+          <span class="material-icons">chevron_right</span>
+        </li>
+      } @else {
+        <li class="page__btn" matRipple [matRippleColor]="'rgba(0,0,0,0.2)'" style="border-radius: 50px"
+            (click)="moveFollowingPage()">
+          <span class="material-icons">chevron_right</span>
+        </li>
+      }
+    </ul>
+  </div>
+}
