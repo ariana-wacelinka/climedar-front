@@ -50,7 +50,7 @@
         </div>
 
         <div class="calendar-grid">
-          <ng-container *ngFor="let empty of emptyDays">
+          <ng-container *ngFor="let empty of firstEmptyDays">
             <div class="calendar-cell empty-cell"></div>
           </ng-container>
 
@@ -58,12 +58,14 @@
             *ngFor="let day of monthDays"
             class="calendar-cell day-cell"
             [class.other-month]="!isSameMonth(day)"
-            [class.clickable]="isSameMonth(day)"
             (click)="isSameMonth(day) && openTurnosDialog(day)"
           >
             <span class="day-number">{{ day | date : "d" }}</span>
             <div *ngIf="tieneTurnos(day)" class="turnos-indicator"></div>
           </div>
+          <ng-container *ngFor="let empty of lastEmptyDays">
+            <div class="calendar-cell empty-cell"></div>
+          </ng-container>
         </div>
       </div>
     </div>

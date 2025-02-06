@@ -25,6 +25,27 @@
             }
           </mat-autocomplete>
         </mat-form-field>
+
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Desde</mat-label>
+          <input matInput
+            [matTimepicker]="startTimePicker"
+            [(ngModel)]="startTime"
+            (ngModelChange)="onSelectedTime($event)"
+            >
+          <mat-timepicker #startTimePicker/>
+          <mat-timepicker-toggle [for]="startTimePicker" matSuffix/>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Hasta</mat-label>
+          <input matInput
+            [matTimepicker]="endTimePicker"
+            [(ngModel)]="endTime"
+            (ngModelChange)="onSelectedTime($event)">
+          <mat-timepicker #endTimePicker/>
+          <mat-timepicker-toggle [for]="endTimePicker" matSuffix/>
+        </mat-form-field>
       </div>
       <div class="turnos-container">
         <ng-container *ngIf="turnos().length === 0">

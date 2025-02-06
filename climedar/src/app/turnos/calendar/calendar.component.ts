@@ -43,21 +43,22 @@ import { DoctorService } from '../../doctors/service/doctor.service';
 })
 export class CalendarComponent implements OnInit {
 
-  currentDate = new Date(2025, 0, 1);
+  currentDate = new Date();
   diasSemana = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
   monthDays: Date[] = [];
-  emptyDays: number[] = [];
+  firstEmptyDays: number[] = [];
+  lastEmptyDays: number[] = [];
   especialidades: Especialidad[] = [];
   medicos: Doctor[] = [];
   filteredEspecialidadOptions:  Observable<Especialidad[]> | undefined;
   filteredDoctorOptions:  Observable<Doctor[]> | undefined;
-  
+  dayswithShifts: Date[] = [];
   especialidadControl = new FormControl<String | Especialidad>('');
   doctorControl = new FormControl<String | Doctor>('');
 
   constructor(
     private especialidadService: EspecialidadService,
-    // private turnosService: TurnosService,
+    private turnosService: TurnosService,
     private dialog: MatDialog,
     private doctorService: DoctorService,
   ) {
@@ -115,17 +116,8 @@ export class CalendarComponent implements OnInit {
   
     // Días vacíos al inicio
     const firstDayOfWeek = firstDay.getDay() || 7; // Ajustar inicio para lunes
-    this.emptyDays = Array(firstDayOfWeek - 1).fill(0);
-  
-    // Días sobrantes al final
-    const lastDayOfWeek = lastDay.getDay() || 7;
-    const remainingDays = 7 - lastDayOfWeek;
-    this.monthDays = [
-      ...this.monthDays,
-      ...Array.from({ length: remainingDays }, (_, i) => 
-        new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, i + 1)
-      )
-    ];
+    this.firstEmptyDays = Array(firstDayOfWeek - 1).fill(0);
+    this.lastEmptyDays = Array(7 - ((this.monthDays.length + this.firstEmptyDays.length) % 7)).fill(0);
   }
   
 
@@ -136,6 +128,11 @@ export class CalendarComponent implements OnInit {
       1
     );
     this.updateCalendar();
+    if (this.doctorControl.value !== '' && this.doctorControl.value !== null && typeof this.doctorControl.value !== 'string') {
+      this.turnosService.getDaysWithShiftsByMonth(this.currentDate, (this.doctorControl.value as Doctor).id).subscribe((days: Date[]) => {
+        this.dayswithShifts = days;
+      });
+    }
   }
 
   isSameMonth(date: Date): boolean {
@@ -143,20 +140,20 @@ export class CalendarComponent implements OnInit {
   }
 
   tieneTurnos(fecha: Date): boolean {
-    return true;
+    return this.dayswithShifts.some(day => day.toISOString().split('T')[0] === fecha.toISOString().split('T')[0]);
   }
 
   openTurnosDialog(fecha: Date) {
     // const turnos = this.turnosService.getTurnosDelDia(fecha);
     const fechaFormat = fecha.toISOString().split('T')[0];
-    console.log('openTurnosDialog', fechaFormat);
+    console.log('openTurnosDialog', fecha.toISOString());
     const especialidad = typeof this.especialidadControl.value === 'string' || this.especialidadControl.value === '' ? null : this.especialidadControl.value as Especialidad;
     const doctor = typeof this.doctorControl.value === 'string' || this.doctorControl.value === '' ? null : this.doctorControl.value as Doctor;
     this.dialog.open(TurnosDialogComponent, {
       data: { fechaFormat , especialidad, doctor },
       width: '600px',
       maxWidth: '90vw',
-      maxHeight: '90vh'
+      height: '90vh'
     });
   }
 
@@ -176,6 +173,10 @@ export class CalendarComponent implements OnInit {
     //filtrado de medicos por especialidad y busqueda de turnos
     console.log('selected', event.option.value);
     this.doctorControl.setValue(event.option.value);
+    console.log("currentDate", this.currentDate);
+    this.turnosService.getDaysWithShiftsByMonth(this.currentDate, (event.option.value as Doctor).id).subscribe((days: Date[]) => {
+      this.dayswithShifts = days;
+    });
   }
 
   selectedEspeciality(event: MatAutocompleteSelectedEvent) {

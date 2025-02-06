@@ -12,7 +12,34 @@ export class TurnosService {
 
   constructor(private http: HttpClient) { }
 
-  public getTurnosByDate(date: string, doctor: Doctor, startTime: string, endTime: string, page: number): Observable<Turno[]> {
+  public getDaysWithShiftsByMonth(date: Date, doctorId: string): Observable<Date[]> {
+    const initialDate = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
+    const finalDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
+    const apiUrl = 'http://localhost:8083/graphql';
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    const body = {
+      query: `{
+                getDatesWithShifts(
+                  doctorId: "${doctorId}",
+                  fromDate: "${initialDate}",
+                  toDate: "${finalDate}"
+                )
+              }`
+    }
+    return this.http.post<{ data: { getDatesWithShifts: string[] } }>(
+      apiUrl,
+      body,
+      { headers }
+    ).pipe(
+      // Extrae solo la lista de fechas de la respuesta
+      map(response => response.data.getDatesWithShifts.map(date => new Date(date)))
+    );
+  }
+
+  public getTurnosByDate(date: string, doctorId: string, startTime: string, endTime: string, page: number): Observable<Turno[]> {
     const apiUrl = 'http://localhost:8083/graphql';
     console.log('getTurnosByDate');
     const headers = new HttpHeaders({
@@ -22,7 +49,7 @@ export class TurnosService {
       query: `{
                 getAllShifts(
                   pageRequest: {page: 1, size: 10, order: { field: "startTime", direction: ASC}},
-                  specification: { date: "${date}", doctorId: "${doctor.id}" }
+                  specification: { date: "${date}", doctorId: "${doctorId}" fromTime: "${startTime}", toTime: "${endTime}"}
                 ) {
                       pageInfo {
                           currentPage
