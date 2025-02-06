@@ -69,3 +69,6 @@
       }
       </div>
     </mat-dialog-content>
+    <mat-dialog-actions>
+      <app-paginator [totalItems]="pageInfo.totalItems" [pageSize]="10" (pageChange)="pageChange($event)"></app-paginator>
+    </mat-dialog-actions>

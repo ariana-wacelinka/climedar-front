@@ -4,6 +4,7 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Turno } from '../../models/turno.models';
 import { Especialidad } from '../../../especialidad';
 import { Doctor } from '../../../doctors/models/doctor.models';
+import { PageInfo } from '../../../shared/models/extras.models';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class TurnosService {
     );
   }
 
-  public getTurnosByDate(date: string, doctorId: string, startTime: string, endTime: string, page: number): Observable<Turno[]> {
+  public getTurnosByDate(date: string, doctorId: string, startTime: string, endTime: string, page: number): Observable<{ pageInfo: PageInfo, shifts: Turno[] }> {
     const apiUrl = 'http://localhost:8083/graphql';
     console.log('getTurnosByDate');
     const headers = new HttpHeaders({
@@ -48,10 +49,11 @@ export class TurnosService {
     const body = {
       query: `{
                 getAllShifts(
-                  pageRequest: {page: 1, size: 10, order: { field: "startTime", direction: ASC}},
+                  pageRequest: {page: ${page}, size: 10, order: { field: "startTime", direction: ASC}},
                   specification: { date: "${date}", doctorId: "${doctorId}" fromTime: "${startTime}", toTime: "${endTime}"}
                 ) {
                       pageInfo {
+                          totalItems
                           currentPage
                           totalPages
                       }
@@ -75,13 +77,12 @@ export class TurnosService {
               }`
     }
     console.log('query: ', body);
-    return this.http.post<{ data: { getAllShifts: { shifts: Turno[] } } }>(
+    return this.http.post<{ data: { getAllShifts: { pageInfo: PageInfo, shifts: Turno[] } } }>(
       apiUrl,
       body,
       { headers }
     ).pipe(
-      // Extrae solo la lista de turnos de la respuesta
-      map(response => response.data.getAllShifts.shifts)
+      map(response => response.data.getAllShifts)
     );
   }
 }

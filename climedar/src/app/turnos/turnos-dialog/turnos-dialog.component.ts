@@ -1,3 +1,4 @@
+import { PageInfo } from './../../shared/models/extras.models';
 import { Component, Inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { Turno } from '../models/turno.models';
@@ -19,6 +20,7 @@ import { TurnosService } from '../services/turnos-service/turnos.service';
 import { Duration } from 'luxon';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'app-turnos-dialog',
@@ -41,6 +43,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     MatFormFieldModule,
     MatInputModule,
     MatTimepickerModule,
+    PaginatorComponent,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './turnos-dialog.component.html',
@@ -53,6 +56,7 @@ export class TurnosDialogComponent implements OnInit {
   fecha: string;
   startTime: string;
   endTime: string;
+  pageInfo: PageInfo = { totalItems: 0, currentPage: 1, totalPages: 0 };
 
   filteredEspecialidadOptions:  Observable<Especialidad[]> | undefined;
   filteredDoctorOptions:  Observable<Doctor[]> | undefined;
@@ -73,12 +77,11 @@ export class TurnosDialogComponent implements OnInit {
     console.log('thisStartTime', this.startTime);
     console.log('thisEndTime', this.endTime);
     if (data.doctor) {
-      this.turnosService.getTurnosByDate(this.fecha, data.doctor.id, '08:00', '20:00', 1).pipe(
-        map((turno: Turno[]) => {
-          return turno;
-        })
-      ).subscribe(turnos => {
-        this.turnos.set(turnos);
+      this.turnosService.getTurnosByDate(this.fecha, data.doctor.id, '08:00', '20:00', this.pageInfo.currentPage).pipe(
+        map(response => response)
+      ).subscribe(response => {
+        this.turnos.set(response.shifts);
+        this.pageInfo = response.pageInfo;
       });
     }
    }
@@ -132,17 +135,17 @@ export class TurnosDialogComponent implements OnInit {
     
       selectedDoctor(event: MatAutocompleteSelectedEvent) {
         //filtrado de medicos por especialidad y busqueda de turnos
+        this.pageInfo = { totalItems: 0, currentPage: 1, totalPages: 0 };
         console.log('selected', event.option.value);
         this.doctorControl.setValue(event.option.value);
         console.log("fecha", this.fecha);
         var startTime = this.startTime != "" ? new Date(this.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).split(" ")[0] : "";
         var endTime = this.endTime != "" ? new Date(this.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).split(" ")[0]: "";
-        this.turnosService.getTurnosByDate(this.fecha, (event.option.value as Doctor).id, startTime, endTime, 1).pipe(
-          map((turno: Turno[]) => {
-            return turno;
-          })
-        ).subscribe(turnos => {
-          this.turnos.set(turnos);
+        this.turnosService.getTurnosByDate(this.fecha, (event.option.value as Doctor).id, startTime, endTime, this.pageInfo.currentPage).pipe(
+          map(response => response)
+        ).subscribe(response => {
+          this.turnos.set(response.shifts);
+          this.pageInfo = response.pageInfo;
         });
         console.log('turnos', this.turnos());
       }
@@ -160,27 +163,45 @@ export class TurnosDialogComponent implements OnInit {
         console.log("startTime", startTime);
         console.log("endTime", endTime);
         if (typeof this.doctorControl.value === 'string' || this.doctorControl.value === '' || this.doctorControl.value == null) {
-          this.turnosService.getTurnosByDate(this.fecha, "", startTime, endTime, 1).pipe(
-            map((turno: Turno[]) => {
-              return turno;
-            })
-          ).subscribe(turnos => {
-            this.turnos.set(turnos);
-            console.log("turnos", this.turnos());
+          this.turnosService.getTurnosByDate(this.fecha, "", startTime, endTime, this.pageInfo.currentPage).pipe(
+            map(response => response)
+          ).subscribe(response => {
+            this.turnos.set(response.shifts);
+            this.pageInfo = response.pageInfo;
           });
           return;
         }
         console.log('selectedTime', event);
-        this.turnosService.getTurnosByDate(this.fecha, (this.doctorControl.value as Doctor).id, startTime, endTime, 1).pipe(
-          map((turno: Turno[]) => {
-            return turno;
-          })
-        ).subscribe(turnos => {
-          this.turnos.set(turnos);
-          console.log("turnos", this.turnos());
+        this.turnosService.getTurnosByDate(this.fecha, (this.doctorControl.value as Doctor).id, startTime, endTime, this.pageInfo.currentPage).pipe(
+          map(response => response)
+        ).subscribe(response => {
+          this.turnos.set(response.shifts);
+          this.pageInfo = response.pageInfo;
         });
 
       }
+
+      pageChange(page: number) {
+        if (typeof this.doctorControl.value === 'string' || this.doctorControl.value === '' || this.doctorControl.value == null) {
+          this.turnosService.getTurnosByDate(this.fecha, "", this.startTime, this.endTime, page).pipe(
+              map(response => response)
+            ).subscribe(response => {
+              this.turnos.set(response.shifts);
+              this.pageInfo = response.pageInfo;
+            });
+            return;
+        } else {
+          this.turnosService.getTurnosByDate(this.fecha, (this.doctorControl.value as Doctor).id, this.startTime, this.endTime, page).pipe(
+            map(response => response)
+          ).subscribe(response => {
+            this.turnos.set(response.shifts);
+            this.pageInfo = response.pageInfo;
+            console.log("pageInfo", this.pageInfo);
+          });
+        }
+      }
+
+
 
       convertDuration(duration: string): string {
         return Duration.fromISO(duration).as('minutes') + ' min';
