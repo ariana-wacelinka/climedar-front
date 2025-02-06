@@ -33,24 +33,22 @@ export class PaginatorComponent {
   }
 
   movePreviousPage() {
-    if (this.currentPage() > 1) {
-      this.disabled1.set(false);
-      this.disabled2.set(false);
-      this.currentPage.set(this.previousPage);
-      this.pageChange.emit(this.previousPage);
-    } else if (this.currentPage() === 1) {
+    if (this.currentPage() === 2) {
       this.disabled1.set(true);
+    } 
+    if (this.totalItems/this.pageSize > 1) {
+      this.disabled2.set(false);
     }
+    this.currentPage.set(this.currentPage() - 1);
+    this.pageChange.emit(this.currentPage());
   }
 
   moveFollowingPage() {
-    if (this.currentPage() < this.pages) {
-      this.disabled2.set(false);
-      this.disabled1.set(false);
-      this.currentPage.set(this.followingPage);
-      this.pageChange.emit(this.followingPage);
-    } else if (this.currentPage() === this.pages) {
+    if (Math.floor(this.totalItems / this.pageSize) === this.currentPage()) {
       this.disabled2.set(true);
-    }
+    } 
+    this.disabled1.set(false);
+    this.currentPage.set(this.currentPage() + 1);
+    this.pageChange.emit(this.currentPage());
   }
 }
