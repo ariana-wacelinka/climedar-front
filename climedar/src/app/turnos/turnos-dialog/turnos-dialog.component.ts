@@ -1,5 +1,5 @@
 import { PageInfo } from './../../shared/models/extras.models';
-import { Component, Inject, OnInit, signal } from '@angular/core';
+import { Component, Inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { Turno } from '../models/turno.models';
 import { MatCardModule } from '@angular/material/card';
@@ -56,7 +56,7 @@ export class TurnosDialogComponent implements OnInit {
   fecha: string;
   startTime: string;
   endTime: string;
-  pageInfo: PageInfo = { totalItems: 0, currentPage: 1, totalPages: 0 };
+  pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
 
   filteredEspecialidadOptions:  Observable<Especialidad[]> | undefined;
   filteredDoctorOptions:  Observable<Doctor[]> | undefined;
@@ -77,11 +77,11 @@ export class TurnosDialogComponent implements OnInit {
     console.log('thisStartTime', this.startTime);
     console.log('thisEndTime', this.endTime);
     if (data.doctor) {
-      this.turnosService.getTurnosByDate(this.fecha, data.doctor.id, '08:00', '20:00', this.pageInfo.currentPage).pipe(
+      this.turnosService.getTurnosByDate(this.fecha, data.doctor.id, '08:00', '20:00', this.pageInfo().currentPage).pipe(
         map(response => response)
       ).subscribe(response => {
         this.turnos.set(response.shifts);
-        this.pageInfo = response.pageInfo;
+        this.pageInfo.set(response.pageInfo);
       });
     }
    }
@@ -135,17 +135,17 @@ export class TurnosDialogComponent implements OnInit {
     
       selectedDoctor(event: MatAutocompleteSelectedEvent) {
         //filtrado de medicos por especialidad y busqueda de turnos
-        this.pageInfo = { totalItems: 0, currentPage: 1, totalPages: 0 };
+        this.pageInfo.set({ totalItems: 0, currentPage: 1, totalPages: 0 });
         console.log('selected', event.option.value);
         this.doctorControl.setValue(event.option.value);
         console.log("fecha", this.fecha);
         var startTime = this.startTime != "" ? new Date(this.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).split(" ")[0] : "";
         var endTime = this.endTime != "" ? new Date(this.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).split(" ")[0]: "";
-        this.turnosService.getTurnosByDate(this.fecha, (event.option.value as Doctor).id, startTime, endTime, this.pageInfo.currentPage).pipe(
+        this.turnosService.getTurnosByDate(this.fecha, (event.option.value as Doctor).id, startTime, endTime, this.pageInfo().currentPage).pipe(
           map(response => response)
         ).subscribe(response => {
           this.turnos.set(response.shifts);
-          this.pageInfo = response.pageInfo;
+          this.pageInfo.set(response.pageInfo);
         });
         console.log('turnos', this.turnos());
       }
@@ -157,45 +157,52 @@ export class TurnosDialogComponent implements OnInit {
         this.doctorControl.setValue('');
       }
 
+      currentPage(): WritableSignal<number> {
+        return signal<number>(this.pageInfo().currentPage + 1);
+      }
+
       onSelectedTime(event: MatTimepickerSelected<Date>) {
+        this.pageInfo.set({ totalItems: 0, currentPage: 1, totalPages: 0 });
         var startTime = this.startTime != "" ? new Date(this.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).split(" ")[0] : "";
         var endTime = this.endTime != "" ? new Date(this.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).split(" ")[0]: "";
         console.log("startTime", startTime);
         console.log("endTime", endTime);
         if (typeof this.doctorControl.value === 'string' || this.doctorControl.value === '' || this.doctorControl.value == null) {
-          this.turnosService.getTurnosByDate(this.fecha, "", startTime, endTime, this.pageInfo.currentPage).pipe(
+          this.turnosService.getTurnosByDate(this.fecha, "", startTime, endTime, this.pageInfo().currentPage).pipe(
             map(response => response)
           ).subscribe(response => {
             this.turnos.set(response.shifts);
-            this.pageInfo = response.pageInfo;
+            this.pageInfo.set(response.pageInfo);
           });
           return;
         }
         console.log('selectedTime', event);
-        this.turnosService.getTurnosByDate(this.fecha, (this.doctorControl.value as Doctor).id, startTime, endTime, this.pageInfo.currentPage).pipe(
+        this.turnosService.getTurnosByDate(this.fecha, (this.doctorControl.value as Doctor).id, startTime, endTime, this.pageInfo().currentPage).pipe(
           map(response => response)
         ).subscribe(response => {
           this.turnos.set(response.shifts);
-          this.pageInfo = response.pageInfo;
+          this.pageInfo.set(response.pageInfo);
         });
 
       }
 
       pageChange(page: number) {
+        var startTime = this.startTime != "" ? new Date(this.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).split(" ")[0] : "";
+        var endTime = this.endTime != "" ? new Date(this.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).split(" ")[0]: "";
         if (typeof this.doctorControl.value === 'string' || this.doctorControl.value === '' || this.doctorControl.value == null) {
-          this.turnosService.getTurnosByDate(this.fecha, "", this.startTime, this.endTime, page).pipe(
+          this.turnosService.getTurnosByDate(this.fecha, "", startTime, endTime, page).pipe(
               map(response => response)
             ).subscribe(response => {
               this.turnos.set(response.shifts);
-              this.pageInfo = response.pageInfo;
+              this.pageInfo.set(response.pageInfo);
             });
             return;
         } else {
-          this.turnosService.getTurnosByDate(this.fecha, (this.doctorControl.value as Doctor).id, this.startTime, this.endTime, page).pipe(
+          this.turnosService.getTurnosByDate(this.fecha, (this.doctorControl.value as Doctor).id, startTime, endTime, page).pipe(
             map(response => response)
           ).subscribe(response => {
             this.turnos.set(response.shifts);
-            this.pageInfo = response.pageInfo;
+            this.pageInfo.set(response.pageInfo);
             console.log("pageInfo", this.pageInfo);
           });
         }

@@ -13,10 +13,9 @@ export class PaginatorComponent {
 
   @Input() totalItems = 0;
   @Input() pageSize = 0;
+  @Input() currentPage = signal(1);
 
   @Output() pageChange = new EventEmitter<number>();
-
-  public currentPage = signal(1);
 
   public get pages(): number {
     return Math.ceil(this.totalItems / this.pageSize);
