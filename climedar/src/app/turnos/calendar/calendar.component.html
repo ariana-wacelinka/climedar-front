@@ -1,72 +1,73 @@
-<div class="app-container">
-    <mat-toolbar color="primary" class="header">
-      <div class="logo">
-        <mat-icon>local_hospital</mat-icon>
-        <span>Climedar</span>
+<app-centered-card>
+  <ng-container main-header>
+    <div class="header">
+      
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Especialidad</mat-label>
+        <input type="text" matInput [formControl]="especialidadControl" [matAutocomplete]="autoEsp">
+        <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad" (optionSelected)="selectedEspeciality($event)">
+          @for (option of filteredEspecialidadOptions | async; track option?.code) {
+            <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Medico</mat-label>
+        <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="autoDoc" >
+        <mat-autocomplete #autoDoc="matAutocomplete" [displayWith]="displayDoctor" (optionSelected)="selectedDoctor($event)">
+          @for (option of filteredDoctorOptions | async; track option.id) {
+            @if (option.gender == "MALE") {
+              <mat-option [value]="option" style="padding: 8px">Dr. {{option.surname}} {{option.name}}</mat-option>  
+            }
+            @else {
+              <mat-option [value]="option" style="padding: 8px">Dra. {{option.surname}} {{option.name}}</mat-option>
+            }
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <div class="month-navigation">
+        <button mat-icon-button (click)="changeMonth('prev')">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span class="month-label">{{ currentDate | date : "MMMM yyyy" }}</span>
+        <button mat-icon-button (click)="changeMonth('next')">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
       </div>
-      <button mat-button>Cerrar sesión</button>
-    </mat-toolbar>
-
-    <div class="content">
-      <mat-card class="calendar-container">
-        <mat-card-header>
-          <mat-card-title>Turnos disponibles</mat-card-title>
-          <div class="month-navigation">
-            <button mat-icon-button (click)="changeMonth('prev')">
-              <mat-icon>chevron_left</mat-icon>
-            </button>
-            <span class="month-label">{{ currentDate | date:'MMMM yyyy':'':'es' }}</span>
-            <button mat-icon-button (click)="changeMonth('next')">
-              <mat-icon>chevron_right</mat-icon>
-            </button>
-          </div>
-        </mat-card-header>
-
-        <mat-card-content>
-          <div class="filters">
-            <mat-form-field appearance="outline">
-              <mat-label>Especialidad</mat-label>
-              <mat-select [formControl]="especialidadControl">
-                <mat-option>Todas</mat-option>
-                <mat-option *ngFor="let esp of especialidades" [value]="esp">
-                  {{esp}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Médico</mat-label>
-              <mat-select [formControl]="medicoControl">
-                <mat-option>Todos</mat-option>
-                <mat-option *ngFor="let med of medicos" [value]="med">
-                  {{med}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <div class="calendar">
-            <div class="calendar-header">
-              <div *ngFor="let dia of diasSemana" class="calendar-cell header-cell">
-                {{dia}}
-              </div>
-            </div>
-
-            <div class="calendar-grid">
-              <ng-container *ngFor="let empty of emptyDays">
-                <div class="calendar-cell empty-cell"></div>
-              </ng-container>
-
-              <div *ngFor="let day of monthDays" 
-                   class="calendar-cell day-cell"
-                   [class.other-month]="!isSameMonth(day)"
-                   (click)="openTurnosDialog(day)">
-                <span class="day-number">{{day | date:'d'}}</span>
-                <div *ngIf="tieneTurnos(day)" class="turnos-indicator"></div>
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
     </div>
-  </div>
+  </ng-container>
+
+  <ng-container main-content>
+    <div class="content">
+
+      <div class="calendar">
+        <div class="calendar-header">
+          <div *ngFor="let dia of diasSemana" class="calendar-cell header-cell">
+            {{ dia }}
+          </div>
+        </div>
+
+        <div class="calendar-grid">
+          <ng-container *ngFor="let empty of firstEmptyDays">
+            <div class="calendar-cell empty-cell"></div>
+          </ng-container>
+
+          <div
+            *ngFor="let day of monthDays"
+            class="calendar-cell day-cell"
+            [class.other-month]="!isSameMonth(day)"
+            (click)="isSameMonth(day) && openTurnosDialog(day)"
+          >
+            <span class="day-number">{{ day | date : "d" }}</span>
+            <div *ngIf="tieneTurnos(day)" class="turnos-indicator"></div>
+          </div>
+          <ng-container *ngFor="let empty of lastEmptyDays">
+            <div class="calendar-cell empty-cell"></div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</app-centered-card>

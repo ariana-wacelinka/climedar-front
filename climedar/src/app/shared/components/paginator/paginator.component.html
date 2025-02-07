@@ -1,10 +1,10 @@
-@if (pages > 1) {
+@if (pages >= 1) {
   <div id="app" class="container">
     <ul class="page">
       @if (currentPage() == pages) {
-        <p class="label">{{currentPage() * 5 - 4}} - {{totalItems}} de {{totalItems}}</p>
+        <p class="label">{{1 + ((currentPage() - 1) * pageSize)}} - {{totalItems}} de {{totalItems}}</p>
       } @else {
-        <p class="label">{{currentPage() * 5 - 4}} - {{currentPage() * 5}} de {{totalItems}}</p>
+        <p class="label">{{1 + ((currentPage() - 1) * pageSize)}} - {{currentPage() * pageSize}} de {{totalItems}}</p>
       }
       @if (disabled1()) {
         <li class="page__disabled__btn">

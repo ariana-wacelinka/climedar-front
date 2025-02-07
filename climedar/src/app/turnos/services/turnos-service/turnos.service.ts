@@ -1,197 +1,88 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Turno } from '../../models/turno.models';
+import { Especialidad } from '../../../especialidad';
+import { Doctor } from '../../../doctors/models/doctor.models';
+import { PageInfo } from '../../../shared/models/extras.models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TurnosService {
 
-  private turnos: Turno[] = [
-    // 30 de enero 2025
-    {
-      id: 1,
-      medico: "Dr. Lucio Guerra",
-      especialidad: "Neurología",
-      fecha: "2025-01-30",
-      hora: "09:00",
-      duracion: 30,
-    },
-    {
-      id: 2,
-      medico: "Dr. Lucio Guerra",
-      especialidad: "Neurología",
-      fecha: "2025-01-30",
-      hora: "09:30",
-      duracion: 30,
-    },
-    {
-      id: 3,
-      medico: "Dr. Lucio Guerra",
-      especialidad: "Neurología",
-      fecha: "2025-01-30",
-      hora: "10:00",
-      duracion: 30,
-    },
-    {
-      id: 4,
-      medico: "Dra. Ana García",
-      especialidad: "Cardiología",
-      fecha: "2025-01-30",
-      hora: "09:00",
-      duracion: 30,
-    },
-    {
-      id: 5,
-      medico: "Dra. Ana García",
-      especialidad: "Cardiología",
-      fecha: "2025-01-30",
-      hora: "09:30",
-      duracion: 30,
-    },
-    {
-      id: 6,
-      medico: "Dra. Ana García",
-      especialidad: "Cardiología",
-      fecha: "2025-01-30",
-      hora: "10:00",
-      duracion: 30,
-    },
-    {
-      id: 7,
-      medico: "Dr. Juan Pérez",
-      especialidad: "Pediatría",
-      fecha: "2025-01-30",
-      hora: "14:00",
-      duracion: 30,
-    },
-    {
-      id: 8,
-      medico: "Dr. Juan Pérez",
-      especialidad: "Pediatría",
-      fecha: "2025-01-30",
-      hora: "14:30",
-      duracion: 30,
-    },
-    {
-      id: 9,
-      medico: "Dr. Juan Pérez",
-      especialidad: "Pediatría",
-      fecha: "2025-01-30",
-      hora: "15:00",
-      duracion: 30,
-    },
-    // 31 de enero 2025
-    {
-      id: 10,
-      medico: "Dr. Lucio Guerra",
-      especialidad: "Neurología",
-      fecha: "2025-01-31",
-      hora: "11:00",
-      duracion: 30,
-    },
-    {
-      id: 11,
-      medico: "Dr. Lucio Guerra",
-      especialidad: "Neurología",
-      fecha: "2025-01-31",
-      hora: "11:30",
-      duracion: 30,
-    },
-    {
-      id: 12,
-      medico: "Dr. Lucio Guerra",
-      especialidad: "Neurología",
-      fecha: "2025-01-31",
-      hora: "12:00",
-      duracion: 30,
-    },
-    {
-      id: 13,
-      medico: "Dra. Ana García",
-      especialidad: "Cardiología",
-      fecha: "2025-01-31",
-      hora: "15:00",
-      duracion: 30,
-    },
-    {
-      id: 14,
-      medico: "Dra. Ana García",
-      especialidad: "Cardiología",
-      fecha: "2025-01-31",
-      hora: "15:30",
-      duracion: 30,
-    },
-    {
-      id: 15,
-      medico: "Dra. Ana García",
-      especialidad: "Cardiología",
-      fecha: "2025-01-31",
-      hora: "16:00",
-      duracion: 30,
-    },
-    {
-      id: 16,
-      medico: "Dr. Juan Pérez",
-      especialidad: "Pediatría",
-      fecha: "2025-01-31",
-      hora: "09:00",
-      duracion: 30,
-    },
-    {
-      id: 17,
-      medico: "Dr. Juan Pérez",
-      especialidad: "Pediatría",
-      fecha: "2025-01-31",
-      hora: "09:30",
-      duracion: 30,
-    },
-    {
-      id: 18,
-      medico: "Dr. Juan Pérez",
-      especialidad: "Pediatría",
-      fecha: "2025-01-31",
-      hora: "10:00",
-      duracion: 30,
-    }
-  ];
+  constructor(private http: HttpClient) { }
 
-  private especialidades = ["Neurología", "Cardiología", "Pediatría"];
-  private medicos = ["Dr. Lucio Guerra", "Dra. Ana García", "Dr. Juan Pérez"];
-
-  private turnosFiltrados = new BehaviorSubject<Turno[]>(this.turnos);
-
-  getTurnos(): Observable<Turno[]> {
-    return this.turnosFiltrados.asObservable();
-  }
-
-  getEspecialidades(): string[] {
-    return this.especialidades;
-  }
-
-  getMedicos(): string[] {
-    return this.medicos;
-  }
-
-  filtrarTurnos(especialidad: string = '', medico: string = ''): void {
-    const turnosFiltrados = this.turnos.filter(turno => {
-      if (especialidad && turno.especialidad !== especialidad) return false;
-      if (medico && turno.medico !== medico) return false;
-      return true;
+  public getDaysWithShiftsByMonth(date: Date, doctorId: string): Observable<Date[]> {
+    const initialDate = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
+    const finalDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
+    const apiUrl = 'http://localhost:8083/graphql';
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
     });
-    this.turnosFiltrados.next(turnosFiltrados);
-  }
 
-  getTurnosDelDia(fecha: Date): Turno[] {
-    return this.turnosFiltrados.value.filter(turno => 
-      new Date(turno.fecha).toDateString() === fecha.toDateString()
-    ).sort((a, b) => a.hora.localeCompare(b.hora));
-  }
-
-  tieneTurnos(fecha: Date): boolean {
-    return this.turnosFiltrados.value.some(turno => 
-      new Date(turno.fecha).toDateString() === fecha.toDateString()
+    const body = {
+      query: `{
+                getDatesWithShifts(
+                  doctorId: "${doctorId}",
+                  fromDate: "${initialDate}",
+                  toDate: "${finalDate}"
+                )
+              }`
+    }
+    return this.http.post<{ data: { getDatesWithShifts: string[] } }>(
+      apiUrl,
+      body,
+      { headers }
+    ).pipe(
+      // Extrae solo la lista de fechas de la respuesta
+      map(response => response.data.getDatesWithShifts.map(date => new Date(date)))
     );
   }
 
+  public getTurnosByDate(date: string, doctorId: string, startTime: string, endTime: string, page: number): Observable<{ pageInfo: PageInfo, shifts: Turno[] }> {
+    const apiUrl = 'http://localhost:8083/graphql';
+    console.log('getTurnosByDate');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    const body = {
+      query: `{
+                getAllShifts(
+                  pageRequest: {page: ${page}, size: 10, order: { field: "startTime", direction: ASC}},
+                  specification: { date: "${date}", doctorId: "${doctorId}" fromTime: "${startTime}", toTime: "${endTime}"}
+                ) {
+                      pageInfo {
+                          totalItems
+                          currentPage
+                          totalPages
+                      }
+                      shifts {
+                          id
+                          date
+                          startTime
+                          endTime
+                          state
+                          timeOfShifts
+                          place
+                          doctor {
+                              id
+                              name
+                              surname
+                              gender
+                          }
+                      }
+                  }
+                
+              }`
+    }
+    console.log('query: ', body);
+    return this.http.post<{ data: { getAllShifts: { pageInfo: PageInfo, shifts: Turno[] } } }>(
+      apiUrl,
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.getAllShifts)
+    );
+  }
 }

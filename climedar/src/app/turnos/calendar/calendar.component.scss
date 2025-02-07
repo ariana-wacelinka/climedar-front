@@ -1,123 +1,184 @@
-.app-container {
-    min-height: 100vh;
-    background: linear-gradient(to bottom right, #60a5fa, #1e40af);
-  }
+$primary-color: #333333;
+$accent-color: red;
 
-  .header {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: space-between;
-  }
+$border-color: rgba(0, 0, 0, 0.12);
+$hover-color: rgba(0, 0, 0, 0.04);
+$text-muted: rgba(0, 0, 0, 0);
+$calendar-cell-size: 50px;
+$border-radius: 8px;
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+.header {
+  max-width: 900px;
+  margin-top: 10px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.5fr 1.5fr 2fr;
+  gap: 20px;
+  grid-template-rows: 1fr;
+}
 
-  .content {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+.titulo {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin:0;
+}
 
-  .calendar-container {
-    background: white;
-    border-radius: 8px;
-    padding: 1.5rem;
-  }
-
-  mat-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-
-  .month-navigation {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
+// Título y navegación del mes
+.month-navigation {
+  display: flex;
+  align-items: center;
+  width: 85%;
+  margin-top: 7px;
+  justify-content: space-between;
+  justify-self: end;
+  align-self: baseline;
+  border-radius: $border-radius;
 
   .month-label {
-    min-width: 140px;
-    text-align: center;
+    font-size: 1.25rem;
     font-weight: 500;
+    text-transform: capitalize;
   }
 
-  .filters {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    grid-template-columns: 1fr;
-  }
-
-  @media (min-width: 768px) {
-    .filters {
-      grid-template-columns: 1fr 1fr;
+  button {
+    &:hover {
+      background-color: rgba($primary-color, 0.1);
     }
   }
+}
 
-  .calendar {
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    border-radius: 4px;
-  }
+.content{
+  margin: -30px 0;
+  width: 900px;
+  padding: 0 50px;
+}
 
-  .calendar-header {
+// Calendario
+.calendar {
+  background: white;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  &-header {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    background: rgba(0, 0, 0, 0.04);
-  }
-
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-  }
-
-  .calendar-cell {
-    aspect-ratio: 1;
-    padding: 0.75rem;
-    text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.12);
-  }
-
-  .header-cell {
-    padding: 0.75rem;
+    background-color: $primary-color;
+    color: white;
     font-weight: 500;
-    font-size: 0.875rem;
   }
 
-  .day-cell {
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border: 1px solid $border-color;
+    border-top: none;
+  }
+
+  &-cell {
     position: relative;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
+    min-height: 70px;
+    padding: 8px;
+    border-right: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
 
-  .day-cell:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-  }
+    &.header-cell {
+      min-height: auto;
+      padding: 12px 8px;
+      text-align: center;
+      border: none;
+    }
 
-  .other-month {
-    color: rgba(0, 0, 0, 0.38);
-  }
+    &.day-cell {
+      cursor: default; /* Por defecto, no clickeable */
+    
+      &.clickable {
+        cursor: pointer; /* Solo los días del mes actual son clickeables */
+        transition: all 0.2s ease;
+    
+        &:hover {
+          background-color: rgba(0, 0, 255, 0.1);
+          transform: scale(0.98);
+        }
+    
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    
+      &.other-month {
+        color: rgba(0, 0, 0, 0.5); /* Estilo más tenue */
+        font-weight: normal;
+        pointer-events: none; /* Evita completamente el clic */
+        background-color: #f9f9f9;
 
-  .day-number {
-    font-size: 0.875rem;
-  }
+        .day-number {
+          color: $text-muted;
+        }
+      }
+    }
 
-  .turnos-indicator {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
+    &.empty-cell {
+      background-color: #f9f9f9;
+    }
+  }
+}
+
+
+
+
+
+// Número del día
+.day-number {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: $calendar-cell-size;
+  height: $calendar-cell-size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+// Indicador de turnos
+.turnos-indicator {
+  position: absolute;
+  top: 10px;
+  left: 40px;
+  display: flex;
+  gap: 4px;
+
+  &::before {
+    content: '';
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    background-color: #1976d2;
+    background-color: $accent-color;
+    animation: pulse 2s infinite;
   }
+}
 
-  mat-form-field {
-    width: 100%;
+// Animaciones
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba($accent-color, 0.7);
   }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba($accent-color, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba($accent-color, 0);
+  }
+}
+

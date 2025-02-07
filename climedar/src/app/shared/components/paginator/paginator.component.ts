@@ -10,47 +10,32 @@ import {MatRipple} from '@angular/material/core';
   styleUrls: ['./paginator.component.scss']
 })
 export class PaginatorComponent {
-  public disabled1 = signal(true);
-  public disabled2 = signal(false);
 
   @Input() totalItems = 0;
   @Input() pageSize = 0;
+  @Input() currentPage = signal(1);
 
   @Output() pageChange = new EventEmitter<number>();
-
-  public currentPage = signal(1);
-
-  get previousPage(): number {
-    return Math.max(1, this.currentPage() - 1);
-  }
-
-  get followingPage(): number {
-    return Math.min(this.pages, this.currentPage() + 1);
-  }
 
   public get pages(): number {
     return Math.ceil(this.totalItems / this.pageSize);
   }
 
+  disabled1() {
+    return this.currentPage() === 1;
+  }
+
+  disabled2() {
+    return this.currentPage() === this.pages;
+  }
+
   movePreviousPage() {
-    if (this.currentPage() > 1) {
-      this.disabled1.set(false);
-      this.disabled2.set(false);
-      this.currentPage.set(this.previousPage);
-      this.pageChange.emit(this.previousPage);
-    } else if (this.currentPage() === 1) {
-      this.disabled1.set(true);
-    }
+    this.currentPage.set(this.currentPage() - 1);
+    this.pageChange.emit(this.currentPage());
   }
 
   moveFollowingPage() {
-    if (this.currentPage() < this.pages) {
-      this.disabled2.set(false);
-      this.disabled1.set(false);
-      this.currentPage.set(this.followingPage);
-      this.pageChange.emit(this.followingPage);
-    } else if (this.currentPage() === this.pages) {
-      this.disabled2.set(true);
-    }
+    this.currentPage.set(this.currentPage() + 1);
+    this.pageChange.emit(this.currentPage());
   }
 }

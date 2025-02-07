@@ -3,12 +3,21 @@ import { MatDialog } from '@angular/material/dialog';
 import { TurnosService } from '../services/turnos-service/turnos.service';
 import { TurnosDialogComponent } from '../turnos-dialog/turnos-dialog.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
+import { MatButtonModule } from '@angular/material/button';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { debounceTime, filter, map, Observable, of, startWith, switchMap } from 'rxjs';
+import { Especialidad } from '../../especialidad';
+import { Doctor } from '../../doctors/models/doctor.models';
+import { EspecialidadService } from '../../especialidad/service/especialidad.service';
+import {MatInputModule} from '@angular/material/input';
+import { DoctorService } from '../../doctors/service/doctor.service';
 
 @Component({
   selector: 'app-calendar',
@@ -21,55 +30,96 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    DatePipe
-  ],
+    DatePipe,
+    CenteredCardComponent,
+    MatButtonModule,
+    MatAutocompleteModule,
+    AsyncPipe,
+    NgFor,
+    MatInputModule
+],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
 
-  currentDate = new Date(2025, 0, 1);
+  currentDate = new Date();
   diasSemana = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
   monthDays: Date[] = [];
-  emptyDays: number[] = [];
-  especialidades: string[] = [];
-  medicos: string[] = [];
-  
-  especialidadControl = new FormControl('');
-  medicoControl = new FormControl('');
+  firstEmptyDays: number[] = [];
+  lastEmptyDays: number[] = [];
+  especialidades: Especialidad[] = [];
+  medicos: Doctor[] = [];
+  filteredEspecialidadOptions:  Observable<Especialidad[]> | undefined;
+  filteredDoctorOptions:  Observable<Doctor[]> | undefined;
+  dayswithShifts: Date[] = [];
+  especialidadControl = new FormControl<String | Especialidad>('');
+  doctorControl = new FormControl<String | Doctor>('');
 
   constructor(
+    private especialidadService: EspecialidadService,
     private turnosService: TurnosService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private doctorService: DoctorService,
   ) {
-    this.especialidades = this.turnosService.getEspecialidades();
-    this.medicos = this.turnosService.getMedicos();
+    console.log('this.filteredEspecialidadOptions', this.filteredEspecialidadOptions);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.updateCalendar();
-    
-    this.especialidadControl.valueChanges.subscribe(value => {
-      this.turnosService.filtrarTurnos(value || '', this.medicoControl.value || '');
-    });
 
-    this.medicoControl.valueChanges.subscribe(value => {
-      this.turnosService.filtrarTurnos(this.especialidadControl.value || '', value || '');
-    });
+    this.filteredEspecialidadOptions = this.especialidadControl.valueChanges.pipe(
+      startWith(''),
+      filter((value): value is string => typeof value === 'string'),
+      debounceTime(300),
+      switchMap(value => {
+        const title = value;
+        return this.especialidadService.getEspecialidadesByNombre(title).pipe(
+          map((especiliades: Especialidad[]) => {
+            return especiliades;
+          })
+        );
+      }),
+    );
+
+    this.filteredDoctorOptions = this.doctorControl.valueChanges.pipe(
+      startWith(''),
+      filter((value): value is string => typeof value === 'string'),
+      debounceTime(300),
+      switchMap(value => {
+        const title = value;
+        const especialidad = this.especialidadControl.value;
+        const especialidadId = typeof especialidad === 'string' || especialidad === '' ? '' : (especialidad as Especialidad).id;
+        return this.doctorService.getDoctorsByName(title, especialidadId).pipe(
+          map((doctors: Doctor[]) => {
+            return doctors;
+          })
+        );
+      }),
+    );
+
+  }
+
+  trackByCodigo(index: number, option: Especialidad): string {
+    return option.code;
   }
 
   updateCalendar() {
     const firstDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
     const lastDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0);
-    
+  
+    // Generar los días del mes
     this.monthDays = Array.from(
       { length: lastDay.getDate() },
       (_, i) => new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), i + 1)
     );
-
-    const firstDayOfWeek = firstDay.getDay() || 7;
-    this.emptyDays = Array(firstDayOfWeek - 1).fill(0);
+  
+    // Días vacíos al inicio
+    const firstDayOfWeek = firstDay.getDay() || 7; // Ajustar inicio para lunes
+    this.firstEmptyDays = Array(firstDayOfWeek - 1).fill(0);
+    this.lastEmptyDays = Array(7 - ((this.monthDays.length + this.firstEmptyDays.length) % 7)).fill(0);
   }
+  
 
   changeMonth(direction: 'prev' | 'next') {
     this.currentDate = new Date(
@@ -78,6 +128,11 @@ export class CalendarComponent {
       1
     );
     this.updateCalendar();
+    if (this.doctorControl.value !== '' && this.doctorControl.value !== null && typeof this.doctorControl.value !== 'string') {
+      this.turnosService.getDaysWithShiftsByMonth(this.currentDate, (this.doctorControl.value as Doctor).id).subscribe((days: Date[]) => {
+        this.dayswithShifts = days;
+      });
+    }
   }
 
   isSameMonth(date: Date): boolean {
@@ -85,17 +140,50 @@ export class CalendarComponent {
   }
 
   tieneTurnos(fecha: Date): boolean {
-    return this.turnosService.tieneTurnos(fecha);
+    return this.dayswithShifts.some(day => day.toISOString().split('T')[0] === fecha.toISOString().split('T')[0]);
   }
 
   openTurnosDialog(fecha: Date) {
-    const turnos = this.turnosService.getTurnosDelDia(fecha);
+    // const turnos = this.turnosService.getTurnosDelDia(fecha);
+    const fechaFormat = fecha.toISOString().split('T')[0];
+    console.log('openTurnosDialog', fecha.toISOString());
+    const especialidad = typeof this.especialidadControl.value === 'string' || this.especialidadControl.value === '' ? null : this.especialidadControl.value as Especialidad;
+    const doctor = typeof this.doctorControl.value === 'string' || this.doctorControl.value === '' ? null : this.doctorControl.value as Doctor;
     this.dialog.open(TurnosDialogComponent, {
-      data: { fecha, turnos },
+      data: { fechaFormat , especialidad, doctor },
       width: '600px',
       maxWidth: '90vw',
-      maxHeight: '80vh'
+      height: '90vh'
     });
+  }
+
+  displayEspecialidad(especialidad: Especialidad | null): string {
+    return especialidad ? especialidad.name : '';
+  }
+
+  displayDoctor(doctor: Doctor | null): string {
+    return doctor 
+      ? doctor.gender == "MALE"
+        ? `Dr. ${doctor.surname} ${doctor.name}`
+        : `Dra. ${doctor.surname} ${doctor.name}`
+      : '';
+  }
+
+  selectedDoctor(event: MatAutocompleteSelectedEvent) {
+    //filtrado de medicos por especialidad y busqueda de turnos
+    console.log('selected', event.option.value);
+    this.doctorControl.setValue(event.option.value);
+    console.log("currentDate", this.currentDate);
+    this.turnosService.getDaysWithShiftsByMonth(this.currentDate, (event.option.value as Doctor).id).subscribe((days: Date[]) => {
+      this.dayswithShifts = days;
+    });
+  }
+
+  selectedEspeciality(event: MatAutocompleteSelectedEvent) {
+    //filtrado de medicos por especialidad y busqueda de turnos
+    console.log('selected', event.option.value);
+    this.especialidadControl.setValue(event.option.value);
+    this.doctorControl.setValue('');
   }
 
 }
