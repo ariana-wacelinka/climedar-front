@@ -19,6 +19,6 @@ export const routes: Routes = [
   {path: 'obra-social/listado', component: ListadoObrasSocialesComponent},
   {path: 'especialidad/listado', component: ListadoEspecialidadesComponent},
   {path: 'servicio/listado', component: ListadoServiciosComponent},
-  {path: 'paquetes/listado', component: ListadoPaquetesComponent},
+  {path: 'paquete/listado', component: ListadoPaquetesComponent},
   {path: 'paginator', component: PaginatorComponent},
 ];

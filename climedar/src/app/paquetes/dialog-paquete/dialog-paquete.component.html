@@ -1,9 +1,9 @@
 @if (this.data.id == null) {
-  <h2 mat-dialog-title>Añadir servicio</h2>
+  <h1 mat-dialog-title>Añadir servicio</h1>
 
   <div mat-dialog-content>
     <form [formGroup]="formGroup">
-      <mat-form-field class="full-width" appearance="outline">
+      <mat-form-field id="nombre" class="full-width" appearance="outline">
         <mat-label>Nombre</mat-label>
         <input matInput placeholder="Nombre" formControlName="nombre" required>
       </mat-form-field>
@@ -31,7 +31,9 @@
             <th mat-header-cell *matHeaderCellDef></th>
 
             <td id="select" mat-cell *matCellDef="let element" style="text-align: right;">
-              <mat-checkbox class="example-margin" [(ngModel)]="indeterminate"></mat-checkbox>
+              <mat-checkbox 
+                (change)="toggleSelection(element.id, $event.checked)">
+              </mat-checkbox>
             </td>
           </ng-container>
 
@@ -51,7 +53,7 @@
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
       </div>
     </div>
@@ -60,6 +62,6 @@
 } @else {}
 
 <div class="column" mat-dialog-actions>
-  <button mat-flat-button (click)="onModify()">Modificar</button>
+  <button mat-flat-button (click)="onSubmit()">Guardar</button>
   <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
 </div>

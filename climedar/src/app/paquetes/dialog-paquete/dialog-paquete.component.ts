@@ -21,7 +21,7 @@ import {MatSort, MatSortHeader} from '@angular/material/sort';
 import {MatDivider} from '@angular/material/divider';
 import {MatFormField, MatLabel, MatPrefix} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatCheckbox} from '@angular/material/checkbox';
 
 interface Servicio {
@@ -69,45 +69,44 @@ interface Servicio {
   styleUrls: ['./dialog-paquete.component.scss']
 })
 export class DialogPaqueteComponent {
-  readonly indeterminate = model(false);
+  readonly indeterminate = false;
+  selectedServices = new Set<number>();
 
   displayedColumns: string[] = ["select", "nombre", "precio", "duracionEstimada"];
   dataSource = new MatTableDataSource([
-    {nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30', number: 0},
-    {nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30', number: 1},
-    {nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30', number: 2},
-    {nombre: 'Ecografía', descripcion: 'Ecografía de cualquier parte del cuerpo', precio: 1000, duracionEstimada: '01:00', number: 3},
-    {nombre: 'Fisioterapia', descripcion: 'Sesión de fisioterapia', precio: 600, duracionEstimada: '01:00', number: 4}
+    {nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30', id: 0},
+    {nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30', id: 1},
+    {nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30', id: 2},
+    {nombre: 'Ecografía', descripcion: 'Ecografía de cualquier parte del cuerpo', precio: 1000, duracionEstimada: '01:00', id: 3},
+    {nombre: 'Fisioterapia', descripcion: 'Sesión de fisioterapia', precio: 600, duracionEstimada: '01:00', id: 4}
   ]);
 
-  formGroup = new FormGroup({
-    nombre: new FormControl ('', Validators.required),
-    descripcion: new FormControl ('', Validators.required),
-    precio: new FormControl ('', Validators.required),
-    duracionEstimada: new FormControl ('', [Validators.required, Validators.pattern('^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$\n')])
-  });
-
-  formGroup2 = new FormGroup({
-    nombreEditar: new FormControl ('', Validators.required),
-    descripcionEditar: new FormControl ('', [Validators.required, Validators.maxLength(150)]),
-    precioEditar: new FormControl ('', Validators.required),
-    duracionEstimadaEditar: new FormControl ('', Validators.required)
-  });
+  formGroup: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<DialogPaqueteComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: { id?: number, nombre?: string, descripcion?: string, precio?: number, duracionEstimada?: number }
+              @Inject(MAT_DIALOG_DATA) public data: { id?: number, nombre?: string, services?:Servicio[]},
+              private fb: FormBuilder
   ) {
-    if (data.nombre != null && data.descripcion != null && data.precio != null && data.duracionEstimada != null){
-      this.formGroup2.setValue({ nombreEditar: data.nombre, descripcionEditar: data.descripcion, precioEditar: data.precio.toString(), duracionEstimadaEditar: data.duracionEstimada.toString() });
+    if (data.nombre != null){
+      this.formGroup = this.fb.group({
+        nombre: [{nombre: data.nombre}, Validators.required],
+        servicios: this.fb.array([data.services])
+      });
     } else {
+      this.formGroup = this.fb.group({
+        nombre: ['', Validators.required],
+        servicios: this.fb.array([])
+      });
     }
   }
-
+  
+  trackById(index: number, item: Servicio) {
+    return item.id;
+  }
+  
   onClose() {
     this.dialogRef.close();
   }
-
-  onModify() {}
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -121,10 +120,19 @@ export class DialogPaqueteComponent {
         this.onClose();
       }
     } else {
-      if (this.formGroup2.valid){
-        alert('Paquete editado: ' + this.formGroup2.value.nombreEditar);
+      if (this.formGroup.valid){
+        alert('Paquete editado: ' + this.formGroup.value.nombre);
         this.onClose();
       }
     }
   }
+
+  toggleSelection(id: number, isChecked: boolean) {
+    if (isChecked) {
+      this.selectedServices.add(id);
+      console.log(Array.from(this.selectedServices));
+    } else {
+      this.selectedServices.delete(id);
+    }
+  }  
 }

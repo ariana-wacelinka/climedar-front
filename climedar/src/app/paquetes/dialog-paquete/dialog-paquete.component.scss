@@ -3,6 +3,10 @@
   margin-top: 5px;
   }
 
+#nombre{
+  margin-bottom: 20px;
+}
+
 *{
   color: black;
   font-size: 16px;
@@ -86,4 +90,9 @@ td, th {
 
 :host ::ng-deep .mat-mdc-form-field-subscript-wrapper{
   position: fixed !important;
+  }
+
+  #select{
+    padding: 0 !important;
+    margin: 0 !important;
   }
