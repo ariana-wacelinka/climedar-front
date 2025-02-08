@@ -11,6 +11,7 @@ import {
   MatRow, MatRowDef, MatTable, MatTableDataSource
 } from "@angular/material/table";
 import {MatFormField, MatFormFieldModule, MatLabel} from "@angular/material/form-field";
+import {Especialidad, EspecialidadService} from '../../especialidad';
 import {MatIcon, MatIconModule} from "@angular/material/icon";
 import {MatInput, MatInputModule} from "@angular/material/input";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
@@ -56,27 +57,25 @@ export class ListadoEspecialidadesComponent {
   currentPage = 1;
   pageSize = 5;
   totalItems = 30;
+  especialidades: Especialidad[] = [];
+  dataSource = new MatTableDataSource<Especialidad>([]);
+  displayedColumns: string[] = ["nombre", "edit"];
+
+  constructor(private dialog: MatDialog, private especialidadService: EspecialidadService) {};
+
+  ngOnInit() {
+    this.loadEspecialidades();
+  }
 
   onPageChange(page: number) {
     this.currentPage = page;
   }
-
-  //Esto despues se reemplaza por el sort que hizo Lu
-  @ViewChild(MatSort) sort: MatSort = new MatSort;
-
-  displayedColumns: string[] = ["nombre", "edit"];
-  dataSource = new MatTableDataSource([
-    {nombre: 'Cardiologia', number: 0},
-    {nombre: 'Traumatologia', number: 1},
-    {nombre: 'Cirugia general', number: 2},
-    {nombre: 'Ginecologia', number: 3},
-    {nombre: 'Pediatria', number: 4}
-  ]);
-
-  constructor(private dialog: MatDialog) {}
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
+  
+  loadEspecialidades() {
+    this.especialidadService.getAllEspecialidades().subscribe(especialidades => {
+      this.especialidades = especialidades;
+      this.dataSource.data = this.especialidades;
+    });
   }
 
   applyFilter(event: Event) {
@@ -88,12 +87,18 @@ export class ListadoEspecialidadesComponent {
     }
   }
 
-  editEspecialidad(number: number) {
-    this.dialog.open(DialogEspecialidadComponent, {
-      width:'670px',
+  editEspecialidad(especialidad: Especialidad) {
+    const dialogRef = this.dialog.open(DialogEspecialidadComponent, {
+      width: '670px',
       minWidth: '350px',
       maxWidth: '90vw',
-      data: {id: number, nombre: this.dataSource.data[number].nombre}
+      data: {id: especialidad.id, name: especialidad.name, code: especialidad.code, description: especialidad.description}
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadEspecialidades();
+      }
     });
   }
 

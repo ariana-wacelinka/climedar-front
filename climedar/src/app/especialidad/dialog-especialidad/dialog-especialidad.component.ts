@@ -7,7 +7,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatFormField, MatHint, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 
@@ -21,7 +21,8 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
         MatFormField,
         MatInput,
         MatLabel,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatHint
     ],
   templateUrl: './dialog-especialidad.component.html',
   styleUrl: './dialog-especialidad.component.scss'
@@ -29,40 +30,31 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 export class DialogEspecialidadComponent {
 
   formGroup = new FormGroup({
-    nombre: new FormControl ('', Validators.required)
-  });
-
-  formGroup2 = new FormGroup({
-    nombreEditar: new FormControl ('', Validators.required)
+    name: new FormControl ('', Validators.required),
+    code: new FormControl ('', Validators.required),
+    description: new FormControl ('', Validators.required)
   });
 
   constructor(
     public dialogRef: MatDialogRef<DialogEspecialidadComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id?: number, nombre?: string }
+    @Inject(MAT_DIALOG_DATA) public data: { id?: number, name?: string, code?:string, description?: string }
   ) {
-    if (data.nombre != null) {
-      this.formGroup2.setValue({ nombreEditar: data.nombre });
-    } else {
-    }
-  }
+    if (data) {
+      this.formGroup.patchValue({
+        name: data.name ?? '',
+        code: data.code ?? '',
+        description: data.description ?? ''
+      });
+     }}
 
   onClose() {
     this.dialogRef.close();
   }
 
   onSubmit() {
-    if (this.data.id == null){
-      if (this.formGroup.valid){
-        alert('Obra social creada: ' + this.formGroup.value.nombre);
-        this.onClose();
-      } else {
-      }
-    } else {
-      if (this.formGroup2.valid){
-        alert('Obra social editada: ' + this.formGroup2.value.nombreEditar);
-        this.onClose();
-      } else {
-      }
+    if (this.formGroup.valid){
+      alert('Obra social guardada: ' + this.formGroup.value.name);
+      this.onClose();
     }
   }
 }
