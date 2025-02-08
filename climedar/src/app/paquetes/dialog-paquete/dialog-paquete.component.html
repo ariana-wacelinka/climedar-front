@@ -1,65 +1,63 @@
-@if (this.data.id == null) {
-  <h1 mat-dialog-title>Añadir servicio</h1>
+<h1 mat-dialog-title>Añadir servicio</h1>
 
-  <div mat-dialog-content>
-    <form [formGroup]="formGroup">
-      <mat-form-field id="nombre" class="full-width" appearance="outline">
-        <mat-label>Nombre</mat-label>
-        <input matInput placeholder="Nombre" formControlName="nombre" required>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <mat-form-field id="nombre" class="full-width" appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput placeholder="Nombre" formControlName="nombre" required>
+    </mat-form-field>
+
+  <div class="contenedor-tabla">
+
+    <div class="titulo-tabla"><b>Servicios</b></div>
+
+    <div class="form-field">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
+        <mat-label>Ingrese un servicio</mat-label>
+        <input matInput
+                placeholder="Ingrese un servicio"
+                (keyup)="applyFilter($event)"
+                #input>
       </mat-form-field>
-
-    <div class="contenedor-tabla">
-
-      <div class="titulo-tabla"><b>Servicios</b></div>
-
-      <div class="form-field">
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
-          <mat-label>Ingrese un servicio</mat-label>
-          <input matInput
-                 placeholder="Ingrese un servicio"
-                 (keyup)="applyFilter($event)"
-                 #input>
-        </mat-form-field>
-      </div>
-
-      <div class="mat-elevation-z8">
-        <table style="padding: 0 10px; background-color: #F9F9F9" mat-table
-               [dataSource]="dataSource">
-
-          <ng-container class="select" matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef></th>
-
-            <td id="select" mat-cell *matCellDef="let element" style="text-align: right;">
-              <mat-checkbox 
-                (change)="toggleSelection(element.id, $event.checked)">
-              </mat-checkbox>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="nombre">
-            <th mat-header-cell *matHeaderCellDef> Nombre </th>
-            <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="precio">
-            <th mat-header-cell *matHeaderCellDef> Precio </th>
-            <td mat-cell class="precio" *matCellDef="let element">$ {{element.precio}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="duracionEstimada">
-            <th mat-header-cell class="duracionEstimada" *matHeaderCellDef> Duración estimada </th>
-            <td mat-cell class="duracionEstimada" *matCellDef="let element"><i>{{element.duracionEstimada}}</i></td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-      </div>
     </div>
-    </form>
+
+    <div class="mat-elevation-z8">
+      <table style="padding: 0 10px; background-color: #F9F9F9" mat-table
+              [dataSource]="dataSource">
+
+        <ng-container class="select" matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef></th>
+
+          <td id="select" mat-cell *matCellDef="let service" style="text-align: right;">
+            <mat-checkbox [checked]="selectedServices.has(service.id)" 
+              (change)="toggleSelection(service.id, $event.checked)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef> Nombre </th>
+          <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="precio">
+          <th mat-header-cell *matHeaderCellDef> Precio </th>
+          <td mat-cell class="precio" *matCellDef="let element">$ {{element.precio}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="duracionEstimada">
+          <th mat-header-cell class="duracionEstimada" *matHeaderCellDef> Duración estimada </th>
+          <td mat-cell class="duracionEstimada" *matCellDef="let element"><i>{{element.duracionEstimada}}</i></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
   </div>
-} @else {}
+  </form>
+</div>
 
 <div class="column" mat-dialog-actions>
   <button mat-flat-button (click)="onSubmit()">Guardar</button>

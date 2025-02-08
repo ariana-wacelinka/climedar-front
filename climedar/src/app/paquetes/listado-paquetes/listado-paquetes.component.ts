@@ -100,13 +100,15 @@ export class ListadoPaquetesComponent {
     }
   }
 
-  editPaquete(number: number) {
-    // this.dialog.open(DialogPaqueteComponent, {
-    //   width:'670px',
-    //   minWidth: '350px',
-    //   maxWidth: '90vw',
-    //   data: {id: number, nombre: this.dataSource.data[number].nombre, descripcion: this.dataSource.data[number].descripcion, precio: this.dataSource.data[number].precio, duracionEstimada: this.dataSource.data[number].duracionEstimada}
-    // });
+  editPaquete(id: number) {
+    this.dialog.open(DialogPaqueteComponent, {
+    width:'670px',
+    minWidth: '350px',
+    maxWidth: '90vw',
+    data: {id: id,
+      nombre: this.dataSource.data[id].nombre,
+      services: this.dataSource.data[id].servicios}
+    });
   }
 
   createPaquete(): void {
@@ -132,13 +134,13 @@ export class ListadoPaquetesComponent {
     });
   }
 
-  paqueteInfo(number: number) {
+  paqueteInfo(id: number) {
     this.dialog.open(InfoPaqueteComponent, {
       data: {
-        id: number,
-        nombre: this.dataSource.data[number].nombre,
-        precio: this.dataSource.data[number].precio,
-        servicios: this.dataSource.data[number].servicios
+        id: id,
+        nombre: this.dataSource.data[id].nombre,
+        precio: this.dataSource.data[id].precio,
+        servicios: this.dataSource.data[id].servicios
       }
     });
   }

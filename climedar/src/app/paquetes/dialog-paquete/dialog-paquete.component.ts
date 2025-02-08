@@ -87,19 +87,22 @@ export class DialogPaqueteComponent {
               @Inject(MAT_DIALOG_DATA) public data: { id?: number, nombre?: string, services?:Servicio[]},
               private fb: FormBuilder
   ) {
-    if (data.nombre != null){
-      this.formGroup = this.fb.group({
-        nombre: [{nombre: data.nombre}, Validators.required],
-        servicios: this.fb.array([data.services])
-      });
-    } else {
-      this.formGroup = this.fb.group({
-        nombre: ['', Validators.required],
-        servicios: this.fb.array([])
+    this.formGroup = this.fb.group({
+      nombre: [data.nombre || '', Validators.required],
+      servicios: this.fb.array(data.services ? data.services.map(service => this.fb.group(service)) : [])
+    });
+
+    this.initializeSelectedServices();
+  }
+  
+  initializeSelectedServices() {
+    if (this.data.services) {
+      this.data.services.forEach(service => {
+        this.selectedServices.add(service.id);
       });
     }
   }
-  
+
   trackById(index: number, item: Servicio) {
     return item.id;
   }
@@ -116,12 +119,20 @@ export class DialogPaqueteComponent {
   onSubmit() {
     if (this.data.id == null){
       if (this.formGroup.valid){
+        let i = 0;
         alert('Paquete creado: ' + this.formGroup.value.nombre);
+        for (let id of this.selectedServices){
+          console.log('Servicio ' + i + ': ' + id);
+        }
         this.onClose();
       }
     } else {
       if (this.formGroup.valid){
+        let i = 0;
         alert('Paquete editado: ' + this.formGroup.value.nombre);
+        for (let id of this.selectedServices){
+          console.log('Servicio ' + i + ': ' + id);
+        }
         this.onClose();
       }
     }
