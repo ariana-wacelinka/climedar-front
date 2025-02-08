@@ -1,5 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MatButton} from "@angular/material/button";
+import {Especialidad, EspecialidadService} from '../../especialidad';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -37,7 +38,8 @@ export class DialogEspecialidadComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogEspecialidadComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id?: number, name?: string, code?:string, description?: string }
+    @Inject(MAT_DIALOG_DATA) public data: { id?: number, name?: string, code?:string, description?: string },
+    private especialidadService: EspecialidadService
   ) {
     if (data) {
       this.formGroup.patchValue({
@@ -53,8 +55,22 @@ export class DialogEspecialidadComponent {
 
   onSubmit() {
     if (this.formGroup.valid){
-      alert('Obra social guardada: ' + this.formGroup.value.name);
-      this.onClose();
+      if (this.data.id != null) {
+        console.log('Especialidad editada: ' + this.formGroup.value.name + this.formGroup.value.code + this.formGroup.value.description);
+        this.onClose();
+      } else {
+        const especialidad: Especialidad = {
+          id: '',
+          name: this.formGroup.value.name!,
+          description: this.formGroup.value.description!,
+          code: this.formGroup.value.code!
+        };        
+
+        this.especialidadService.createEspecialidad(especialidad).subscribe(() => {
+          console.log('Especialidad creada:', especialidad);
+          this.onClose();
+        });
+      }
     }
   }
 }

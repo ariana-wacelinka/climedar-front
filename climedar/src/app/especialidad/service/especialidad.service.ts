@@ -11,6 +11,38 @@ export class EspecialidadService {
 
   constructor(private http: HttpClient) { }
 
+  public createEspecialidad(especialidad: Especialidad): Observable<Especialidad> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+  
+    const body = {
+      query: `
+        mutation CreateSpeciality($code: String!, $description: String!, $name: String!) {
+          createSpeciality(speciality: {code: $code, description: $description, name: $name}) {
+            id
+            code
+            name
+            description
+          }
+        }`,
+      variables: {
+        code: especialidad.code,
+        description: especialidad.description,
+        name: especialidad.name
+      }
+    };
+  
+    return this.http.post<{ data: { createSpeciality: Especialidad } }>(
+      this.apiUrl,
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.createSpeciality)
+    );
+  }
+  
+
   public getAllEspecialidades(): Observable<Especialidad[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
