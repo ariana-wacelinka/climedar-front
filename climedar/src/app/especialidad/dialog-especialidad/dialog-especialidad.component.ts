@@ -31,6 +31,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 export class DialogEspecialidadComponent {
 
   formGroup = new FormGroup({
+    id: new FormControl (''),
     name: new FormControl ('', Validators.required),
     code: new FormControl ('', Validators.required),
     description: new FormControl ('', Validators.required)
@@ -38,11 +39,12 @@ export class DialogEspecialidadComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogEspecialidadComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id?: number, name?: string, code?:string, description?: string },
+    @Inject(MAT_DIALOG_DATA) public data: { id?: string, name?: string, code?:string, description?: string },
     private especialidadService: EspecialidadService
   ) {
     if (data) {
       this.formGroup.patchValue({
+        id: data.id ?? '',
         name: data.name ?? '',
         code: data.code ?? '',
         description: data.description ?? ''
@@ -56,8 +58,18 @@ export class DialogEspecialidadComponent {
   onSubmit() {
     if (this.formGroup.valid){
       if (this.data.id != null) {
-        console.log('Especialidad editada: ' + this.formGroup.value.name + this.formGroup.value.code + this.formGroup.value.description);
-        this.onClose();
+        const especialidad: Especialidad = {
+          id: this.formGroup.value.id!,
+          name: this.formGroup.value.name!,
+          description: this.formGroup.value.description!,
+          code: this.formGroup.value.code!
+        };
+        console.log('Especialidad a modificar:', especialidad);
+
+        this.especialidadService.updateEspecialidad(especialidad).subscribe(() => {
+          console.log('Especialidad modificada:', especialidad);
+          this.onClose();
+        });
       } else {
         const especialidad: Especialidad = {
           id: '',

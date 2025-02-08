@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Especialidad } from '../models';
 import { map, Observable } from 'rxjs';
+import { query } from '@angular/animations';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,35 @@ export class EspecialidadService {
   apiUrl = 'http://localhost:8083/graphql';
 
   constructor(private http: HttpClient) { }
+
+  public updateEspecialidad(especialidad: Especialidad): Observable<Especialidad> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+  
+    const body = {
+      query: `mutation {
+      updateSpeciality(id: "${especialidad.id}", speciality: {
+        code: "${especialidad.code}", 
+        description: "${especialidad.description}", 
+        name: "${especialidad.name}"
+      }) {
+        id
+        code
+        name
+        description
+      }
+    }`
+    };
+  
+    return this.http.post<{ data: { updateSpeciality: Especialidad } }>(
+      this.apiUrl,
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.updateSpeciality)
+    );
+  }
 
   public createEspecialidad(especialidad: Especialidad): Observable<Especialidad> {
     const headers = new HttpHeaders({
