@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Información de la especialidad</h1>
+
+<div class="column" mat-dialog-content>
+    <div><b>Nombre:</b> {{speciality.name}}</div>
+    <div><b>Descripción:</b> {{speciality.description}}</div>
+    <div><b>Código</b> {{speciality.code}}</div>
+</div>
+
+<div class="column" mat-dialog-actions>
+  <button mat-flat-button (click)="onModify()">Modificar</button>
+  <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
+</div>

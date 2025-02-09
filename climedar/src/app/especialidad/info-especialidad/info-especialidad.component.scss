@@ -1,0 +1,32 @@
+.full-width {
+width: 100% !important;
+margin-top: 5px;
+}
+
+*{
+color: black;
+}
+
+.column{
+display: flex;
+flex-direction: column;
+width: 100%;
+gap: 10px;
+}
+
+button {
+border-radius: 5px;
+width: 100%;
+}
+
+h1{
+text-align: center;
+color: black !important;
+font-weight: bold !important;
+margin-top: 10px;
+}
+
+.warn {
+background-color: #811B1DC9 !important;
+margin: 0 0 10px 0 !important;
+}

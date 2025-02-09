@@ -31,9 +31,10 @@
 
             <td mat-cell *matCellDef="let speciality" style="text-align: right;">
               <button id="menu"
-                      [matMenuTriggerFor]="menu"><mat-icon style="color: black; font-size: 22px; margin-top: 5px">menu
+                      [matMenuTriggerFor]="menu"><mat-icon style="color: black; font-size: 22px; margin-top: 5px">more_vert
               </mat-icon></button>
               <mat-menu #menu="matMenu">
+                <button (click)="info_especialidad(speciality)" mat-menu-item>Ver más</button>
                 <button (click)="editEspecialidad(speciality)" mat-menu-item>Modificar</button>
                 <button mat-menu-item>Eliminar</button>
               </mat-menu>

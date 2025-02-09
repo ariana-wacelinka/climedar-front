@@ -69,6 +69,8 @@ export class DialogEspecialidadComponent {
         this.especialidadService.updateEspecialidad(especialidad).subscribe(() => {
           console.log('Especialidad modificada:', especialidad);
           this.onClose();
+
+          window.location.reload();
         });
       } else {
         const especialidad: Especialidad = {
@@ -81,6 +83,8 @@ export class DialogEspecialidadComponent {
         this.especialidadService.createEspecialidad(especialidad).subscribe(() => {
           console.log('Especialidad creada:', especialidad);
           this.onClose();
+
+          window.location.reload();
         });
       }
     }

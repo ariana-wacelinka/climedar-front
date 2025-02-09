@@ -19,6 +19,7 @@ import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {PaginatorComponent} from "../../shared/components/paginator/paginator.component";
 import {MatDialog} from '@angular/material/dialog';
 import {DialogEspecialidadComponent} from '../dialog-especialidad/dialog-especialidad.component';
+import { InfoEspecialidadComponent } from '../info-especialidad/info-especialidad.component';
 
 @Component({
   selector: 'app-listado-especialidades',
@@ -87,18 +88,20 @@ export class ListadoEspecialidadesComponent {
     }
   }
 
+  info_especialidad(especialidad: Especialidad) {
+    console.log(especialidad);
+    const dialogRef = this.dialog.open(InfoEspecialidadComponent, {
+      maxWidth: '90vw',
+      data: {id: especialidad.id, name: especialidad.name, code: especialidad.code, description: especialidad.description}
+    });
+  }
+
   editEspecialidad(especialidad: Especialidad) {
     const dialogRef = this.dialog.open(DialogEspecialidadComponent, {
       width: '670px',
       minWidth: '350px',
       maxWidth: '90vw',
       data: {id: especialidad.id, name: especialidad.name, code: especialidad.code, description: especialidad.description}
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.loadEspecialidades();
-      }
     });
   }
 
