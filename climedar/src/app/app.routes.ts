@@ -9,16 +9,19 @@ import {PaginatorComponent} from './shared/components/paginator/paginator.compon
 import {ListadoEspecialidadesComponent} from './especialidad/listado-especialidades/listado-especialidades.component';
 import {ListadoServiciosComponent} from './servicio/listado-servicios/listado-servicios.component';
 import {ListadoPaquetesComponent} from './paquetes/listado-paquetes/listado-paquetes.component';
+import { CreateConsultationComponent } from './consultation/create-consultation/create-consultation.component';
 
 export const routes: Routes = [
-  {path: '', component: CalendarComponent},
-  {path: 'home', component: CenteredCardComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'doctor/nuevo', component: AltaDoctorComponent},
-  {path: 'paciente/nuevo', component: AltaPatientsComponent},
-  {path: 'obra-social/listado', component: ListadoObrasSocialesComponent},
-  {path: 'especialidad/listado', component: ListadoEspecialidadesComponent},
-  {path: 'servicio/listado', component: ListadoServiciosComponent},
-  {path: 'paquete/listado', component: ListadoPaquetesComponent},
-  {path: 'paginator', component: PaginatorComponent},
+  { path: '', component: CalendarComponent },
+  { path: 'home', component: CenteredCardComponent },
+  { path: 'consultation/create', component: CreateConsultationComponent },
+  { path: 'consultation/create/:turnoId', component: CreateConsultationComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'doctor/nuevo', component: AltaDoctorComponent },
+  { path: 'paciente/nuevo', component: AltaPatientsComponent },
+  { path: 'obra-social/listado', component: ListadoObrasSocialesComponent },
+  { path: 'especialidad/listado', component: ListadoEspecialidadesComponent },
+  { path: 'servicio/listado', component: ListadoServiciosComponent },
+  { path: 'paquete/listado', component: ListadoPaquetesComponent },
+  { path: 'paginator', component: PaginatorComponent },
 ];

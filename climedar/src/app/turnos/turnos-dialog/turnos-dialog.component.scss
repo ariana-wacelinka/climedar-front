@@ -8,17 +8,20 @@
   display: flex;
   flex-direction: column;
   min-height: 90vh;
+  overflow: hidden;
 }
 
 ::ng-deep .mat-mdc-dialog-container .mat-mdc-dialog-title+.mat-mdc-dialog-content {
   display: flex;
   flex-direction: column;
-  min-height: 80%;
+  min-height: 78%;
 }
 
 h2 {
   text-align: center;
   padding: 0;
+  margin: 10px 0;
+  font-weight: 600!important;
 }
 .no-turnos {
   text-align: center;
@@ -27,9 +30,7 @@ h2 {
 .turno-card {
   margin-bottom: 16px;
 }
-:root {
-  height: 100%;
-}
+
 
 .mat-typography {
   overflow: hidden;
@@ -58,4 +59,16 @@ mat-card-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 20px;
+}
+
+.turno-cancelado {
+  background-color: #d88e8e75;
+}
+
+.turno-disponible {
+  background-color: #8eb3d875;
+}
+
+.turno-reservado {
+  background-color: rgba(77, 77, 77, 0.2);
 }
