@@ -82,7 +82,9 @@ export class TurnosService {
       body,
       { headers }
     ).pipe(
-      map(response => response.data.getAllShifts)
+      map(response => {
+        console.log('Response:', response);
+        return response.data.getAllShifts})
     );
   }
 
@@ -106,6 +108,28 @@ export class TurnosService {
       map(response => {
       console.log('Response:', response);
       return response.data.cancelShift;
+      })
+    );
+  }
+
+  deleteShift(shiftId: string): Observable<boolean> {
+    const apiUrl = 'http://localhost:8083/graphql';
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    const body = {
+      query: `mutation {
+                deleteShift(id: "${shiftId}")
+              }`
+    }
+    return this.http.post<{ data: { deleteShift: boolean } }>(
+      apiUrl,
+      body,
+      { headers }
+    ).pipe(
+      map(response => {
+      console.log('Response:', response);
+      return response.data.deleteShift;
       })
     );
   }
