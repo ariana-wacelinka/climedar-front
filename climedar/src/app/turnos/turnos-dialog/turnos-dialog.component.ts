@@ -22,6 +22,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-turnos-dialog',
@@ -69,6 +70,7 @@ export class TurnosDialogComponent implements OnInit {
     private turnosService: TurnosService,
     public dialogRef: MatDialogRef<TurnosDialogComponent>,
     private cdr: ChangeDetectorRef,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: { fechaFormat: string; especialidad: Especialidad; doctor: Doctor }
   ) {
     console.log('data', data);
@@ -212,7 +214,7 @@ export class TurnosDialogComponent implements OnInit {
   }
 
   goToCreateConsulta(turno: Turno) {
-    alert('Crear consulta');
+    this.router.navigate(['/consultation/create', { turnoId: turno.id }]);
   }
 
   isTunoOcuped(turno: Turno): boolean {
