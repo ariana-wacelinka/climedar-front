@@ -19,6 +19,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'doctor/nuevo', component: AltaDoctorComponent },
   { path: 'paciente/nuevo', component: AltaPatientsComponent },
+  { path: 'turno/nuevo', component: AltaTurnoComponent },
   { path: 'obra-social/listado', component: ListadoObrasSocialesComponent },
   { path: 'especialidad/listado', component: ListadoEspecialidadesComponent },
   { path: 'servicio/listado', component: ListadoServiciosComponent },
