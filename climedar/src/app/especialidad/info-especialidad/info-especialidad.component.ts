@@ -22,6 +22,7 @@ export class InfoEspecialidadComponent {
     }
 
   onModify() {
+    this.dialogRef.close();
     const dialogRef = this.dialog.open(DialogEspecialidadComponent, {
       width: '670px',
       minWidth: '350px',

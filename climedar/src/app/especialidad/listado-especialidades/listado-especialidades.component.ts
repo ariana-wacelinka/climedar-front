@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, signal, ViewChild, WritableSignal} from '@angular/core';
 import {CenteredCardComponent} from "../../shared/components";
 import {MatButton} from "@angular/material/button";
 import {
@@ -20,6 +20,8 @@ import {PaginatorComponent} from "../../shared/components/paginator/paginator.co
 import {MatDialog} from '@angular/material/dialog';
 import {DialogEspecialidadComponent} from '../dialog-especialidad/dialog-especialidad.component';
 import { InfoEspecialidadComponent } from '../info-especialidad/info-especialidad.component';
+import { PageInfo } from '../../shared/models/extras.models';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-listado-especialidades',
@@ -55,10 +57,8 @@ import { InfoEspecialidadComponent } from '../info-especialidad/info-especialida
   styleUrl: './listado-especialidades.component.scss'
 })
 export class ListadoEspecialidadesComponent {
-  currentPage = 1;
-  pageSize = 5;
-  totalItems = 30;
-  especialidades: Especialidad[] = [];
+  pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
+  especialidades = signal<Especialidad[]>([]);
   dataSource = new MatTableDataSource<Especialidad>([]);
   displayedColumns: string[] = ["nombre", "edit"];
 
@@ -68,14 +68,27 @@ export class ListadoEspecialidadesComponent {
     this.loadEspecialidades();
   }
 
-  onPageChange(page: number) {
-    this.currentPage = page;
+  pageChange(page: number) {
+    this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
+
+    this.especialidadService.getAllEspecialidades(page).pipe(
+      map(response => response)
+    ).subscribe(response => {
+      this.especialidades.set(response.especialidades);
+      this.pageInfo.set(response.pageInfo);
+    });
+  }
+  
+
+  currentPage(): WritableSignal<number> {
+    return signal<number>(this.pageInfo().currentPage + 1);
   }
   
   loadEspecialidades() {
-    this.especialidadService.getAllEspecialidades().subscribe(especialidades => {
-      this.especialidades = especialidades;
-      this.dataSource.data = this.especialidades;
+    this.especialidadService.getAllEspecialidades(this.pageInfo().currentPage).subscribe(response => {
+      this.especialidades.set(response.especialidades);
+      this.dataSource.data = response.especialidades;
+      this.pageInfo.set(response.pageInfo);
     });
   }
 
@@ -91,7 +104,8 @@ export class ListadoEspecialidadesComponent {
   info_especialidad(especialidad: Especialidad) {
     console.log(especialidad);
     const dialogRef = this.dialog.open(InfoEspecialidadComponent, {
-      maxWidth: '90vw',
+      maxWidth: '330px',
+      height: 'auto',
       data: {id: especialidad.id, name: especialidad.name, code: especialidad.code, description: especialidad.description}
     });
   }

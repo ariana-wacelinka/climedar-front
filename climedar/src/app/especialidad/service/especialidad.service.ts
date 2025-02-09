@@ -1,14 +1,16 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Especialidad } from '../models';
 import { map, Observable } from 'rxjs';
 import { query } from '@angular/animations';
+import { PageInfo } from '../../shared/models/extras.models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EspecialidadService {
   apiUrl = 'http://localhost:8083/graphql';
+  pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
 
   constructor(private http: HttpClient) { }
 
@@ -73,32 +75,42 @@ export class EspecialidadService {
   }
   
 
-  public getAllEspecialidades(): Observable<Especialidad[]> {
+  public getAllEspecialidades(page: number): Observable<{ pageInfo: PageInfo, especialidades: Especialidad[] }> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-
+  
     const body = {
-      query: `
-        query {
-          getAllSpecialities(pageRequest: { page: 1, size: 5 }) {
-            specialities {
-              id
-              code
-              name
-              description
-            }
+      query: `{
+        getAllSpecialities(
+          pageRequest: { page: ${page}, size: 5, order: {field: "name", direction: ASC}}
+        ) {
+          pageInfo {
+            totalItems
+            currentPage
+            totalPages
           }
-        }`
+          specialities {
+            id
+            code
+            name
+            description
+          }
+        }
+      }`
     };
-
-    return this.http.post<{ data: { getAllSpecialities: { specialities: Especialidad[] } } }>(
+  
+    return this.http.post<{ data: { getAllSpecialities: { pageInfo: PageInfo, specialities: Especialidad[] } } }>(
       this.apiUrl,
       body,
       { headers }
     ).pipe(
-      map(response => response.data?.getAllSpecialities?.specialities ?? []));
-  }
+      map(response => ({
+        pageInfo: response.data.getAllSpecialities.pageInfo,
+        especialidades: response.data.getAllSpecialities.specialities
+      }))
+    );
+  }  
 
   public getEspecialidadesByNombre(nombre: string): Observable<Especialidad[]> {
     console.log('getEspecialidadesByNombre');

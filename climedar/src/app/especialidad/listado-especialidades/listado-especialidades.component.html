@@ -19,7 +19,7 @@
 
 
       <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource" matSort>
+        <table mat-table [dataSource]="especialidades()" matSort>
 
           <ng-container matColumnDef="nombre">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
@@ -54,8 +54,7 @@
   </ng-container>
 
   <ng-container main-actions>
-    <app-paginator [totalItems]="totalItems" [pageSize]="pageSize"
-                   (pageChange)="onPageChange($event)"></app-paginator>
+    <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)" [currentPage]="currentPage()"></app-paginator>
   </ng-container>
 
 </app-centered-card>
