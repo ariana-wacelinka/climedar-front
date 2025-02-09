@@ -78,7 +78,6 @@ export class ListadoEspecialidadesComponent {
       this.pageInfo.set(response.pageInfo);
     });
   }
-  
 
   currentPage(): WritableSignal<number> {
     return signal<number>(this.pageInfo().currentPage + 1);
@@ -125,6 +124,17 @@ export class ListadoEspecialidadesComponent {
       minWidth: '350px',
       maxWidth: '90vw',
       data: {}
+    });
+  }
+
+  eliminarEspecialidad(id: string) {
+    this.especialidadService.deleteEspecialidad(id)
+    .subscribe(success => {
+      if (success) {
+        window.location.reload();
+      } else {
+        console.log('Error al eliminar la especialidad');
+      }
     });
   }
 }

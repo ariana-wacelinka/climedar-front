@@ -40,7 +40,7 @@ export class DialogEspecialidadComponent {
   constructor(
     public dialogRef: MatDialogRef<DialogEspecialidadComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id?: string, name?: string, code?:string, description?: string },
-    private especialidadService: EspecialidadService
+    private especialidadService: EspecialidadService,
   ) {
     if (data) {
       this.formGroup.patchValue({
@@ -69,7 +69,6 @@ export class DialogEspecialidadComponent {
         this.especialidadService.updateEspecialidad(especialidad).subscribe(() => {
           console.log('Especialidad modificada:', especialidad);
           this.onClose();
-
           window.location.reload();
         });
       } else {
@@ -83,7 +82,6 @@ export class DialogEspecialidadComponent {
         this.especialidadService.createEspecialidad(especialidad).subscribe(() => {
           console.log('Especialidad creada:', especialidad);
           this.onClose();
-
           window.location.reload();
         });
       }

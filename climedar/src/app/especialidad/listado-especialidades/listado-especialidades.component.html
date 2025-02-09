@@ -36,7 +36,7 @@
               <mat-menu #menu="matMenu">
                 <button (click)="info_especialidad(speciality)" mat-menu-item>Ver más</button>
                 <button (click)="editEspecialidad(speciality)" mat-menu-item>Modificar</button>
-                <button mat-menu-item>Eliminar</button>
+                <button (click)="eliminarEspecialidad(speciality.id)" mat-menu-item>Eliminar</button>
               </mat-menu>
             </td>
           </ng-container>

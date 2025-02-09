@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Especialidad } from '../models';
 import { map, Observable } from 'rxjs';
-import { query } from '@angular/animations';
 import { PageInfo } from '../../shared/models/extras.models';
 
 @Injectable({
@@ -72,8 +71,7 @@ export class EspecialidadService {
     ).pipe(
       map(response => response.data.createSpeciality)
     );
-  }
-  
+  }  
 
   public getAllEspecialidades(page: number): Observable<{ pageInfo: PageInfo, especialidades: Especialidad[] }> {
     const headers = new HttpHeaders({
@@ -112,6 +110,27 @@ export class EspecialidadService {
     );
   }  
 
+  public deleteEspecialidad(id: string): Observable<boolean> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+  
+    const body = {
+      query: `mutation {
+        deleteSpeciality(id: "${id}")
+      }`
+    };
+  
+    return this.http.post<{ data: { deleteSpeciality: boolean } }>(
+      this.apiUrl,
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.deleteSpeciality) // Devuelve el resultado como booleano
+    );
+  }
+
+  
   public getEspecialidadesByNombre(nombre: string): Observable<Especialidad[]> {
     console.log('getEspecialidadesByNombre');
     console.log('nombre: ', nombre);
