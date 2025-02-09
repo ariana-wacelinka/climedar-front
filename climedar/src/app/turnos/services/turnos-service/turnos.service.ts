@@ -94,7 +94,7 @@ export class TurnosService {
     const body = {
       query: `mutation {
                 cancelShift(id: "${shiftId}") {
-                    timeOfShifts
+                    state
                 }
               }`
     }
@@ -103,7 +103,10 @@ export class TurnosService {
       body,
       { headers }
     ).pipe(
-      map(response => response.data.cancelShift)
+      map(response => {
+      console.log('Response:', response);
+      return response.data.cancelShift;
+      })
     );
   }
 }

@@ -72,14 +72,14 @@
             </button>
             <mat-menu #beforeMenu="matMenu" xPosition="before">
               @if(isTurnoCanceled(turno)) {
-                <button mat-menu-item (click)="confirmTurno(turno)">Eliminar</button>
+                <button mat-menu-item (click)="deleteShift(turno)">Eliminar</button>
               } @else {
                 @if (isTunoOcuped(turno)) {
                   <button mat-menu-item (click)="liberarTurno(turno)">Liberar</button>
                   <button mat-menu-item (click)="cancelShift(turno)">Cancelar</button>
                 }@else {
                   <button mat-menu-item (click)="goToCreateConsulta(turno)">Reservar</button>
-                  <button mat-menu-item (click)="confirmTurno(turno)">Eliminar</button>
+                  <button mat-menu-item (click)="deleteShift(turno)">Eliminar</button>
                   <button mat-menu-item (click)="modificarTurno(turno)">
                     <span>Modificar</span>
                   </button>

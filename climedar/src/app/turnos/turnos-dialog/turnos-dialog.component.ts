@@ -1,5 +1,5 @@
 import { PageInfo } from './../../shared/models/extras.models';
-import { Component, Inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { Turno, TurnoState } from '../models/turno.models';
 import { MatCardModule } from '@angular/material/card';
@@ -68,6 +68,7 @@ export class TurnosDialogComponent implements OnInit {
     private doctorService: DoctorService,
     private turnosService: TurnosService,
     public dialogRef: MatDialogRef<TurnosDialogComponent>,
+    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: { fechaFormat: string; especialidad: Especialidad; doctor: Doctor }
   ) {
     console.log('data', data);
@@ -228,20 +229,19 @@ export class TurnosDialogComponent implements OnInit {
 
       cancelShift(turno: Turno) {
         this.turnosService.cancelShift(turno.id!).subscribe((response) => {
-          console.log('cancelShift', response);
+          console.log('cancelShift', response.state);
           this.turnos().filter(t => t.id == turno.id).map(t => t.state = response.state);
             const turnoElement = document.getElementById(turno.id!.toString());
-            if (turnoElement) {
-              turnoElement.classList.remove("turno-reservado");
-              turnoElement.classList.add("turno-cancelado");
-            }
-          // this.turnos.set(this.turnos().filter(t => t.id !== turno.id));
-          // this.turnos.set([...this.turnos(), response]);
+            this.cdr.detectChanges();
+            this.cdr.markForCheck();
         });
       }
 
-      confirmTurno(turno: Turno) {
-        alert('Confirmar turno');
+      deleteShift(turno: Turno) {
+        // this.turnosService.deleteShift(turno.id!).subscribe((response) => {
+        //   console.log('deleteShift', response);
+        //   this.turnos.set(this.turnos().filter(t => t.id !== turno.id));
+        // });
       }
 
       liberarTurno(turno: Turno) {
