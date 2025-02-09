@@ -3,6 +3,8 @@
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
 
 mat-toolbar {
+    padding-top: 10px;
+    color: #f9f9f9;
     flex: 0 0 auto; /* Mantiene su tamaño natural */
     z-index: 2;
     // background-color: rgba(0, 0, 0, 0.1);
@@ -10,4 +12,81 @@ mat-toolbar {
     top: 0;
     left: 0;
     width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
+
+.izquierda{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+}
+
+.derecha{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: end;
+
+    button{
+        border: 1px solid #F9F9F9;
+        border-radius: 10px;
+        color: #F9F9F9;
+    }
+}
+
+.menu {
+    margin-top: 13px;
+    display: flex;
+    gap: 16px;
+    height: 100%;
+
+    div[mat-button] {
+    cursor: pointer;
+    font-size: 18px;
+    }
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.not_menu{
+    margin-right: 10px;
+}
+
+mat-icon{
+    font-size: 18px;
+    align-content: center;
+    text-align: center;
+}
+
+.logo{
+    padding-top: 10px;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.231));
+    margin-right: 10px;
+    max-width: 250px;
+    height: auto;
+    cursor: pointer;
+}
+
+mat-icon {
+    transition: transform 0.3s ease;
+}
+
+mat-icon.rotate {
+    transform: rotate(180deg);
+}
+  
