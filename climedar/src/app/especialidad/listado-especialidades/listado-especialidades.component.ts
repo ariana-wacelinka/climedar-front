@@ -84,11 +84,11 @@ export class ListadoEspecialidadesComponent {
   }
   
   loadEspecialidades() {
-    // this.especialidadService.getAllEspecialidades(this.pageInfo().currentPage).subscribe(response => {
-    //   this.especialidades.set(response.especialidades);
-    //   this.dataSource.data = response.especialidades;
-    //   this.pageInfo.set(response.pageInfo);
-    // });
+    this.especialidadService.getAllEspecialidades(this.pageInfo().currentPage).subscribe(response => {
+      this.especialidades.set(response.especialidades);
+      this.dataSource.data = response.especialidades;
+      this.pageInfo.set(response.pageInfo);
+    });
   }
 
   applyFilter(event: Event) {
