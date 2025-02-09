@@ -52,18 +52,40 @@
           <p class="no-turnos">No hay turnos disponibles para este día</p>
         </ng-container>
         @for(turno of turnos(); track turno.id) {
-        <mat-card class="turno-card">
+        <mat-card [id]="turno.id!" class="turno-card" [ngClass]="{
+          'turno-disponible': isTurnoAvailable(turno),
+          'turno-reservado': isTunoOcuped(turno),
+          'turno-cancelado': isTurnoCanceled(turno),
+        }">
           <mat-card-content>
             <div class="turno-info">
-              @if (turno.doctor.gender === "MALE") {
-                <h3>Dr. {{ turno.doctor.surname }} {{ turno.doctor.name }}</h3>
+              @if (turno.doctor!.gender === "MALE") {
+                <h3>Dr. {{ turno.doctor!.surname }} {{ turno.doctor!.name }}</h3>
               }@else {
-                <h3>Dra. {{ turno.doctor.surname }} {{ turno.doctor.name }}</h3>
+                <h3>Dra. {{ turno.doctor!.surname }} {{ turno.doctor!.name }}</h3>
               }
               <p class="especialidad">{{ turno.place }}</p>
-              <p class="hora">{{ turno.startTime }} ({{ convertDuration(turno.timeOfShifts) }})</p>
+              <p class="hora">{{ turno.startTime }} ({{ convertDuration(turno!.timeOfShifts!) }})</p>
             </div>
-            <button mat-flat-button color="primary">Reservar</button>
+            <button mat-icon-button [matMenuTriggerFor]="beforeMenu" color="primary">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #beforeMenu="matMenu" xPosition="before">
+              @if(isTurnoCanceled(turno)) {
+                <button mat-menu-item (click)="confirmTurno(turno)">Eliminar</button>
+              } @else {
+                @if (isTunoOcuped(turno)) {
+                  <button mat-menu-item (click)="liberarTurno(turno)">Liberar</button>
+                  <button mat-menu-item (click)="cancelShift(turno)">Cancelar</button>
+                }@else {
+                  <button mat-menu-item (click)="goToCreateConsulta(turno)">Reservar</button>
+                  <button mat-menu-item (click)="confirmTurno(turno)">Eliminar</button>
+                  <button mat-menu-item (click)="modificarTurno(turno)">
+                    <span>Modificar</span>
+                  </button>
+                }
+              }
+            </mat-menu>
           </mat-card-content>
         </mat-card>
       }

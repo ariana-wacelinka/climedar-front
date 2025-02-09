@@ -85,4 +85,25 @@ export class TurnosService {
       map(response => response.data.getAllShifts)
     );
   }
+
+  cancelShift(shiftId: string): Observable<Turno> {
+    const apiUrl = 'http://localhost:8083/graphql';
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    const body = {
+      query: `mutation {
+                cancelShift(id: "${shiftId}") {
+                    timeOfShifts
+                }
+              }`
+    }
+    return this.http.post<{ data: { cancelShift: Turno } }>(
+      apiUrl,
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.cancelShift)
+    );
+  }
 }

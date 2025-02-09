@@ -1,7 +1,7 @@
 import { PageInfo } from './../../shared/models/extras.models';
 import { Component, Inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { Turno } from '../models/turno.models';
+import { Turno, TurnoState } from '../models/turno.models';
 import { MatCardModule } from '@angular/material/card';
 import { AsyncPipe, CommonModule, DatePipe, NgFor, NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +21,7 @@ import { Duration } from 'luxon';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-turnos-dialog',
@@ -44,6 +45,7 @@ import { PaginatorComponent } from '../../shared/components/paginator/paginator.
     MatInputModule,
     MatTimepickerModule,
     PaginatorComponent,
+    MatMenuModule
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './turnos-dialog.component.html',
@@ -208,7 +210,47 @@ export class TurnosDialogComponent implements OnInit {
         }
       }
 
+      goToCreateConsulta(turno: Turno) {
+        alert('Crear consulta');
+      }
 
+      isTunoOcuped(turno: Turno): boolean {
+        return turno.state === TurnoState.OCUPADO;
+      }
+
+      isTurnoAvailable(turno: Turno): boolean {
+        return turno.state === TurnoState.LIBRE;
+      }
+
+      isTurnoCanceled(turno: Turno): boolean {
+        return turno.state === TurnoState.CANCELADO;
+      }
+
+      cancelShift(turno: Turno) {
+        this.turnosService.cancelShift(turno.id!).subscribe((response) => {
+          console.log('cancelShift', response);
+          this.turnos().filter(t => t.id == turno.id).map(t => t.state = response.state);
+            const turnoElement = document.getElementById(turno.id!.toString());
+            if (turnoElement) {
+              turnoElement.classList.remove("turno-reservado");
+              turnoElement.classList.add("turno-cancelado");
+            }
+          // this.turnos.set(this.turnos().filter(t => t.id !== turno.id));
+          // this.turnos.set([...this.turnos(), response]);
+        });
+      }
+
+      confirmTurno(turno: Turno) {
+        alert('Confirmar turno');
+      }
+
+      liberarTurno(turno: Turno) {
+        alert('liberar turno');
+      }
+
+      modificarTurno(turno: Turno) {
+        alert('Modificar turno');
+      }
 
       convertDuration(duration: string): string {
         return Duration.fromISO(duration).as('minutes') + ' min';
