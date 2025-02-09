@@ -3,6 +3,18 @@
   }
 //Importante para que el paginator esté abajo a la derecha
 
+.nada{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px 0;
+  &:hover{
+    cursor: pointer;
+    background-color: #b9b9b923;
+  }
+}
+
 .full-width {
   width: 100%;
   }

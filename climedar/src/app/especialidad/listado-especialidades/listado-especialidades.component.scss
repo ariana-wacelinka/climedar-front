@@ -55,3 +55,15 @@ td, th {
     cursor: pointer;
     }
   }
+
+  .nada{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+    &:hover{
+      cursor: pointer;
+      background-color: #b9b9b923;
+    }
+  }

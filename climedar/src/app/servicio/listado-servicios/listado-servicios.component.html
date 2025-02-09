@@ -45,7 +45,7 @@
 
             <td id="edit" mat-cell *matCellDef="let element" style="text-align: right;">
               <button id="menu"
-                      [matMenuTriggerFor]="menu"><mat-icon style="color: black; font-size: 22px; margin-top: 5px">menu
+                      [matMenuTriggerFor]="menu"><mat-icon style="color: black; font-size: 22px; margin-top: 5px">more_vert
               </mat-icon></button>
               <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="servicioInfo(element.number)">Ver más</button>
@@ -59,7 +59,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
           <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4">No se han encontrado coincidencias con "{{input.value}}"</td>
+            <td class="mat-cell" colspan="4"><div class="nada">No se han encontrado servicios</div></td>
           </tr>
         </table>
       </div>

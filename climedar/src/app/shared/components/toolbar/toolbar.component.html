@@ -1,3 +1,35 @@
-<mat-toolbar>
-    <span>My Application</span>
+<mat-toolbar color="primary">
+    <div class="izquierda">
+    <img (click)="agenda()" src="https://i.postimg.cc/NGTw4HDr/LOGO-CLIMEDAR-1.png" alt="logo" class="logo">
+    <div class="menu">
+        <div mat-button [matMenuTriggerFor]="medicosMenu" (menuOpened)="toggleMenu('medicos')" (menuClosed)="toggleMenu('medicos')">
+            <div class="row">Médicos
+            <mat-icon [class.rotate]="medicosMenuOpen">keyboard_arrow_down</mat-icon>
+        </div>
+        </div>
+        <mat-menu #medicosMenu="matMenu">
+        <button (click)="listado_medicos()" mat-menu-item>Listado de Médicos</button>
+        <button (click)="alta_medico()" mat-menu-item>Agregar Médico</button>
+        </mat-menu>
+        
+        <div mat-button [matMenuTriggerFor]="pacientesMenu" (menuOpened)="toggleMenu('pacientes')" (menuClosed)="toggleMenu('pacientes')">
+        <div class="row">Pacientes
+        <mat-icon [class.rotate]="pacientesMenuOpen">keyboard_arrow_down</mat-icon></div>
+        </div>
+        <mat-menu #pacientesMenu="matMenu">
+        <button (click)="listado_pacientes()" mat-menu-item>Listado de Pacientes</button>
+        <button (click)="alta_paciente()" mat-menu-item>Agregar Paciente</button>
+        </mat-menu>          
+  
+      <div class="not_menu" mat-button (click)="listado_servicios()">Servicios</div>
+
+      <div class="not_menu" mat-button (click)="listado_especialidadaes()">Especialidades</div>
+  
+      <div class="not_menu" mat-button (click)="listado_paquetes()">Paquetes</div>
+    </div>
+    </div>
+    <div class="derecha">
+        <button mat-stroked-button style="margin-right: 10px; cursor: pointer; font-size: 18px;" (click)="login()">Iniciar sesión</button>
+    </div>
 </mat-toolbar>
+  

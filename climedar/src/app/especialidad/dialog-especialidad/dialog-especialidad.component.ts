@@ -1,5 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MatButton} from "@angular/material/button";
+import {Especialidad, EspecialidadService} from '../../especialidad';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -7,7 +8,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatFormField, MatHint, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 
@@ -21,7 +22,8 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
         MatFormField,
         MatInput,
         MatLabel,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatHint
     ],
   templateUrl: './dialog-especialidad.component.html',
   styleUrl: './dialog-especialidad.component.scss'
@@ -29,39 +31,59 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 export class DialogEspecialidadComponent {
 
   formGroup = new FormGroup({
-    nombre: new FormControl ('', Validators.required)
-  });
-
-  formGroup2 = new FormGroup({
-    nombreEditar: new FormControl ('', Validators.required)
+    id: new FormControl (''),
+    name: new FormControl ('', Validators.required),
+    code: new FormControl ('', Validators.required),
+    description: new FormControl ('', Validators.required)
   });
 
   constructor(
     public dialogRef: MatDialogRef<DialogEspecialidadComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id?: number, nombre?: string }
+    @Inject(MAT_DIALOG_DATA) public data: { id?: string, name?: string, code?:string, description?: string },
+    private especialidadService: EspecialidadService,
   ) {
-    if (data.nombre != null) {
-      this.formGroup2.setValue({ nombreEditar: data.nombre });
-    } else {
-    }
-  }
+    if (data) {
+      this.formGroup.patchValue({
+        id: data.id ?? '',
+        name: data.name ?? '',
+        code: data.code ?? '',
+        description: data.description ?? ''
+      });
+     }}
 
   onClose() {
     this.dialogRef.close();
   }
 
   onSubmit() {
-    if (this.data.id == null){
-      if (this.formGroup.valid){
-        alert('Obra social creada: ' + this.formGroup.value.nombre);
-        this.onClose();
+    if (this.formGroup.valid){
+      if (this.data.id != null) {
+        const especialidad: Especialidad = {
+          id: this.formGroup.value.id!,
+          name: this.formGroup.value.name!,
+          description: this.formGroup.value.description!,
+          code: this.formGroup.value.code!
+        };
+        console.log('Especialidad a modificar:', especialidad);
+
+        this.especialidadService.updateEspecialidad(especialidad).subscribe(() => {
+          console.log('Especialidad modificada:', especialidad);
+          this.onClose();
+          window.location.reload();
+        });
       } else {
-      }
-    } else {
-      if (this.formGroup2.valid){
-        alert('Obra social editada: ' + this.formGroup2.value.nombreEditar);
-        this.onClose();
-      } else {
+        const especialidad: Especialidad = {
+          id: '',
+          name: this.formGroup.value.name!,
+          description: this.formGroup.value.description!,
+          code: this.formGroup.value.code!
+        };        
+
+        this.especialidadService.createEspecialidad(especialidad).subscribe(() => {
+          console.log('Especialidad creada:', especialidad);
+          this.onClose();
+          window.location.reload();
+        });
       }
     }
   }
