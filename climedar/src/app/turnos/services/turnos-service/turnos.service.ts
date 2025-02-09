@@ -133,4 +133,39 @@ export class TurnosService {
       })
     );
   }
+
+  getShiftById(shiftId: string): Observable<Turno> {
+    const apiUrl = 'http://localhost:8083/graphql';
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    const body = {
+      query: `{
+                getShiftById(id: "${shiftId}") {
+                  date
+                  startTime
+                  endTime
+                  timeOfShifts
+                  doctor {
+                    id
+                    name
+                    surname
+                    gender
+                    speciality {
+                      id
+                      name
+                    }
+                  }
+                }
+              }`
+    }
+
+    return this.http.post<{ data: { getShiftById: Turno } }>(
+      apiUrl,
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.getShiftById)
+    );
+  }
 }

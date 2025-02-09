@@ -90,7 +90,7 @@ export class CalendarComponent implements OnInit {
         const title = value;
         const especialidad = this.especialidadControl.value;
         const especialidadId = typeof especialidad === 'string' || especialidad === '' ? '' : (especialidad as Especialidad).id;
-        return this.doctorService.getDoctorsByName(title, especialidadId).pipe(
+        return this.doctorService.getDoctorsByName(title, especialidadId!).pipe(
           map((doctors: Doctor[]) => {
             return doctors;
           })
@@ -101,7 +101,7 @@ export class CalendarComponent implements OnInit {
   }
 
   trackByCodigo(index: number, option: Especialidad): string {
-    return option.code;
+    return option.code!;
   }
 
   updateCalendar() {
@@ -158,7 +158,7 @@ export class CalendarComponent implements OnInit {
   }
 
   displayEspecialidad(especialidad: Especialidad | null): string {
-    return especialidad ? especialidad.name : '';
+    return especialidad ? especialidad.name! : '';
   }
 
   displayDoctor(doctor: Doctor | null): string {

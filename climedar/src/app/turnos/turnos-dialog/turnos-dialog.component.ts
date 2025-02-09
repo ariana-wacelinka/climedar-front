@@ -115,7 +115,7 @@ export class TurnosDialogComponent implements OnInit {
         const title = value;
         const especialidad = this.especialidadControl.value;
         const especialidadId = typeof especialidad === 'string' || especialidad == '' || especialidad == null ? '' : (especialidad as Especialidad).id;
-        return this.doctorService.getDoctorsByName(title, especialidadId).pipe(
+        return this.doctorService.getDoctorsByName(title, especialidadId!).pipe(
           map((doctors: Doctor[]) => {
             return doctors;
           })
@@ -127,7 +127,7 @@ export class TurnosDialogComponent implements OnInit {
 
 
   displayEspecialidad(especialidad: Especialidad | null): string {
-    return especialidad ? especialidad.name : '';
+    return especialidad ? especialidad.name! : '';
   }
 
   displayDoctor(doctor: Doctor | null): string {
@@ -214,7 +214,8 @@ export class TurnosDialogComponent implements OnInit {
   }
 
   goToCreateConsulta(turno: Turno) {
-    this.router.navigate(['/consultation/create', { turnoId: turno.id }]);
+    this.dialogRef.close();
+    this.router.navigate(['consultation/create', { turnoId: turno.id }]);
   }
 
   isTunoOcuped(turno: Turno): boolean {
