@@ -1,13 +1,26 @@
 import { Component, Input } from '@angular/core';
-import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
+import { CenteredCardComponent } from "../../shared/components";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatFormFieldModule, MatHint, MatLabel} from '@angular/material/form-field';
 import { DayOfWeek } from '../../shared/models/extras.models';
 import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerInputEvent, MatDatepickerModule, MatDateRangePicker } from '@angular/material/datepicker';
+import {
+  MatDatepickerInputEvent,
+  MatDatepickerModule,
+  MatDatepickerToggle,
+  MatDateRangePicker
+} from '@angular/material/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipListbox, MatChipListboxChange, MatChipOption } from "@angular/material/chips";
+import {MatChipListbox, MatChipListboxChange, MatChipOption, MatChipsModule} from "@angular/material/chips";
 import { MatIconModule } from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {CommonModule} from '@angular/common';
+import {MAT_DATE_LOCALE, provideNativeDateAdapter} from '@angular/material/core';
+import {MatDivider} from '@angular/material/divider';
+
+const today = new Date();
+const month = today.getMonth();
+const year = today.getFullYear();
 
 @Component({
   selector: 'app-alta-turno',
@@ -22,20 +35,19 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
+    MatButtonModule,
+    MatLabel,
+    MatHint,
+    MatDatepickerToggle,
+    CommonModule,
+    MatChipsModule, MatDivider,
   ],
+  providers: [provideNativeDateAdapter(), {provide: MAT_DATE_LOCALE, useValue: 'es-ES'},],
   templateUrl: './alta-turno.component.html',
   styleUrl: './alta-turno.component.scss'
 })
 export class AltaTurnoComponent {
-createturno() {
-throw new Error('Method not implemented.');
-}
-updateturno() {
-throw new Error('Method not implemented.');
-}
-Cancel() {
-throw new Error('Method not implemented.');
-}
+
   @Input() turnoID: string | null = null;
   today: Date = new Date();
   dateRange = false;
@@ -50,6 +62,11 @@ throw new Error('Method not implemented.');
     startTime: new FormControl<string | null>(this.formatTime(new Date()), [Validators.required]),
     endTime: new FormControl<string | null>(this.formatTime(new Date(new Date().setHours(new Date().getHours() + 1))), [Validators.required]),
     multiple: new FormControl<boolean | null>(false),
+  }, {validators: Validators.compose([this.timeRangeValidator.bind(this)])});
+
+  readonly rangePicker: FormGroup = new FormGroup({
+    start: new FormControl<Date | null>(null, [Validators.required]),
+    end: new FormControl<Date | null>(null, [Validators.required]),
   }, {validators: Validators.compose([this.timeRangeValidator.bind(this)])});
 
   formatTime(date: Date): string {
@@ -90,12 +107,13 @@ throw new Error('Method not implemented.');
     var date = new Date();
   }
 
-guardar() {
-throw new Error('Method not implemented.');
-}
-cancelar() {
-throw new Error('Method not implemented.');
-}
+  guardar() {
+    console.log(this.range.value);
+  }
+
+  cancelar() {
+    window.history.back()
+  }
 
 validateTimeRange() {
   if (this.range.get("endTime") && this.range.get("startTime")) {
