@@ -9,8 +9,11 @@ import { environment } from './environments';
 
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
-import { LOCALE_ID } from '@angular/core';
+import { LOCALE_ID, inject } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
+import { provideApollo } from 'apollo-angular';
+import { HttpLink } from 'apollo-angular/http';
+import { InMemoryCache } from '@apollo/client/core';
 
 registerLocaleData(localeEs, 'es');
 
@@ -28,6 +31,15 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     { provide: LOCALE_ID, useValue: 'es' },
-    provideAnimationsAsync()]
+    provideAnimationsAsync(), provideHttpClient(), provideApollo(() => {
+      const httpLink = inject(HttpLink);
+
+      return {
+        link: httpLink.create({
+          uri: environment.apiUrl,
+        }),
+        cache: new InMemoryCache(),
+      };
+    })]
 };
 

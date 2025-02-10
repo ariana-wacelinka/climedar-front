@@ -1,3 +1,5 @@
 import { Persona } from "../../shared/persona";
 
-export interface Paciente extends Persona {}
+export interface Paciente extends Persona {
+    medicalSecure?: string;
+}
