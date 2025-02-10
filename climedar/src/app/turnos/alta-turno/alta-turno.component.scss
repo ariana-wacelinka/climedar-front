@@ -1,0 +1,202 @@
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    margin-top: 10px;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .row, .row2, .row3 {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+    flex-wrap: wrap;
+  
+    mat-checkbox {
+      margin-bottom: 25px;
+      margin-left: 20px
+    }
+  }
+  
+  .row2 {
+    justify-content: space-between;
+    margin-top: 25px;
+    width: 100%;
+  
+    mat-form-field {
+      width: 100%;
+    }
+  }
+  
+  .row4 {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+  
+    .start-time {
+      width: 100%;
+      margin-right: 20px;
+    }
+  
+    .end-time {
+      width: 100%;
+    }
+  }
+  
+  .row3 {
+    justify-content: start;
+    margin-bottom: 0;
+  
+    mat-form-field {
+      width: 100%;
+    }
+  }
+  
+  .button-container {
+    margin-top: 15px;
+    background-color: #222222;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    .back-btn {
+      margin: 0 20px 0 0;
+    }
+  }
+  
+  .days {
+    margin-top: 5px;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+  }
+  
+  @media(max-width: 600px) {
+    .main-container {
+      margin: 0;
+      padding: 0;
+    }
+    .row, .row2, .row3 {
+      flex-direction: column;
+      align-items: start;
+      justify-content: start;
+  
+      mat-checkbox {
+        margin-top: 5px;
+        margin-bottom: 0;
+        margin-left: 0;
+      }
+    }
+    .row {
+      flex-wrap: nowrap;
+  
+      mat-form-field {
+        width: 100%;
+      }
+    }
+    .row2 {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .row3 {
+      mat-form-field {
+        width: 100%;
+      }
+    }
+    .button-container {
+      justify-content: center;
+      flex-direction: column-reverse;
+      align-items: center;
+      button {
+        width: 90%;
+      }
+      .back-btn {
+        margin: 10px 0 0 0;
+      }
+    }
+    .days {
+      width: 100%;
+    }
+  }
+  
+  @media(max-width: 470px) {
+    .main-container {
+      margin: 0;
+      padding: 0;
+    }
+    mat-form-field {
+      width: 300px !important;
+      margin: 0 10px !important;
+    }
+    .row, .row2, .row3, .row4, .row5 {
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+  
+      mat-checkbox {
+        margin-top: 5px;
+        margin-bottom: 0;
+        margin-left: 0;
+      }
+    }
+    .row2 {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .row3 {
+      margin-top: 0;
+      margin-bottom: 0;
+  
+      mat-form-field {
+        width: 100%;
+      }
+    }
+    .row4 {
+      margin-top: 0;
+      margin-bottom: 0;
+  
+      .start-time {
+        width: 100%;
+        margin-right: 0;
+      }
+  
+      .end-time {
+        width: 100%;
+      }
+    }
+    .button-container {
+      justify-content: center;
+      margin-bottom: 0;
+    }
+    .day-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+  
+      .days {
+        justify-content: center;
+        width: 80%;
+      }
+    }
+  }
+  
+  .check {
+      display: flex;
+      width: 100%;
+      justify-content: start;
+  
+  }
+  
+  .ng-invalid .mat-form-field-outline {
+    border-color: red !important;
+  }
+  

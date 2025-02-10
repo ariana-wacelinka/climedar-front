@@ -10,6 +10,7 @@ import {ListadoEspecialidadesComponent} from './especialidad/listado-especialida
 import {ListadoServiciosComponent} from './servicio/listado-servicios/listado-servicios.component';
 import {ListadoPaquetesComponent} from './paquetes/listado-paquetes/listado-paquetes.component';
 import { CreateConsultationComponent } from './consultation/create-consultation/create-consultation.component';
+import { AltaTurnoComponent } from './turnos/alta-turno/alta-turno.component';
 
 export const routes: Routes = [
   { path: '', component: CalendarComponent },
