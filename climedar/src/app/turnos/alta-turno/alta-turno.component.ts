@@ -115,16 +115,15 @@ export class AltaTurnoComponent {
     window.history.back()
   }
 
-validateTimeRange() {
-  if (this.range.get("endTime") && this.range.get("startTime")) {
-    this.timeRangeInvalid = this.range.get("startTime")?.value >= this.range.get("endTime")?.value;
-    console.log(this.timeRangeInvalid);
+  validateTimeRange() {
+    if (this.range.get("endTime") && this.range.get("startTime")) {
+      this.timeRangeInvalid = this.range.get("startTime")?.value >= this.range.get("endTime")?.value;
+      console.log(this.timeRangeInvalid);
+    }
   }
-}
 
-chipsChangeEvent(arg0: string, $event: MatChipListboxChange) {
-  this.range.patchValue({daysOfWeek: Array.from($event.value)});
-  console.log(this.range.value.daysOfWeek);
-}
-
+  chipsChangeEvent(arg0: string, $event: MatChipListboxChange) {
+    this.range.patchValue({daysOfWeek: Array.from($event.value)});
+    console.log(this.range.value.daysOfWeek);
+  }
 }
