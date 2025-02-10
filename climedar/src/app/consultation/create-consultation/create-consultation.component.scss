@@ -10,6 +10,33 @@ h1 {
     padding: 0;
 }
 
+.servicioNombre {
+    margin-right: 20px;
+}
+
+.paginador {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-top: -15px;
+    margin-bottom: 10px;
+}
+
+.elementos-inferiores {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+    width: 100%;
+}
+
+.lista {
+    margin-top: -20px;
+}
+
+.servicioTiempo {
+    font-weight: 300;
+}
+
 .horarios {
     display: grid;
     grid-template-columns: 1fr 1fr;
