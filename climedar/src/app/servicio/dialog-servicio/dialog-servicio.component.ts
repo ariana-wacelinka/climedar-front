@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, signal} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {
@@ -11,6 +11,11 @@ import {
 import {MatFormField, MatHint, MatLabel, MatPrefix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {NgxMaskDirective, provideNgxMask} from 'ngx-mask';
+import {ServiciosMedicosService} from '../services/servicio/servicios-medicos.service';
+import {MedicalService} from '../models/services.models';
+import {MatSelectModule} from '@angular/material/select';
+import {Especialidad, EspecialidadService} from '../../especialidad';
+import {map} from 'rxjs';
 
 @Component({
   selector: 'app-dialog-servicio',
@@ -27,35 +32,59 @@ import {NgxMaskDirective, provideNgxMask} from 'ngx-mask';
     ReactiveFormsModule,
     MatPrefix,
     NgxMaskDirective,
+    MatSelectModule,
   ],
   providers: [provideNgxMask()],
   templateUrl: './dialog-servicio.component.html',
   styleUrl: './dialog-servicio.component.scss'
 })
 export class DialogServicioComponent {
+  especialidades = signal<Especialidad[]>([]);
+  specialityID = new FormControl('', Validators.required);
+  serviceType = new FormControl('', Validators.required);
 
   formGroup = new FormGroup({
-    id: new FormControl (''),
-    nombre: new FormControl ('', Validators.required),
-    descripcion: new FormControl ('', Validators.required),
-    precio: new FormControl ('', [Validators.required, Validators.pattern('^[0-9]*$')]),
-    duracionEstimada: new FormControl ('', [Validators.required, Validators.pattern('^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$\n')])
+    id: new FormControl(''),
+    nombre: new FormControl('', Validators.required),
+    descripcion: new FormControl('', Validators.required),
+    precio: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
+    duracionEstimada: new FormControl('', [Validators.required/*,
+     Validators.pattern('^([01]\\d|2[0-3]):([0-5]\\d)$')*/]),
+    serviceType: new FormControl(''),
+    specialityId: new FormControl('')
   });
 
   constructor(
     public dialogRef: MatDialogRef<DialogServicioComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id?: string, nombre?: string, descripcion?: string, precio?: number, duracionEstimada?: string }
+    private serviciosMedicosService: ServiciosMedicosService,
+    private specialityService: EspecialidadService,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      id?: string,
+      nombre?: string,
+      descripcion?: string,
+      precio?: number,
+      duracionEstimada?: string,
+      serviceType?: string,
+      specialityId?: string
+    }
   ) {
     if (data) {
-      console.log(data);
       this.formGroup.patchValue({
         id: data.id ?? '',
         nombre: data.nombre ?? '',
         descripcion: data.descripcion ?? '',
         precio: data.precio?.toString() ?? '',
-        duracionEstimada: data.duracionEstimada ?? ''
+        duracionEstimada: data.duracionEstimada ?? '',
+        serviceType: data.serviceType ?? '',
+        specialityId: data.specialityId ?? ''
       });
     }
+
+    this.specialityService.getAllEspecialidades(1).pipe(
+      map(response => response)
+    ).subscribe(response => {
+      this.especialidades.set(response.especialidades);
+    });
   }
 
   onClose() {
@@ -63,14 +92,26 @@ export class DialogServicioComponent {
   }
 
   onSubmit() {
-    if (this.data.id == null){
-      if (this.formGroup.valid){
+    if (this.data.id == null) {
+      const servicioMedico: MedicalService = {
+        id: '',
+        name: this.formGroup.value.nombre!,
+        description: this.formGroup.value.descripcion!,
+        price: this.formGroup.value.precio!,
+        estimatedDuration: this.formGroup.value.duracionEstimada!,
+        serviceType: this.formGroup.value.serviceType!,
+        specialityId: this.formGroup.value.specialityId!
+      };
+
+      if (this.formGroup.valid) {
+        console.log(servicioMedico);
+        //this.serviciosMedicosService.createMedicalService(servicioMedico);
         alert('Servicio creado: ' + this.formGroup.value.nombre);
         this.onClose();
       }
     } else {
-      if (this.formGroup.valid){
-        alert('Servicio editado: ' + this.formGroup.value.nombre) ;
+      if (this.formGroup.valid) {
+        alert('Servicio editado: ' + this.formGroup.value.nombre);
         this.onClose();
       }
     }

@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { PageInfo } from '../../../shared/models/extras.models';
-import { MedicalService } from '../../models/services.models';
-import { map, Observable } from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {PageInfo} from '../../../shared/models/extras.models';
+import {MedicalService} from '../../models/services.models';
+import {map, Observable} from 'rxjs';
 import {Apollo} from 'apollo-angular';
 
 @Injectable({
@@ -20,10 +20,9 @@ export class ServiciosMedicosService {
 
     const body = {
       query: `
-        mutation CreateMedicalService($code: String!, $description: String!, $name: String!, $estimatedDuration: String!, $price: String!, $serviceType: String!, $specialityId: String!) {
-          createMedicalService(speciality: {code: $code, description: $description, name: $name, estimatedDuration: $estimatedDuration, price: $price, serviceType: $serviceType, specialityId: $specialityId}) {
+        mutation CreateMedicalService($description: String!, $name: String!, $estimatedDuration: String!, $price: String!, $serviceType: String!, $specialityId: String!) {
+          createMedicalService(speciality: {description: $description, name: $name, estimatedDuration: $estimatedDuration, price: $price, serviceType: $serviceType, specialityId: $specialityId}) {
             id
-            code
             name
             description
             estimatedDuration
@@ -33,7 +32,6 @@ export class ServiciosMedicosService {
           }
         }`,
       variables: {
-        code: medicalService.code,
         description: medicalService.description,
         name: medicalService.name,
         estimatedDuration: medicalService.estimatedDuration,

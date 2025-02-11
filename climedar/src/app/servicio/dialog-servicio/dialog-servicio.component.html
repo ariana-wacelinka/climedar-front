@@ -4,38 +4,62 @@
   <h2 mat-dialog-title>Modificar servicio</h2>
 }
 
-  <div mat-dialog-content>
-    <form [formGroup]="formGroup">
+<div mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput placeholder="Nombre" formControlName="nombre" required>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput placeholder="Descripción" formControlName="descripcion" required></textarea>
+      <mat-hint align="end">{{ formGroup.get('descripcion')?.value?.length || 0 }} / 150</mat-hint>
+    </mat-form-field>
+
+    <div class="row">
+
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Nombre</mat-label>
-        <input matInput placeholder="Nombre" formControlName="nombre" required>
+        <mat-label>Tipo de servicio</mat-label>
+        <mat-select [formControl]="serviceType" placeholder="Seleccione el tipo de servicio" required>
+          <mat-option value="general">Consulta general</mat-option>
+          <mat-option value="especializada">Consulta especializada</mat-option>
+          <mat-option value="examen">Exámen médico</mat-option>
+          <mat-option value="cirugia">Cirugía</mat-option>
+          <mat-option value="terapia">Terapia y tratamientos varios</mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Descripción</mat-label>
-        <textarea matInput placeholder="Descripción" formControlName="descripcion" required></textarea>
-        <mat-hint align="end">{{formGroup.get('descripcion')?.value?.length || 0}} / 150</mat-hint>
+        <mat-label>Especialidad</mat-label>
+        <mat-select [formControl]="specialityID" placeholder="Seleccione una especialidad" required>
+          @for (specialityID of especialidades(); track specialityID) {
+            <mat-option [value]="specialityID">{{specialityID.name}}</mat-option>
+          }
+        </mat-select>
       </mat-form-field>
 
-      <div class="row">
+    </div>
 
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Duración estimada</mat-label>
-          <input matInput maxlength="5" formControlName="duracionEstimada" placeholder="HH:MM" mask="00:00">
-          <mat-hint align="start">HH:MM</mat-hint>
-        </mat-form-field>
+    <div class="row">
 
-        <mat-form-field class="full-width" appearance="outline">
-          <input matInput type="number" formControlName="precio" placeholder="0">
-          <span matTextPrefix>$&nbsp; </span>
-        </mat-form-field>
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Duración estimada</mat-label>
+        <input matInput maxlength="5" formControlName="duracionEstimada" placeholder="HH:MM" mask="00:00">
+        <mat-hint align="start">HH:MM</mat-hint>
+      </mat-form-field>
 
-      </div>
+      <mat-form-field class="full-width" appearance="outline">
+        <input matInput type="number" formControlName="precio" placeholder="0">
+        <span matTextPrefix>$&nbsp; </span>
+      </mat-form-field>
 
-    </form>
-  </div>
+    </div>
 
-  <div style="padding-top: 20px; padding-bottom: 30px" mat-dialog-actions>
-    <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
-    <button mat-flat-button (click)="onSubmit()">Guardar</button>
-  </div>
+  </form>
+</div>
+
+<div style="padding-top: 20px; padding-bottom: 30px" mat-dialog-actions>
+  <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>
+  <button mat-flat-button (click)="onSubmit()">Guardar</button>
+</div>
