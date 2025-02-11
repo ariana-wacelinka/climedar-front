@@ -68,18 +68,14 @@ export class ListadoServiciosComponent {
 
   displayedColumns: string[] = ["nombre", "precio", "duracionEstimada", "edit"];
   dataSource = new MatTableDataSource([
-    {nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30', number: 0},
-    {nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30', number: 1},
-    {nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30', number: 2},
-    {nombre: 'Ecografía', descripcion: 'Ecografía de cualquier parte del cuerpo', precio: 1000, duracionEstimada: '01:00', number: 3},
-    {nombre: 'Fisioterapia', descripcion: 'Sesión de fisioterapia', precio: 600, duracionEstimada: '01:00', number: 4}
+    {nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30', id: 0},
+    {nombre: 'Radiografía', descripcion: 'Radiografía de cualquier parte del cuerpo', precio: 800, duracionEstimada: '00:30', id: 1},
+    {nombre: 'Análisis de Sangre', descripcion: 'Análisis completo de sangre', precio: 300, duracionEstimada: '00:30', id: 2},
+    {nombre: 'Ecografía', descripcion: 'Ecografía de cualquier parte del cuerpo', precio: 1000, duracionEstimada: '01:00', id: 3},
+    {nombre: 'Fisioterapia', descripcion: 'Sesión de fisioterapia', precio: 600, duracionEstimada: '01:00', id: 4}
   ]);
 
   constructor(private dialog: MatDialog) {}
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -90,12 +86,12 @@ export class ListadoServiciosComponent {
     }
   }
 
-  editServicio(number: number) {
+  editServicio(id: number) {
     this.dialog.open(DialogServicioComponent, {
       width:'670px',
       minWidth: '350px',
       maxWidth: '90vw',
-      data: {id: number, nombre: this.dataSource.data[number].nombre, descripcion: this.dataSource.data[number].descripcion, precio: this.dataSource.data[number].precio, duracionEstimada: this.dataSource.data[number].duracionEstimada}
+      data: {id: id, nombre: this.dataSource.data[id].nombre, descripcion: this.dataSource.data[id].descripcion, precio: this.dataSource.data[id].precio, duracionEstimada: this.dataSource.data[id].duracionEstimada}
     });
   }
 
@@ -108,8 +104,8 @@ export class ListadoServiciosComponent {
     });
   }
 
-  servicioInfo(number: number) {
-    this.dialog.open(infoServicioComponent, {data: {id: number, nombre: this.dataSource.data[number].nombre, descripcion: this.dataSource.data[number].descripcion, precio: this.dataSource.data[number].precio, duracionEstimada: this.dataSource.data[number].duracionEstimada}
+  servicioInfo(id: number) {
+    this.dialog.open(infoServicioComponent, {data: {id: id, nombre: this.dataSource.data[id].nombre, descripcion: this.dataSource.data[id].descripcion, precio: this.dataSource.data[id].precio, duracionEstimada: this.dataSource.data[id].duracionEstimada}
     });
   }
 }
