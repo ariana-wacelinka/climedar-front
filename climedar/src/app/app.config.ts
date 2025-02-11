@@ -13,7 +13,7 @@ import { LOCALE_ID, inject } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { InMemoryCache } from '@apollo/client/core';
+import { ApolloLink, InMemoryCache } from '@apollo/client/core';
 
 registerLocaleData(localeEs, 'es');
 
@@ -31,8 +31,25 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     { provide: LOCALE_ID, useValue: 'es' },
-    provideAnimationsAsync(), provideHttpClient(), provideApollo(() => {
+    provideAnimationsAsync(), 
+    provideHttpClient(), 
+    provideApollo(() => {
       const httpLink = inject(HttpLink);
+
+      // TODO: DESCOMENTAR CUANDO TENGAMOS QUE ENVIAR EL TOKEN EN CADA REQUEST
+      // // Middleware para agregar el token automáticamente a cada request
+      // const authLink = new ApolloLink((operation, forward) => {
+      //   const token = localStorage.getItem('token'); // Obtiene el token de localStorage
+
+      //   operation.setContext({
+      //     headers: {
+      //       Authorization: token ? `Bearer ${token}` : '', // Agrega el token al header
+      //       'Custom-Header': 'valor-personalizado' // Puedes agregar otros headers si es necesario
+      //     },
+      //   });
+
+      //   return forward(operation);
+      // });
 
       return {
         link: httpLink.create({
