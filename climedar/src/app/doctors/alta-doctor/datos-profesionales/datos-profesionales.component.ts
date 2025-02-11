@@ -39,8 +39,10 @@ export class DatosProfesionalesComponent implements OnInit{
   ]
 
   infoLaboral = new FormGroup({
-    especialidad: new FormControl('', [Validators.required]),
-    sueldo: new FormControl('', [Validators.required, Validators.min(0)]),
+    speciality: new FormGroup({
+      id: new FormControl('', [Validators.required])
+    }),
+    salary: new FormControl('', [Validators.required, Validators.min(0)]),
   })
 
   public nueva_especialidad(){

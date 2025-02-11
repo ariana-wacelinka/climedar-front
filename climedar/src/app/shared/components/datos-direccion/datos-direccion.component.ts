@@ -34,10 +34,10 @@ export class DatosDireccionComponent implements OnInit {
   especialidades: { id: string, nombre: string }[] = []
 
   infoDireccion = new FormGroup({
-    calle: new FormControl('', [Validators.required]),
-    numero: new FormControl('', [Validators.required]),
-    piso: new FormControl(''),
-    departamento: new FormControl(''),
+    street: new FormControl('', [Validators.required]),
+    number: new FormControl('', [Validators.required]),
+    floor: new FormControl(''),
+    apartment: new FormControl(''),
   })
 
   ngOnInit(): void {

@@ -53,10 +53,11 @@ export class DatosPersonalesComponent implements OnInit {
   });
 
   infoPersonal = new FormGroup({
-    nombre: new FormControl('', [Validators.required]),
-    apellido: new FormControl('', [Validators.required, Validators.min(0)]),
+    name: new FormControl('', [Validators.required]),
+    surname: new FormControl('', [Validators.required, Validators.min(0)]),
     dni: new FormControl('', [Validators.required, Validators.min(0)]),
-    fechaNacimiento: new FormControl('', [Validators.required]),
+    birthdate: new FormControl('', [Validators.required]),
+    gender: new FormControl('', [Validators.required]),
   })
 
   ngOnInit(): void {

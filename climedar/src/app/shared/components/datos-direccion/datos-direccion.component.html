@@ -6,11 +6,11 @@
         <mat-label>Calle</mat-label>
         <input
           type="text"
-          [formControl]="infoDireccion.controls.calle"
+          [formControl]="infoDireccion.controls.street"
           matInput
         />
-        @if (!infoDireccion.controls.calle.valid &&
-        infoDireccion.controls.calle.touched) {
+        @if (!infoDireccion.controls.street.valid &&
+        infoDireccion.controls.street.touched) {
         <mat-error>Por favor, especifique la calle</mat-error>
         }
       </mat-form-field>
@@ -19,11 +19,11 @@
         <mat-label>Numero</mat-label>
         <input
           type="text"
-          [formControl]="infoDireccion.controls.numero"
+          [formControl]="infoDireccion.controls.number"
           matInput
         />
-        @if (!infoDireccion.controls.numero.valid &&
-        infoDireccion.controls.numero.touched) {
+        @if (!infoDireccion.controls.number.valid &&
+        infoDireccion.controls.number.touched) {
         <mat-error>Por favor, especifique el numero</mat-error>
         }
       </mat-form-field>
@@ -32,7 +32,7 @@
         <mat-label>Piso</mat-label>
         <input
           type="text"
-          [formControl]="infoDireccion.controls.piso"
+          [formControl]="infoDireccion.controls.floor"
           matInput
         />
       </mat-form-field>
@@ -41,7 +41,7 @@
         <mat-label>Departamento</mat-label>
         <input
           type="text"
-          [formControl]="infoDireccion.controls.departamento"
+          [formControl]="infoDireccion.controls.apartment"
           matInput
         />
       </mat-form-field>

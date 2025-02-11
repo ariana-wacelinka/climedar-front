@@ -5,15 +5,15 @@
     <div class="inner-section-1">
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Especialidad</mat-label>
-        <mat-select [formControl]="infoLaboral.controls.especialidad">
+        <mat-select [formControl]="infoLaboral.controls.speciality.controls.id">
           @for (especialidad of especialidades; track especialidad.id) {
           <mat-option value="{{ especialidad.id }}">{{
             especialidad.nombre
           }}</mat-option>
           }
         </mat-select>
-        @if (!infoLaboral.controls.especialidad.valid &&
-        infoLaboral.controls.especialidad.touched) {
+        @if (!infoLaboral.controls.speciality.controls.id.valid &&
+        infoLaboral.controls.speciality.controls.id.touched) {
         <mat-error>Por favor, seleccione la especialidad</mat-error>
         }
       </mat-form-field>
@@ -30,11 +30,11 @@
         <mat-label>Sueldo mensual</mat-label>
         <input
           type="number"
-          [formControl]="infoLaboral.controls.sueldo"
+          [formControl]="infoLaboral.controls.salary"
           matInput
         />
-        @if (!infoLaboral.controls.sueldo.valid &&
-        infoLaboral.controls.sueldo.touched) {
+        @if (!infoLaboral.controls.salary.valid &&
+        infoLaboral.controls.salary.touched) {
         <mat-error>Por favor, especifique el sueldo</mat-error>
         }
       </mat-form-field>

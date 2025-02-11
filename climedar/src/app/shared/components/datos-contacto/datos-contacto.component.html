@@ -20,11 +20,11 @@
       <mat-label>Telefono</mat-label>
       <input
         type="text"
-        [formControl]="infoContacto.controls.telefono"
+        [formControl]="infoContacto.controls.phone"
         matInput
       />
-      @if (!infoContacto.controls.telefono.valid &&
-      infoContacto.controls.telefono.touched) {
+      @if (!infoContacto.controls.phone.valid &&
+      infoContacto.controls.phone.touched) {
       <mat-error>Por favor, especifique el numero de telefono</mat-error>
       }
     </mat-form-field>

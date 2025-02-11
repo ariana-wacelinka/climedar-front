@@ -42,8 +42,13 @@ export class AltaDoctorComponent {
   }
 
   onFormChanges(form: FormGroup){
+    if (Object.keys(form.controls).includes('street')){
+      this.doctorForm.addControl('address', form);
+      console.log('onFormChanges ', this.doctorForm.value);
+    }
     Object.keys(form.controls).forEach(key => {
       this.doctorForm.addControl(key, form.controls[key]);
     });
+    console.log('onFormChanges ', this.doctorForm.value);
   }
 }
