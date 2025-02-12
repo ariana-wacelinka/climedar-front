@@ -10,12 +10,12 @@ import {
 } from "@angular/material/dialog";
 import {MatFormField, MatHint, MatLabel, MatPrefix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {NgxMaskDirective, provideNgxMask} from 'ngx-mask';
 import {ServiciosMedicosService} from '../services/servicio/servicios-medicos.service';
 import {MedicalService} from '../models/services.models';
 import {MatSelectModule} from '@angular/material/select';
 import {Especialidad, EspecialidadService} from '../../especialidad';
 import {map} from 'rxjs';
+import { ServiceType } from '../../shared/models/extras.models';
 
 @Component({
   selector: 'app-dialog-servicio',
@@ -31,14 +31,13 @@ import {map} from 'rxjs';
     MatHint,
     ReactiveFormsModule,
     MatPrefix,
-    NgxMaskDirective,
     MatSelectModule,
   ],
-  providers: [provideNgxMask()],
   templateUrl: './dialog-servicio.component.html',
   styleUrl: './dialog-servicio.component.scss'
 })
 export class DialogServicioComponent {
+  tiposServicio = Object.values(ServiceType);
   especialidades = signal<Especialidad[]>([]);
   specialityID = new FormControl('', Validators.required);
   serviceType = new FormControl('', Validators.required);
@@ -48,8 +47,7 @@ export class DialogServicioComponent {
     nombre: new FormControl('', Validators.required),
     descripcion: new FormControl('', Validators.required),
     precio: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
-    duracionEstimada: new FormControl('', [Validators.required/*,
-     Validators.pattern('^([01]\\d|2[0-3]):([0-5]\\d)$')*/]),
+    duracionEstimada: new FormControl<string | null>(this.formatTime(new Date()), [Validators.required]),
     serviceType: new FormControl(''),
     specialityId: new FormControl('')
   });
@@ -115,5 +113,11 @@ export class DialogServicioComponent {
         this.onClose();
       }
     }
+  }
+
+  formatTime(date: Date): string {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
   }
 }

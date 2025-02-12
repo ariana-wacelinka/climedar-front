@@ -22,11 +22,9 @@
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Tipo de servicio</mat-label>
         <mat-select [formControl]="serviceType" placeholder="Seleccione el tipo de servicio" required>
-          <mat-option value="general">Consulta general</mat-option>
-          <mat-option value="especializada">Consulta especializada</mat-option>
-          <mat-option value="examen">Exámen médico</mat-option>
-          <mat-option value="cirugia">Cirugía</mat-option>
-          <mat-option value="terapia">Terapia y tratamientos varios</mat-option>
+          @for (serviceType of tiposServicio; track serviceType) {
+            <mat-option [value]="serviceType">{{serviceType}}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
 
@@ -45,7 +43,7 @@
 
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Duración estimada</mat-label>
-        <input matInput maxlength="5" formControlName="duracionEstimada" placeholder="HH:MM" mask="00:00">
+        <input matInput formControlName="duracionEstimada" placeholder="HH:MM" type="time">
         <mat-hint align="start">HH:MM</mat-hint>
       </mat-form-field>
 
