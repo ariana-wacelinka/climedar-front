@@ -49,7 +49,7 @@ export class DialogServicioComponent {
     nombre: new FormControl('', Validators.required),
     descripcion: new FormControl('', Validators.required),
     precio: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
-    duracionEstimada: new FormControl<string | null>(this.formatTime(new Date()), [Validators.required]),
+    duracionEstimada: new FormControl('', Validators.required),
     serviceType: new FormControl('', Validators.required),
     specialityId: new FormControl('', Validators.required)
   });
@@ -98,7 +98,7 @@ export class DialogServicioComponent {
         name: this.formGroup.value.nombre!,
         description: this.formGroup.value.descripcion!,
         price: this.formGroup.value.precio!,
-        estimatedDuration: this.formGroup.value.duracionEstimada!,
+        estimatedDuration: this.formatTime(this.formGroup.value.duracionEstimada!),
         serviceType: this.formGroup.value.serviceType!,
         specialityId: this.formGroup.value.specialityId!
       };
@@ -117,9 +117,8 @@ export class DialogServicioComponent {
     }
   }
 
-  formatTime(date: Date): string {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
+  formatTime(horaString: string): string {
+    const [horas, minutos] = horaString.split(":").map(Number);
+    return `PT${horas ? horas + "H" : ""}${minutos ? minutos + "M" : ""}`;
   }
 }
