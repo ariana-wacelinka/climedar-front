@@ -12,7 +12,7 @@ import {MatFormField, MatHint, MatLabel, MatPrefix} from "@angular/material/form
 import {MatInput} from "@angular/material/input";
 import {ServiciosMedicosService} from '../services/servicio/servicios-medicos.service';
 import {MedicalService} from '../models/services.models';
-import {MatSelectModule} from '@angular/material/select';
+import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {Especialidad, EspecialidadService} from '../../especialidad';
 import {map} from 'rxjs';
 import { ServiceType } from '../../shared/models/extras.models';
@@ -37,19 +37,21 @@ import { ServiceType } from '../../shared/models/extras.models';
   styleUrl: './dialog-servicio.component.scss'
 })
 export class DialogServicioComponent {
-  tiposServicio = Object.values(ServiceType);
-  especialidades = signal<Especialidad[]>([]);
-  specialityID = new FormControl('', Validators.required);
-  serviceType = new FormControl('', Validators.required);
+  tipoServicio = Object.entries(ServiceType).map(([key, value]) => ({
+    key,
+    value
+  }));
 
+  especialidades = signal<Especialidad[]>([]);
+  
   formGroup = new FormGroup({
     id: new FormControl(''),
     nombre: new FormControl('', Validators.required),
     descripcion: new FormControl('', Validators.required),
     precio: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
     duracionEstimada: new FormControl<string | null>(this.formatTime(new Date()), [Validators.required]),
-    serviceType: new FormControl(''),
-    specialityId: new FormControl('')
+    serviceType: new FormControl('', Validators.required),
+    specialityId: new FormControl('', Validators.required)
   });
 
   constructor(
