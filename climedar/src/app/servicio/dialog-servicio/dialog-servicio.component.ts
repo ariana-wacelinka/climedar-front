@@ -105,9 +105,14 @@ export class DialogServicioComponent {
 
       if (this.formGroup.valid) {
         console.log(servicioMedico);
-        //this.serviciosMedicosService.createMedicalService(servicioMedico);
-        alert('Servicio creado: ' + this.formGroup.value.nombre);
-        this.onClose();
+        this.serviciosMedicosService.createMedicalService(servicioMedico).subscribe(response => {
+          console.log(response);
+          alert('Servicio creado: ' + response);
+          this.onClose();
+        }, error => {
+          console.error('Error al crear servicio', error);
+          alert('Error al crear servicio');
+        });
       }
     } else {
       if (this.formGroup.valid) {
