@@ -21,14 +21,16 @@ export class ServiciosMedicosService {
     const body = {
       query: `
         mutation CreateMedicalService($description: String!, $name: String!, $estimatedDuration: String!, $price: String!, $serviceType: String!, $specialityId: String!) {
-          createMedicalService(speciality: {description: $description, name: $name, estimatedDuration: $estimatedDuration, price: $price, serviceType: $serviceType, specialityId: $specialityId}) {
+          createMedicalService(speciality: {description: "$description", name: "$name", estimatedDuration: "$estimatedDuration", price: $price, serviceType: $serviceType, specialityId: "$specialityId"}) {
             id
             name
             description
             estimatedDuration
             price
             serviceType
-            specialityId
+            speciality {
+              id
+            } 
           }
         }`,
       variables: {
@@ -42,7 +44,7 @@ export class ServiciosMedicosService {
     };
 
     return this.http.post<{ data: { createMedicalService: MedicalService } }>(
-      'http://localhost:8081/graphql',
+      'http://localhost:443/apollo-federation',
       body,
       { headers }
     ).pipe(
