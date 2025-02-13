@@ -3,48 +3,44 @@ import { Injectable } from '@angular/core';
 import { PageInfo } from '../../../shared/models/extras.models';
 import { MedicalService } from '../../models/services.models';
 import { map, Observable } from 'rxjs';
+import { Apollo, gql } from 'apollo-angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiciosMedicosService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private apollo: Apollo) { }
 
   public getServiciosMedicos(name: string = "", specialityId: string = "", page: number = 1): Observable<{ services: MedicalService[], pageInfo: PageInfo }> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    const body = {
-      query: `{
-                getAllMedicalServices(
-                  pageRequest: {page: ${page}, size: 10}
-                  specification: {name: "${name}", specialityId: "${specialityId}"}
-                ) {
-                  services {
-                    id
-                    estimatedDuration
-                    price
-                    name
-                    code
-                    description
-                  }
-                  pageInfo {
-                    currentPage
-                    totalItems
-                    totalPages
-                  }
-                }
-    }`
-    }
-    return this.http.post<{ data: { getAllMedicalServices: { services: MedicalService[], pageInfo: PageInfo } } }>(
-      'http://localhost:8081/graphql',
-      body,
-      { headers }
-    ).pipe(
-      map(response => response.data.getAllMedicalServices)
+    const GET_SERVICIOS_MEDICOS = gql`
+      query {
+        getAllMedicalServices(
+          pageRequest: { page: ${page}, size: 10 }
+          specification: { name: "${name}", specialityId: "${specialityId}" }
+        ) {
+          services {
+            id
+            estimatedDuration
+            price
+            name
+            code
+            description
+          }
+          pageInfo {
+            currentPage
+            totalItems
+            totalPages
+          }
+        }
+      }
+    `;
+
+    return this.apollo.watchQuery<{ getAllMedicalServices: { services: MedicalService[], pageInfo: PageInfo } }>({
+      query: GET_SERVICIOS_MEDICOS,
+    }).valueChanges.pipe(
+      map(result => result.data.getAllMedicalServices)
     );
-    
   }
 
 }

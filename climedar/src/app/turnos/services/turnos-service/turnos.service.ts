@@ -120,8 +120,8 @@ export class TurnosService {
 
   getShiftById(shiftId: string): Observable<Turno> {
     const GET_SHIFT_BY_ID = gql`
-      query getShiftById($shiftId: String!) {
-        getShiftById(id: $shiftId) {
+      query {
+        getShiftById(id: ${shiftId}) {
           date
           startTime
           endTime
@@ -142,9 +142,6 @@ export class TurnosService {
 
     return this.apollo.query<{ getShiftById: Turno }>({
       query: GET_SHIFT_BY_ID,
-      variables: {
-        shiftId
-      }
     }).pipe(
       map(response => response.data.getShiftById)
     );

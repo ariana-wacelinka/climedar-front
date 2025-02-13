@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Paciente } from '../models/paciente.models';
 
 @Injectable({
@@ -45,5 +45,26 @@ export class PatientService {
       return this.apollo.mutate({
         mutation: gql`${body}`
       });
+    }
+
+    getPatients(name: string = ""): Observable<Paciente[]> {
+      const GET_PATIENTS = gql`
+      query {
+        getAllPatients(
+          pageRequest: { page: 1, size: 10}
+          specification: {name: "${name}"}
+        ) {
+          patients {
+              id
+              name
+          }
+        }
+      }
+      `;
+      return this.apollo.query<{ getAllPatients: { patients: Paciente[] } }>({
+        query: GET_PATIENTS
+      }).pipe(
+        map(response => response.data.getAllPatients.patients)
+      );
     }
 }

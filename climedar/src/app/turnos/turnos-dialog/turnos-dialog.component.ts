@@ -215,7 +215,7 @@ export class TurnosDialogComponent implements OnInit {
 
   goToCreateConsulta(turno: Turno) {
     this.dialogRef.close();
-    this.router.navigate(['consultation/create', { turnoId: turno.id }]);
+    this.router.navigate(['consultation/create', { queryParams: turno.id }]);
   }
 
   isTunoOcuped(turno: Turno): boolean {

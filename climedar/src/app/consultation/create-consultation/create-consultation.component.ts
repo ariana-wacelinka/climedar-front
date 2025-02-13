@@ -31,6 +31,7 @@ import { ServiciosMedicosService } from '../../servicio/services/servicio/servic
 import { PageInfo } from '../../shared/models/extras.models';
 import { Duration } from 'luxon';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { PatientService } from '../../patients/services/patient.service';
 @Component({
   selector: 'app-create-consultation',
   imports: [
@@ -64,7 +65,10 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   styleUrl: './create-consultation.component.scss'
 })
 export class CreateConsultationComponent implements OnInit {
+  isSobreTurno = false;
+  pago = true;
   totalAmount = signal<number>(0);
+  totalTime = signal<number>(0);
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
   consultationFG = new FormGroup({
     patientId: new FormControl<string>(""),
@@ -98,19 +102,18 @@ export class CreateConsultationComponent implements OnInit {
   filteredDoctorOptions: Observable<Doctor[]> | undefined;
   servicioControl = new FormControl<string>("");
 
-  constructor(private medicalService: ServiciosMedicosService,private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService) {
-    this.route.paramMap.subscribe(params => {
+  constructor(private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService) {
+    this.route.queryParamMap.subscribe(params => {
       const id = params.get('turnoId');
       if (id) {
         // Almacena el valor en la señal antes de cambiar la URL
         this.turnoId.set(id);
 
-        // Cambia la URL sin recargar ni reiniciar el componente
-        this.router.navigate(['/consultation/create'], { replaceUrl: true });
+        // Cambia la URL para que no se pierda el valor en caso de recarga
+        this.router.navigate([], { queryParams: { turnoId: null }, queryParamsHandling: 'merge' });
       }
 
       console.log('turnoId ' + this.turnoId());
-
     });
   }
 
@@ -135,6 +138,20 @@ export class CreateConsultationComponent implements OnInit {
       }),
     );
 
+    this.filteredPatientOptions = this.pacienteControl.valueChanges.pipe(
+      startWith(''),
+      filter((value): value is string => typeof value === 'string'),
+      debounceTime(300),
+      switchMap(value => {
+        const title = value;
+        return this.pacienteService.getPatients(title).pipe(
+          map((paciente: Paciente[]) => {
+            return paciente;
+          })
+        );
+      }),
+    );
+
       this.servicioControl.valueChanges.pipe(
         startWith(''),
         filter((value): value is string => typeof value === 'string'),
@@ -142,7 +159,11 @@ export class CreateConsultationComponent implements OnInit {
         switchMap(value => {
           console.log('value', value);
           const title = value;
-          return this.medicalService.getServiciosMedicos(title).pipe(
+          console.log('doctorControl', (this.doctorControl.value as Doctor));
+          if (!(this.doctorControl.value as Doctor).id) {
+            return [];
+          }
+          return this.medicalService.getServiciosMedicos(title, (this.doctorControl.value as Doctor).speciality?.id).pipe(
             map(response => {
               console.log('response', response);
               this.servicios.set(response.services);
@@ -157,10 +178,17 @@ export class CreateConsultationComponent implements OnInit {
     return !!this.turnoId();
   }
 
-  getServices(): void {
-    this.medicalService.getServiciosMedicos().subscribe((data) => {
-      this.servicios.set(data.services);
-      this.pageInfo.set(data.pageInfo);
+  createConsultation(): void {
+    console.log('consultationFG', this.consultationFG.value);
+  }
+
+  getServices(name: string = "", specialityId: string = ""): void {
+    this.medicalService.getServiciosMedicos(name, specialityId).subscribe((data) => {
+      console.log('doctorControl', (this.doctorControl.value as Doctor));
+          if ((this.doctorControl.value as Doctor).id) {
+            this.servicios.set(data.services);
+            this.pageInfo.set(data.pageInfo);
+          }
     });
   }
 
@@ -195,6 +223,7 @@ export class CreateConsultationComponent implements OnInit {
 
   selectedDoctor(event: MatAutocompleteSelectedEvent) {
     this.doctorControl.setValue(event.option.value);
+    this.getServices("", (event.option.value as Doctor).speciality!.id);
   }
 
   displayDoctor(doctor: Doctor | null): string {
@@ -235,6 +264,7 @@ export class CreateConsultationComponent implements OnInit {
         const servicio = this.servicios().find(servicio => servicio.id === id);
         if (servicio) {
           this.totalAmount.set(this.totalAmount() + Number(servicio.price));
+          this.totalTime.set(this.totalTime() + Duration.fromISO(servicio.estimatedDuration!).as('minutes'));
         }
       }
     } else {
@@ -243,6 +273,7 @@ export class CreateConsultationComponent implements OnInit {
         const servicio = this.servicios().find(servicio => servicio.id === id);
         if (servicio) {
           this.totalAmount.set(this.totalAmount() - Number(servicio.price));
+          this.totalTime.set(this.totalTime() - Duration.fromISO(servicio.estimatedDuration!).as('minutes'));
         }
       }
     }
@@ -250,6 +281,14 @@ export class CreateConsultationComponent implements OnInit {
 
   isServicioSelected(id: string): boolean {
     return this.consultationFG.controls.medicalServices.value!.includes(id);
+  }
+
+  isMedicoSelected(): boolean {
+    return (this.doctorControl.value as Doctor).id !== "" && (this.doctorControl.value as Doctor).id !== undefined && (this.doctorControl.value as Doctor).id !== null;
+  }
+
+  totalTimeDisplay(): string {
+    return Duration.fromObject({ minutes: this.totalTime() }).toFormat('h.mm');
   }
 
 }

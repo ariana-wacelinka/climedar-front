@@ -160,6 +160,24 @@
         </div>
       </mat-card>
 
+      <div class="duracionEstimada">
+        <div class="duracion">
+          <span>Tiempo estimado de consulta:</span>
+          <span>{{ totalTimeDisplay() }}h</span>
+        </div>
+        <span class="slider">
+          @if(!!!turnoId()) {
+          <mat-slide-toggle labelPosition="before" [(ngModel)]="isSobreTurno"
+            >Sobre turno</mat-slide-toggle
+          >
+          }
+        </span>
+      </div>
+
+      @if (!!!turnoId()) {
+      <button mat-flat-button [disabled]="!isSobreTurno || !isMedicoSelected()">Ver disponibilidad del medico</button>
+      }
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Observaciones</mat-label>
         <textarea
@@ -171,15 +189,29 @@
 
       <div class="pagos">
         <div class="monto">
-          <span>Monto total</span>
+          <span>Monto total:</span>
           <span>{{ totalAmount() | currency : "ARS" }}</span>
         </div>
-        <p>
-          <mat-slide-toggle labelPosition="before">Pago</mat-slide-toggle
+        <span class="slider">
+          <mat-slide-toggle labelPosition="before" [(ngModel)]="pago"
+            >Pago</mat-slide-toggle
           >
-        </p>
+        </span>
       </div>
     </div>
   </ng-container>
-  <ng-container main-actions></ng-container>
+  <ng-container main-actions>
+    <div class="actions">
+      <button mat-flat-button class="warn" [disabled]="!consultationFG.valid">
+        Cancelar
+      </button>
+      <button
+        mat-flat-button
+        [disabled]="!consultationFG.valid"
+        (click)="createConsultation()"
+      >
+        Agendar consulta
+      </button>
+    </div>
+  </ng-container>
 </app-centered-card>
