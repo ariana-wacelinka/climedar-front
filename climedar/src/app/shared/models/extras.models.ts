@@ -16,8 +16,8 @@ export enum DayOfWeek {
 
 export enum ServiceType{
     GENERAL = 'Consulta general',
-    SPECIALIZED = 'Consulta especializada',
-    EXAM = 'Exámen médico',
+    SPECIALIST = 'Consulta especializada',
+    EXAMS = 'Exámen médico',
     SURGERY = 'Cirugía',
     THERAPY = 'Terapia y tratamientos varios'
 }

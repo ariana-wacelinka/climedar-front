@@ -54,7 +54,12 @@
   </ng-container>
 
   <ng-container main-actions>
-    <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)" [currentPage]="currentPage()"></app-paginator>
+    <app-paginator 
+      [totalItems]="pageInfo().totalItems"
+      [pageSize]="5"
+      (pageChange)="pageChange($event)" 
+      [currentPage]="currentPage()">
+    </app-paginator>
   </ng-container>
 
 </app-centered-card>

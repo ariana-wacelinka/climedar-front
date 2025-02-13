@@ -22,6 +22,7 @@ import {infoServicioComponent} from '../info-servicio/info-servicio.component';
 import { ServiciosMedicosService } from '../services/servicio/servicios-medicos.service';
 import { PageInfo } from '../../shared/models/extras.models';
 import { MedicalService } from '../models/services.models';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-listado-servicios',
@@ -58,7 +59,7 @@ import { MedicalService } from '../models/services.models';
   styleUrl: './listado-servicios.component.scss'
 })
 export class ListadoServiciosComponent {
-  pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });  
+  pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
   displayedColumns: string[] = ["nombre", "precio", "duracionEstimada", "edit"];
   dataSource = new MatTableDataSource<MedicalService>([]);
   servicios= signal<MedicalService[]>([]);
@@ -68,11 +69,7 @@ export class ListadoServiciosComponent {
   ) {}
 
   ngOnInit() {
-    this.serviciosMedicosService.getAllServiciosMedicos(this.pageInfo().currentPage).subscribe(response => {
-      this.servicios.set(response.services);
-      this.dataSource.data = response.services;
-      this.pageInfo.set(response.pageInfo);
-    });
+    this.loadServicios();
   }
 
   formatDuration(isoDuration: string): string {
@@ -83,13 +80,25 @@ export class ListadoServiciosComponent {
   }  
 
   currentPage(): WritableSignal<number> {
-    return signal<number>(this.pageInfo().currentPage);
+    return signal<number>(this.pageInfo().currentPage + 1);
   }
 
   pageChange(page: number) {
-    this.serviciosMedicosService.getAllServiciosMedicos(page).subscribe((response) => {
+    this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
+
+    this.serviciosMedicosService.getAllServiciosMedicos(page).pipe(
+        map(response => response)
+      ).subscribe(response => {
         this.servicios.set(response.services);
         this.pageInfo.set(response.pageInfo);
+      });
+  }
+
+  loadServicios() {
+    this.serviciosMedicosService.getAllServiciosMedicos(this.pageInfo().currentPage).subscribe(response => {
+      this.servicios.set(response.services);
+      this.dataSource.data = response.services;
+      this.pageInfo.set(response.pageInfo);
     });
   }
 
