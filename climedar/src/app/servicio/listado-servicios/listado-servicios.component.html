@@ -10,9 +10,7 @@
         <mat-form-field class="full-width" appearance="outline">
           <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
           <mat-label>Ingrese un servicio</mat-label>
-          <input matInput
-                 placeholder="Ingrese un servicio"
-                 #input>
+          <input matInput placeholder="Ingrese un servicio" #input>
         </mat-form-field>
 
 
@@ -36,20 +34,22 @@
 
           <ng-container matColumnDef="duracionEstimada">
             <th mat-header-cell class="duracionEstimada" *matHeaderCellDef> Duración estimada </th>
-            <td mat-cell class="duracionEstimada" *matCellDef="let servicio"><i>{{formatDuration(servicio.estimatedDuration)}}</i></td>
+            <td mat-cell class="duracionEstimada" *matCellDef="let servicio">
+              <i>{{formatDuration(servicio.estimatedDuration)}}</i>
+            </td>
           </ng-container>
 
           <ng-container class="edit" matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef></th>
 
             <td id="edit" mat-cell *matCellDef="let servicio" style="text-align: right;">
-              <button id="menu"
-                      [matMenuTriggerFor]="menu"><mat-icon style="color: black; font-size: 22px; margin-top: 5px">more_vert
-              </mat-icon></button>
+              <button id="menu" [matMenuTriggerFor]="menu"><mat-icon
+                  style="color: black; font-size: 22px; margin-top: 5px">more_vert
+                </mat-icon></button>
               <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="servicioInfo(servicio)">Ver más</button>
                 <button (click)="editServicio(servicio)" mat-menu-item>Modificar</button>
-                <button mat-menu-item>Eliminar</button>
+                <button (click)="deleteServicio(servicio.id)" mat-menu-item>Eliminar</button>
               </mat-menu>
             </td>
           </ng-container>
@@ -58,7 +58,9 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
           <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" class="td-nada" colspan="8"><div class="nada">No se han encontrado servicios</div></td>
+            <td class="mat-cell" class="td-nada" colspan="8">
+              <div class="nada">No se han encontrado servicios</div>
+            </td>
           </tr>
         </table>
       </div>
@@ -67,12 +69,8 @@
   </ng-container>
 
   <ng-container main-actions>
-    <app-paginator
-      [totalItems]="pageInfo().totalItems"
-      [pageSize]="5"
-      (pageChange)="pageChange($event)"
-      [currentPage]="currentPage()"
-    ></app-paginator>
+    <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+      [currentPage]="currentPage()"></app-paginator>
   </ng-container>
 
 </app-centered-card>

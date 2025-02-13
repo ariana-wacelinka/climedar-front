@@ -120,6 +120,13 @@ export class ListadoServiciosComponent {
     });
   }
 
+  deleteServicio(id: string) {
+    this.serviciosMedicosService.deleteMedicalService(id).subscribe(() => {
+      this.loadServicios();
+    });
+    window.location.reload();
+  }
+
   editServicio(servicio: MedicalService) {
     this.dialog.open(DialogServicioComponent, {
       width: '670px',

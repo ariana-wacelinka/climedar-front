@@ -14,6 +14,31 @@ export class ServiciosMedicosService {
   constructor(private http: HttpClient, private apollo: Apollo) {
   }
 
+  public deleteMedicalService(id: string): Observable<boolean> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    const body = {
+      query: `
+        mutation deleteMedicalService($id: ID!) {
+          deleteMedicalService(id: $id)
+        }
+      `,
+      variables: {
+        id
+      }
+    };
+
+    return this.http.post<{ data: { deleteMedicalService: boolean } }>(
+      'http://localhost:443/apollo-federation',
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.deleteMedicalService)
+    );
+  }
+
   public createMedicalService(medicalService: MedicalService): Observable<MedicalService> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
