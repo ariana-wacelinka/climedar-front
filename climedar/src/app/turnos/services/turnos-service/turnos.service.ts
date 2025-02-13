@@ -5,166 +5,147 @@ import { Turno } from '../../models/turno.models';
 import { Especialidad } from '../../../especialidad';
 import { Doctor } from '../../../doctors/models/doctor.models';
 import { PageInfo } from '../../../shared/models/extras.models';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TurnosService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private apollo: Apollo) { }
 
   public getDaysWithShiftsByMonth(date: Date, doctorId: string): Observable<Date[]> {
     const initialDate = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
     const finalDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
-    const apiUrl = 'http://localhost:8083/graphql';
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
 
-    const body = {
-      query: `{
-                getDatesWithShifts(
-                  doctorId: "${doctorId}",
-                  fromDate: "${initialDate}",
-                  toDate: "${finalDate}"
-                )
-              }`
-    }
-    return this.http.post<{ data: { getDatesWithShifts: string[] } }>(
-      apiUrl,
-      body,
-      { headers }
-    ).pipe(
-      // Extrae solo la lista de fechas de la respuesta
+    const GET_DATES_WITH_SHIFTS = gql`
+      query getDatesWithShifts($doctorId: String!, $fromDate: String!, $toDate: String!) {
+        getDatesWithShifts(doctorId: $doctorId, fromDate: $fromDate, toDate: $toDate)
+      }
+    `;
+
+    return this.apollo.query<{ getDatesWithShifts: string[] }>({
+      query: GET_DATES_WITH_SHIFTS,
+      variables: {
+        doctorId,
+        fromDate: initialDate,
+        toDate: finalDate
+      }
+    }).pipe(
       map(response => response.data.getDatesWithShifts.map(date => new Date(date)))
     );
   }
 
   public getTurnosByDate(date: string, doctorId: string, startTime: string, endTime: string, page: number): Observable<{ pageInfo: PageInfo, shifts: Turno[] }> {
-    const apiUrl = 'http://localhost:8083/graphql';
-    console.log('getTurnosByDate');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    const body = {
-      query: `{
-                getAllShifts(
-                  pageRequest: {page: ${page}, size: 10, order: { field: "startTime", direction: ASC}},
-                  specification: { date: "${date}", doctorId: "${doctorId}" fromTime: "${startTime}", toTime: "${endTime}"}
-                ) {
-                      pageInfo {
-                          totalItems
-                          currentPage
-                          totalPages
-                      }
-                      shifts {
-                          id
-                          date
-                          startTime
-                          endTime
-                          state
-                          timeOfShifts
-                          place
-                          doctor {
-                              id
-                              name
-                              surname
-                              gender
-                          }
-                      }
-                  }
-                
-              }`
-    }
-    console.log('query: ', body);
-    return this.http.post<{ data: { getAllShifts: { pageInfo: PageInfo, shifts: Turno[] } } }>(
-      apiUrl,
-      body,
-      { headers }
-    ).pipe(
-      map(response => {
-        console.log('Response:', response);
-        return response.data.getAllShifts})
+    const GET_ALL_SHIFTS = gql`
+      query getAllShifts($date: String!, $doctorId: String!, $startTime: String!, $endTime: String!, $page: Int!) {
+        getAllShifts(
+          pageRequest: { page: $page, size: 10, order: { field: "startTime", direction: ASC } },
+          specification: { date: $date, doctorId: $doctorId, fromTime: $startTime, toTime: $endTime }
+        ) {
+          pageInfo {
+            totalItems
+            currentPage
+            totalPages
+          }
+          shifts {
+            id
+            date
+            startTime
+            endTime
+            state
+            timeOfShifts
+            place
+            doctor {
+              id
+              name
+              surname
+              gender
+            }
+          }
+        }
+      }
+    `;
+
+    return this.apollo.query<{ getAllShifts: { pageInfo: PageInfo, shifts: Turno[] } }>({
+      query: GET_ALL_SHIFTS,
+      variables: {
+        date,
+        doctorId,
+        startTime,
+        endTime,
+        page
+      }
+    }).pipe(
+      map(response => response.data.getAllShifts)
     );
   }
 
   cancelShift(shiftId: string): Observable<Turno> {
-    const apiUrl = 'http://localhost:8083/graphql';
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    const body = {
-      query: `mutation {
-                cancelShift(id: "${shiftId}") {
-                    state
-                }
-              }`
-    }
-    return this.http.post<{ data: { cancelShift: Turno } }>(
-      apiUrl,
-      body,
-      { headers }
-    ).pipe(
-      map(response => {
-      console.log('Response:', response);
-      return response.data.cancelShift;
-      })
+    const CANCEL_SHIFT = gql`
+      mutation cancelShift($shiftId: String!) {
+        cancelShift(id: $shiftId) {
+          state
+        }
+      }
+    `;
+
+    return this.apollo.mutate<{ cancelShift: Turno }>({
+      mutation: CANCEL_SHIFT,
+      variables: {
+        shiftId
+      }
+    }).pipe(
+      map((response: any) => response.data.cancelShift)
     );
   }
 
   deleteShift(shiftId: string): Observable<boolean> {
-    const apiUrl = 'http://localhost:8083/graphql';
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    const body = {
-      query: `mutation {
-                deleteShift(id: "${shiftId}")
-              }`
-    }
-    return this.http.post<{ data: { deleteShift: boolean } }>(
-      apiUrl,
-      body,
-      { headers }
-    ).pipe(
-      map(response => {
-      console.log('Response:', response);
-      return response.data.deleteShift;
-      })
+    const DELETE_SHIFT = gql`
+      mutation deleteShift($shiftId: String!) {
+        deleteShift(id: $shiftId)
+      }
+    `;
+
+    return this.apollo.mutate<{ deleteShift: boolean }>({
+      mutation: DELETE_SHIFT,
+      variables: {
+        shiftId
+      }
+    }).pipe(
+      map((response: any) => response.data.deleteShift)
     );
   }
 
   getShiftById(shiftId: string): Observable<Turno> {
-    const apiUrl = 'http://localhost:8083/graphql';
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    const body = {
-      query: `{
-                getShiftById(id: "${shiftId}") {
-                  date
-                  startTime
-                  endTime
-                  timeOfShifts
-                  doctor {
-                    id
-                    name
-                    surname
-                    gender
-                    speciality {
-                      id
-                      name
-                    }
-                  }
-                }
-              }`
-    }
+    const GET_SHIFT_BY_ID = gql`
+      query getShiftById($shiftId: String!) {
+        getShiftById(id: $shiftId) {
+          date
+          startTime
+          endTime
+          timeOfShifts
+          doctor {
+            id
+            name
+            surname
+            gender
+            speciality {
+              id
+              name
+            }
+          }
+        }
+      }
+    `;
 
-    return this.http.post<{ data: { getShiftById: Turno } }>(
-      apiUrl,
-      body,
-      { headers }
-    ).pipe(
+    return this.apollo.query<{ getShiftById: Turno }>({
+      query: GET_SHIFT_BY_ID,
+      variables: {
+        shiftId
+      }
+    }).pipe(
       map(response => response.data.getShiftById)
     );
   }
