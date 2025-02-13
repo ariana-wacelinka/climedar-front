@@ -11,6 +11,7 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter
 import {MatDatepickerInputEvent, MatDatepickerIntl, MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDivider} from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import { Especialidad, EspecialidadService } from '../../../especialidad';
 
 @Component({
   selector: 'app-datos-profesionales',
@@ -23,7 +24,8 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatDivider,
-    MatButtonModule
+    MatButtonModule,
+    AsyncPipe
   ],
   templateUrl: './datos-profesionales.component.html',
   styleUrl: './datos-profesionales.component.scss'
@@ -32,16 +34,10 @@ export class DatosProfesionalesComponent implements OnInit{
   
   @Output() datosProfesionales = new EventEmitter<any>();
 
-  especialidades: {id: string, nombre: string}[] = [
-    {id: '1', nombre: 'Cardiología'},
-    {id: '2', nombre: 'Dermatología'},
-    {id: '3', nombre: 'Endocrinología'},
-  ]
+  filteredEspecialidadOptions:  Observable<Especialidad[]> | undefined;
 
   infoLaboral = new FormGroup({
-    speciality: new FormGroup({
-      id: new FormControl('', [Validators.required])
-    }),
+    speciality: new FormControl('', [Validators.required]),
     salary: new FormControl('', [Validators.required, Validators.min(0)]),
   })
 
@@ -49,8 +45,33 @@ export class DatosProfesionalesComponent implements OnInit{
     return;
   }
 
+  constructor(private especialidadService: EspecialidadService) {}
+
   ngOnInit(){
     this.datosProfesionales.emit(this.infoLaboral);
+
+    this.filteredEspecialidadOptions = this.infoLaboral.controls.speciality.valueChanges.pipe(
+          startWith(''),
+          filter((value): value is string => typeof value === 'string'),
+          debounceTime(300),
+          switchMap(value => {
+            const title = value;
+            return this.especialidadService.getEspecialidadesByNombre(title).pipe(
+              map((especiliades: Especialidad[]) => {
+                return especiliades;
+            })
+          );
+      }),
+    );
+  }
+
+  displayEspecialidad(especialidad: Especialidad | undefined ): string {
+    return especialidad ? especialidad.name! : '';
+  }
+
+  selectedEspeciality(event: MatAutocompleteSelectedEvent) {
+    //filtrado de medicos por especialidad y busqueda de turnos
+    this.infoLaboral.controls.speciality.setValue(event.option.value);
   }
 
 }

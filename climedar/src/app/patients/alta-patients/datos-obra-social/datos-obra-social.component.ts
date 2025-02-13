@@ -11,6 +11,8 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter
 import {MatDatepickerInputEvent, MatDatepickerIntl, MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDivider} from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import { MedcialSecure } from '../../../obra-social/models/medicalSecure.model';
+import { ObraSocialService } from '../../../obra-social/service/obra-social.service';
 
 @Component({
   selector: 'app-datos-obra-social',
@@ -28,26 +30,33 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './datos-obra-social.component.html',
   styleUrl: './datos-obra-social.component.scss'
 })
-export class DatosObraSocialComponent {
+export class DatosObraSocialComponent implements OnInit {
 
   @Output() datosObraSocial = new EventEmitter<any>();
-  
-    obrasSociales: {id: string, nombre: string}[] = [
-      {id: '1', nombre: 'osde'},
-      {id: '2', nombre: 'swiss medical'},
-      {id: '3', nombre: 'galeno'},
-    ]
+
+  obrasSociales: MedcialSecure[] = []
   
     infoObraSocial = new FormGroup({
-      obraSocial: new FormControl('', [Validators.required]),
+      medicalSecure: new FormGroup({ 
+        id: new FormControl('', [Validators.required])
+      }),
     })
   
     public nueva_obra_social(){
       return;
     }
-  
+
+    constructor(private obraSocialService: ObraSocialService) {}
+
     ngOnInit(){
       this.datosObraSocial.emit(this.infoObraSocial);
+
+      this.obraSocialService.getMedicalSecures().subscribe(
+        (response) => {
+          console.log('Obras sociales', response);
+          this.obrasSociales = response;
+        }
+      );
     }
 
 }

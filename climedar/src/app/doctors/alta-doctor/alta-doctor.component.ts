@@ -8,6 +8,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatLabel } from '@angular/material/form-field';
 import { DatosContactoComponent, DatosDireccionComponent, DatosPersonalesComponent } from '../../shared/components';
 import { DatosProfesionalesComponent } from './datos-profesionales/datos-profesionales.component';
+import { DoctorService } from '../service/doctor.service';
+import { Doctor } from '../models/doctor.models';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-alta-doctor',
@@ -28,12 +31,24 @@ import { DatosProfesionalesComponent } from './datos-profesionales/datos-profesi
 export class AltaDoctorComponent {
 
   public doctorForm = new FormGroup({});
+
+  constructor(private doctorService: DoctorService) {}
   
   public guardar(){
     if(this.doctorForm.invalid){
       this.doctorForm.markAllAsTouched();
+      this.doctorForm.markAsDirty();
       return;
     }
+    console.log('doctor:' + JSON.stringify(this.doctorForm.value as Doctor).replace(/"([^"]+)":/g, '$1:'));
+    this.doctorService.createDoctor(this.doctorForm.value).subscribe(
+      (response) => {
+        console.log('Doctor creado', response);
+      },
+      (error) => {
+        console.error('Error al crear doctor', error);
+      }
+    );
     console.log(this.doctorForm.value);
   }
 
@@ -44,11 +59,11 @@ export class AltaDoctorComponent {
   onFormChanges(form: FormGroup){
     if (Object.keys(form.controls).includes('street')){
       this.doctorForm.addControl('address', form);
-      console.log('onFormChanges ', this.doctorForm.value);
+    } else {
+      Object.keys(form.controls).forEach(key => {
+        this.doctorForm.addControl(key, form.controls[key]);
+      });
     }
-    Object.keys(form.controls).forEach(key => {
-      this.doctorForm.addControl(key, form.controls[key]);
-    });
     console.log('onFormChanges ', this.doctorForm.value);
   }
 }

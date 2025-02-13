@@ -5,15 +5,15 @@
         <div class="inner-section-1">
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Obra social</mat-label>
-          <mat-select [formControl]="infoObraSocial.controls.obraSocial">
+          <mat-select [formControl]="infoObraSocial.controls.medicalSecure.controls.id">
             @for (obraSocial of obrasSociales; track obraSocial.id) {
             <mat-option value="{{ obraSocial.id }}">{{
-              obraSocial.nombre
+              obraSocial.name
             }}</mat-option>
             }
           </mat-select>
-          @if (!infoObraSocial.controls.obraSocial.valid &&
-          infoObraSocial.controls.obraSocial.touched) {
+          @if (!infoObraSocial.controls.medicalSecure.valid &&
+          infoObraSocial.controls.medicalSecure.touched) {
           <mat-error>Por favor, seleccione la obra social</mat-error>
           }
         </mat-form-field>

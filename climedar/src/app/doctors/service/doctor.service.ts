@@ -1,14 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Doctor } from '../models/doctor.models';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { Apollo, gql } from 'apollo-angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DoctorService {
   apiurl = 'http://localhost:8083/graphql';
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private apollo: Apollo) { }
 
   public getDoctorsByName(name: string, specialityid: string) {
     console.log('getDoctorsByName');
@@ -49,5 +50,41 @@ export class DoctorService {
       // Extrae solo la lista de doctores de la respuesta
       map(response => response.data.getAllDoctors.doctors)
     );
+  }
+
+  createDoctor(doctor: any): Observable<any> {
+    const body =  `
+      mutation {
+      createDoctor(
+        doctor: {
+          name: "${doctor.name}",
+          surname: "${doctor.surname}"
+          dni: "${doctor.dni}",
+          gender: ${doctor.gender!},
+          birthdate: "${doctor.birthdate}",
+          salary: ${doctor.salary},
+          email: "${doctor.email}",
+          phone: "${doctor.phone}",
+          speciality: { 
+            id: "${doctor.speciality.id}"
+          },
+          address: {
+            street: "${doctor.address.street}",
+            number: "${doctor.address.number}",
+            apartment: "${doctor.address.apartment}",
+            floor: "${doctor.address.floor}"
+          }
+    }
+      ) {
+        id
+        name
+        surname
+      }
+      }
+    `;
+    console.log('createDoctor' + body);
+    return this.apollo.mutate({
+      mutation: gql`${body}`
+    });
   }
 }

@@ -5,18 +5,18 @@
     <div class="inner-section-1">
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Especialidad</mat-label>
-        <mat-select [formControl]="infoLaboral.controls.speciality.controls.id">
-          @for (especialidad of especialidades; track especialidad.id) {
-          <mat-option value="{{ especialidad.id }}">{{
-            especialidad.nombre
-          }}</mat-option>
+        <input type="text" matInput [formControl]="infoLaboral.controls.speciality" [matAutocomplete]="autoEsp">
+        <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad" (optionSelected)="selectedEspeciality($event)">
+          @for (option of filteredEspecialidadOptions | async; track option?.code) {
+            <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
           }
-        </mat-select>
-        @if (!infoLaboral.controls.speciality.controls.id.valid &&
-        infoLaboral.controls.speciality.controls.id.touched) {
+        </mat-autocomplete>
+        @if (!infoLaboral.controls.speciality.valid &&
+        infoLaboral.controls.speciality.touched) {
         <mat-error>Por favor, seleccione la especialidad</mat-error>
         }
       </mat-form-field>
+      
       <button
         mat-flat-button
         class="nueva-especialidad"

@@ -54,8 +54,8 @@ export class DatosPersonalesComponent implements OnInit {
 
   infoPersonal = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    surname: new FormControl('', [Validators.required, Validators.min(0)]),
-    dni: new FormControl('', [Validators.required, Validators.min(0)]),
+    surname: new FormControl<string>('', [Validators.required, Validators.min(0)]),
+    dni: new FormControl<string>('', [Validators.required, Validators.min(0), Validators.max(99999999), Validators.pattern('^[0-9]*$')]),
     birthdate: new FormControl('', [Validators.required]),
     gender: new FormControl('', [Validators.required]),
   })

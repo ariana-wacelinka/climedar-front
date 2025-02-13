@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatLabel } from '@angular/material/form-field';
 import { DatosContactoComponent, DatosDireccionComponent, DatosPersonalesComponent } from '../../shared/components';
 import { DatosObraSocialComponent } from './datos-obra-social/datos-obra-social.component';
+import { Paciente } from '../models/paciente.models';
+import { PatientService } from '../services/patient.service';
 
 @Component({
   selector: 'app-alta-patients',
@@ -28,13 +30,26 @@ import { DatosObraSocialComponent } from './datos-obra-social/datos-obra-social.
 export class AltaPatientsComponent {
 
   public patientForm = new FormGroup({});
+
+  constructor(private patientService: PatientService) {}
     
     public guardar(){
       if(this.patientForm.invalid){
-        this.patientForm.markAllAsTouched();
-        return;
-      }
-      console.log(this.patientForm.value);
+            this.patientForm.markAllAsTouched();
+            this.patientForm.markAsDirty();
+            return;
+          }
+
+          console.log('Guardando paciente:' + (this.patientForm.value as Paciente).name);
+          this.patientService.createPatient(this.patientForm.value as Paciente).subscribe(
+            (response) => {
+              console.log('Paciente creado', response);
+            },
+            (error) => {
+              console.error('Error al crear paciente', error);
+            }
+          );
+          console.log(this.patientForm.value);
     }
   
     public cancelar(){
@@ -42,8 +57,13 @@ export class AltaPatientsComponent {
     }
   
     onFormChanges(form: FormGroup){
-      Object.keys(form.controls).forEach(key => {
-        this.patientForm.addControl(key, form.controls[key]);
-      });
+      if (Object.keys(form.controls).includes('street')){
+        this.patientForm.addControl('address', form);
+      } else {
+        Object.keys(form.controls).forEach(key => {
+          this.patientForm.addControl(key, form.controls[key]);
+        });
+      }
+      console.log('onFormChanges ', this.patientForm.value);
     }
 }
