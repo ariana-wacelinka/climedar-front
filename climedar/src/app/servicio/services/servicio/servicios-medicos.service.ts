@@ -104,7 +104,7 @@ export class ServiciosMedicosService {
 
     const body = {
       query: `
-        mutation UpdateMedicalService($id: ID!,
+        mutation updateMedicalService($id: ID!,
           $description: String!,
           $name: String!, 
           $estimatedDuration: String!, 
@@ -116,13 +116,6 @@ export class ServiciosMedicosService {
               price: $price}) {
                 id
                 name
-                description
-                estimatedDuration
-                price
-                serviceType
-                speciality {
-                  id
-                } 
             }
         }`,
       variables: {
