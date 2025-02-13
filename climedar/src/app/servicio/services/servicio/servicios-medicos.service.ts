@@ -18,11 +18,27 @@ export class ServiciosMedicosService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-
+  
     const body = {
       query: `
-        mutation CreateMedicalService($description: String!, $name: String!, $estimatedDuration: String!, $price: String!, $serviceType: String!, $specialityId: String!) {
-          createMedicalService(speciality: {description: "$description", name: "$name", estimatedDuration: "$estimatedDuration", price: $price, serviceType: $serviceType, specialityId: "$specialityId"}) {
+        mutation createMedicalService(
+          $description: String!, 
+          $name: String!, 
+          $estimatedDuration: String!, 
+          $price: Float!, 
+          $serviceType: ServiceType!, 
+          $specialityId: ID!
+        ) {
+          createMedicalService(
+            input: {
+              description: $description, 
+              name: $name, 
+              estimatedDuration: $estimatedDuration, 
+              price: $price, 
+              serviceType: $serviceType, 
+              specialityId: $specialityId
+            }
+          ) {
             id
             name
             description
@@ -33,17 +49,20 @@ export class ServiciosMedicosService {
               id
             } 
           }
-        }`,
+        }
+      `,
       variables: {
         description: medicalService.description,
         name: medicalService.name,
         estimatedDuration: medicalService.estimatedDuration,
-        price: medicalService.price,
+        price: Number(medicalService.price),
         serviceType: medicalService.serviceType,
         specialityId: medicalService.specialityId
       }
     };
-
+  
+    console.log('Enviando mutación:', body);
+  
     return this.http.post<{ data: { createMedicalService: MedicalService } }>(
       'http://localhost:443/apollo-federation',
       body,
@@ -51,7 +70,7 @@ export class ServiciosMedicosService {
     ).pipe(
       map(response => response.data.createMedicalService)
     );
-  }
+  }  
 
   public updateMedicalService(medicalService: MedicalService): Observable<MedicalService> {
     const headers = new HttpHeaders({
@@ -102,13 +121,17 @@ export class ServiciosMedicosService {
             pageRequest: { page: ${page}, size: 5, order: {field: "name", direction: ASC}},
             ) {
               services {
+              serviceType
+              price
+              speciality {
                 id
-                estimatedDuration
-                price
-                name
-                code
-                description
               }
+              name
+              estimatedDuration
+              id
+              description
+              code
+            }
               pageInfo {
                 currentPage
                 totalItems

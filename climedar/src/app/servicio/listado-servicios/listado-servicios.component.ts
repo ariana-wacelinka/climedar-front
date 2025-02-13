@@ -45,7 +45,6 @@ import { map } from 'rxjs';
     MatRow,
     MatRowDef,
     MatSort,
-    MatSortHeader,
     MatTable,
     PaginatorComponent,
     MatFormFieldModule,
@@ -103,6 +102,7 @@ export class ListadoServiciosComponent {
   }
 
   editServicio(servicio: MedicalService) {
+    alert('Editando servicio');
     this.dialog.open(DialogServicioComponent, {
       width: '670px',
       minWidth: '350px',
@@ -112,7 +112,9 @@ export class ListadoServiciosComponent {
         nombre: servicio.name,
         descripcion: servicio.description,
         precio: servicio.price,
-        duracionEstimada: servicio.estimatedDuration
+        duracionEstimada: servicio.estimatedDuration,
+        serviceType: servicio.serviceType,
+        specialityId: servicio.specialityId
       }
     });
   }

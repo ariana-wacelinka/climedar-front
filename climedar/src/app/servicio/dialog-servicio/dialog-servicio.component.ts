@@ -68,31 +68,38 @@ export class DialogServicioComponent {
       specialityId?: string
     }
   ) {
+    this.specialityService.getAllEspecialidades(1).subscribe(response => {
+      this.especialidades.set(response.especialidades);
+    });
+  
     if (data) {
+      let duracionEstimada = '';
+      if (data.duracionEstimada && data.duracionEstimada.includes("PT")) {
+        const match = data.duracionEstimada.match(/PT(\d+H)?(\d+M)?/);
+        const horas = match![1] ? match![1].replace("H", "") : "00";
+        const minutos = match![2] ? match![2].replace("M", "") : "00";
+        duracionEstimada = `${horas.padStart(2, "0")}:${minutos.padStart(2, "0")}`;
+      }
+  
       this.formGroup.patchValue({
         id: data.id ?? '',
         nombre: data.nombre ?? '',
         descripcion: data.descripcion ?? '',
         precio: data.precio?.toString() ?? '',
-        duracionEstimada: data.duracionEstimada ?? '',
-        serviceType: data.serviceType ?? '',
-        specialityId: data.specialityId ?? ''
+        duracionEstimada: duracionEstimada ?? '',
+        serviceType: data.serviceType ?? null,
+        specialityId: data.specialityId ?? null
       });
     }
-
-    this.specialityService.getAllEspecialidades(1).pipe(
-      map(response => response)
-    ).subscribe(response => {
-      this.especialidades.set(response.especialidades);
-    });
-  }
+  }  
 
   onClose() {
     this.dialogRef.close();
   }
 
   onSubmit() {
-    if (this.data.id == null) {
+    if (!this.data.id || this.data.id.trim() === '') {
+      console.log('Ejecutando creación, form value:', this.formGroup.value);
       const servicioMedico: MedicalService = {
         id: '',
         name: this.formGroup.value.nombre!,
@@ -104,7 +111,6 @@ export class DialogServicioComponent {
       };
 
       if (this.formGroup.valid) {
-        console.log(servicioMedico);
         this.serviciosMedicosService.createMedicalService(servicioMedico).subscribe(response => {
           console.log(response);
           alert('Servicio creado: ' + response);
