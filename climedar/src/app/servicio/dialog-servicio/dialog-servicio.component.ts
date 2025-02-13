@@ -130,7 +130,7 @@ export class DialogServicioComponent {
         serviceType: this.formGroup.value.serviceType!,
         specialityId: this.formGroup.value.specialityId!
       };
-
+      
       if (this.formGroup.valid) {
         this.serviciosMedicosService.updateMedicalService(servicioMedico).subscribe(response => {
           console.log(response);

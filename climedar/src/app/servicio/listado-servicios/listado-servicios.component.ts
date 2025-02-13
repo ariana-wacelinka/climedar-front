@@ -21,7 +21,7 @@ import {DialogServicioComponent} from '../dialog-servicio/dialog-servicio.compon
 import {infoServicioComponent} from '../info-servicio/info-servicio.component';
 import { ServiciosMedicosService } from '../services/servicio/servicios-medicos.service';
 import { PageInfo } from '../../shared/models/extras.models';
-import { MedicalService } from '../models/services.models';
+import { MedicalService, MedicalServiceResponse } from '../models/services.models';
 import { map } from 'rxjs';
 
 @Component({
@@ -88,21 +88,38 @@ export class ListadoServiciosComponent {
     this.serviciosMedicosService.getAllServiciosMedicos(page).pipe(
         map(response => response)
       ).subscribe(response => {
-        this.servicios.set(response.services);
         this.pageInfo.set(response.pageInfo);
-      });
+          const servicios : MedicalService[] = response.services.map(service => ({
+            id: service.id,
+            name: service.name,
+            description: service.description,
+            price: service.price,
+            estimatedDuration: service.estimatedDuration,
+            serviceType: service.serviceType,
+            specialityId: service.speciality!.id
+          }));
+          this.dataSource.data = servicios
+        })
   }
 
   loadServicios() {
     this.serviciosMedicosService.getAllServiciosMedicos(this.pageInfo().currentPage).subscribe(response => {
-      this.servicios.set(response.services);
-      this.dataSource.data = response.services;
+      this.dataSource.data = this.servicios()
       this.pageInfo.set(response.pageInfo);
+      const servicios : MedicalService[] = response.services.map(service => ({
+        id: service.id,
+        name: service.name,
+        description: service.description,
+        price: service.price,
+        estimatedDuration: service.estimatedDuration,
+        serviceType: service.serviceType,
+        specialityId: service.speciality!.id
+      }));
+      this.dataSource.data = servicios
     });
   }
 
   editServicio(servicio: MedicalService) {
-    alert('Editando servicio');
     this.dialog.open(DialogServicioComponent, {
       width: '670px',
       minWidth: '350px',

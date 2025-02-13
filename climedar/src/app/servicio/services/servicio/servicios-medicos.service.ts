@@ -1,7 +1,7 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable, signal} from '@angular/core';
 import {PageInfo} from '../../../shared/models/extras.models';
-import {MedicalService} from '../../models/services.models';
+import {MedicalService, MedicalServiceResponse} from '../../models/services.models';
 import {map, Observable} from 'rxjs';
 import {Apollo} from 'apollo-angular';
 
@@ -72,36 +72,47 @@ export class ServiciosMedicosService {
     );
   }  
 
-  public updateMedicalService(medicalService: MedicalService): Observable<MedicalService> {
+  public updateMedicalService(medicalService: MedicalService): Observable<MedicalServiceResponse> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
 
     const body = {
       query: `
-        mutation UpdateMedicalService($id: String!, $description: String!, $name: String!, $estimatedDuration: String!, $price: String!) {
-          updateMedicalService(id: "$id", input: {description: "$description", name: "$name", estimatedDuration: "$estimatedDuration", price: $price}) {
-            id
-            name
-            description
-            estimatedDuration
-            price
-            serviceType
-            speciality {
-              id
-            } 
-          }
+        mutation UpdateMedicalService($id: String!,
+          $description: String!,
+          $name: String!, 
+          $estimatedDuration: String!, 
+          $price: Float!) {
+            updateMedicalService(id: $id, 
+              input: {description: 
+              $description, 
+              name: $name, 
+              estimatedDuration: $estimatedDuration, 
+              price: $price}) {
+                id
+                name
+                description
+                estimatedDuration
+                price
+                serviceType
+                speciality {
+                  id
+                } 
+            }
         }`,
       variables: {
         id: medicalService.id,
         description: medicalService.description,
         name: medicalService.name,
         estimatedDuration: medicalService.estimatedDuration,
-        price: medicalService.price
+        price: Number(medicalService.price),
+        serviceType: medicalService.serviceType,
+        specialityId: medicalService.specialityId
       }
     };
 
-    return this.http.post<{ data: { updateMedicalService: MedicalService } }>(
+    return this.http.post<{ data: { updateMedicalService: MedicalServiceResponse } }>(
       'http://localhost:443/apollo-federation',
       body,
       { headers }
@@ -110,7 +121,7 @@ export class ServiciosMedicosService {
     );
   }
 
-  public getAllServiciosMedicos(page: number): Observable<{ pageInfo: PageInfo, services: MedicalService[] }> {
+  public getAllServiciosMedicos(page: number): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
       });
@@ -138,10 +149,9 @@ export class ServiciosMedicosService {
                 totalPages
               }
             }
-    }`
+      }`
       };
-    
-      return this.http.post<{ data: { getAllMedicalServices: { pageInfo: PageInfo, services: MedicalService[] } } }>(
+      return this.http.post<{ data: { getAllMedicalServices: { pageInfo: PageInfo, services: MedicalServiceResponse[] } } }>(
         'http://localhost:443/apollo-federation',
         body,
         { headers }
