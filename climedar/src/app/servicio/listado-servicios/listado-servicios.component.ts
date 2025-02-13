@@ -76,7 +76,7 @@ export class ListadoServiciosComponent {
     const hours = match![1] ? match![1].replace('H', ' hs') : '';
     const minutes = match![2] ? match![2].replace('M', ' mins') : '';
     return `${hours} ${minutes}`.trim();
-  }  
+  }
 
   currentPage(): WritableSignal<number> {
     return signal<number>(this.pageInfo().currentPage + 1);
@@ -108,6 +108,7 @@ export class ListadoServiciosComponent {
       this.pageInfo.set(response.pageInfo);
       const servicios : MedicalService[] = response.services.map(service => ({
         id: service.id,
+        code: service.code,
         name: service.name,
         description: service.description,
         price: service.price,
@@ -126,10 +127,10 @@ export class ListadoServiciosComponent {
       maxWidth: '90vw',
       data: {
         id: servicio.id,
-        nombre: servicio.name,
-        descripcion: servicio.description,
-        precio: servicio.price,
-        duracionEstimada: servicio.estimatedDuration,
+        name: servicio.name,
+        description: servicio.description,
+        price: servicio.price,
+        estimatedDuration: servicio.estimatedDuration,
         serviceType: servicio.serviceType,
         specialityId: servicio.specialityId
       }
@@ -149,10 +150,13 @@ export class ListadoServiciosComponent {
     this.dialog.open(infoServicioComponent, {
       data: {
         id: servicio.id,
-        nombre: servicio.name,
-        descripcion: servicio.description,
-        precio: servicio.price,
-        duracionEstimada: servicio.estimatedDuration
+        code: servicio.code,
+        name: servicio.name,
+        description: servicio.description,
+        price: servicio.price,
+        estimatedDuration: servicio.estimatedDuration,
+        serviceType: servicio.serviceType,
+        specialityId: servicio.specialityId
       }
     });
   }
