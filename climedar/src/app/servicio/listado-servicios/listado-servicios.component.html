@@ -25,17 +25,17 @@
         <table mat-table [dataSource]="dataSource" matSort>
 
           <ng-container matColumnDef="nombre">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
             <td mat-cell class="nombre" *matCellDef="let servicio"> {{servicio.name}} </td>
           </ng-container>
 
           <ng-container matColumnDef="precio">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
+            <th mat-header-cell *matHeaderCellDef> Precio </th>
             <td mat-cell class="precio" *matCellDef="let servicio">$ {{servicio.price}} </td>
           </ng-container>
 
           <ng-container matColumnDef="duracionEstimada">
-            <th mat-header-cell class="duracionEstimada" *matHeaderCellDef mat-sort-header> Duración estimada </th>
+            <th mat-header-cell class="duracionEstimada" *matHeaderCellDef> Duración estimada </th>
             <td mat-cell class="duracionEstimada" *matCellDef="let servicio"><i>{{formatDuration(servicio.estimatedDuration)}}</i></td>
           </ng-container>
 
@@ -58,7 +58,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
           <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4"><div class="nada">No se han encontrado servicios</div></td>
+            <td class="mat-cell" class="td-nada" colspan="8"><div class="nada">No se han encontrado servicios</div></td>
           </tr>
         </table>
       </div>
