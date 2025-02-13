@@ -3,85 +3,72 @@ import { Injectable, signal } from '@angular/core';
 import { Especialidad } from '../models';
 import { map, Observable } from 'rxjs';
 import { PageInfo } from '../../shared/models/extras.models';
+import { Apollo, gql } from 'apollo-angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EspecialidadService {
-  apiUrl = 'http://localhost:8083/graphql';
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private apollo: Apollo) { }
 
   public updateEspecialidad(especialidad: Especialidad): Observable<Especialidad> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-  
-    const body = {
-      query: `mutation {
-      updateSpeciality(id: "${especialidad.id}", speciality: {
-        code: "${especialidad.code}", 
-        description: "${especialidad.description}", 
-        name: "${especialidad.name}"
-      }) {
-        id
-        code
-        name
-        description
+    const mutation = `
+      mutation UpdateSpeciality($id: ID!, $code: String!, $description: String!, $name: String!) {
+        updateSpeciality(id: $id, speciality: {
+          code: $code, 
+          description: $description, 
+          name: $name
+        }) {
+          id
+          code
+          name
+          description
+        }
+      }`;
+
+    return this.apollo.mutate<{ updateSpeciality: Especialidad }>({
+      mutation: gql`${mutation}`,
+      variables: {
+        id: especialidad.id,
+        code: especialidad.code,
+        description: especialidad.description,
+        name: especialidad.name
       }
-    }`
-    };
-  
-    return this.http.post<{ data: { updateSpeciality: Especialidad } }>(
-      this.apiUrl,
-      body,
-      { headers }
-    ).pipe(
-      map(response => response.data.updateSpeciality)
+    }).pipe(
+      map((response:any) => response.data.updateSpeciality)
     );
   }
 
   public createEspecialidad(especialidad: Especialidad): Observable<Especialidad> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-  
-    const body = {
-      query: `
-        mutation CreateSpeciality($code: String!, $description: String!, $name: String!) {
-          createSpeciality(speciality: {code: $code, description: $description, name: $name}) {
-            id
-            code
-            name
-            description
-          }
-        }`,
+    const mutation = gql`
+      mutation CreateSpeciality($code: String!, $description: String!, $name: String!) {
+        createSpeciality(speciality: {code: $code, description: $description, name: $name}) {
+          id
+          code
+          name
+          description
+        }
+      }`;
+
+    return this.apollo.mutate<{ createSpeciality: Especialidad }>({
+      mutation,
       variables: {
         code: especialidad.code,
         description: especialidad.description,
         name: especialidad.name
       }
-    };
-  
-    return this.http.post<{ data: { createSpeciality: Especialidad } }>(
-      this.apiUrl,
-      body,
-      { headers }
-    ).pipe(
-      map(response => response.data.createSpeciality)
+    }).pipe(
+      map((response: any) => response.data.createSpeciality)
     );
-  }  
+  }
 
   public getAllEspecialidades(page: number): Observable<{ pageInfo: PageInfo, especialidades: Especialidad[] }> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-  
-    const body = {
-      query: `{
+    const query = gql`
+      query GetAllSpecialities($page: Int!) {
         getAllSpecialities(
-          pageRequest: { page: ${page}, size: 5, order: {field: "name", direction: ASC}}
+          pageRequest: { page: $page, size: 5, order: {field: "name", direction: ASC}}
         ) {
           pageInfo {
             totalItems
@@ -95,70 +82,54 @@ export class EspecialidadService {
             description
           }
         }
-      }`
-    };
-  
-    return this.http.post<{ data: { getAllSpecialities: { pageInfo: PageInfo, specialities: Especialidad[] } } }>(
-      this.apiUrl,
-      body,
-      { headers }
-    ).pipe(
+      }`;
+
+    return this.apollo.query<{ getAllSpecialities: { pageInfo: PageInfo, specialities: Especialidad[] } }>({
+      query,
+      variables: { page }
+    }).pipe(
       map(response => ({
         pageInfo: response.data.getAllSpecialities.pageInfo,
         especialidades: response.data.getAllSpecialities.specialities
       }))
     );
-  }  
+  }
 
   public deleteEspecialidad(id: string): Observable<boolean> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-  
-    const body = {
-      query: `mutation {
-        deleteSpeciality(id: "${id}")
-      }`
-    };
-  
-    return this.http.post<{ data: { deleteSpeciality: boolean } }>(
-      this.apiUrl,
-      body,
-      { headers }
-    ).pipe(
-      map(response => response.data.deleteSpeciality) // Devuelve el resultado como booleano
+    const mutation = gql`
+      mutation DeleteSpeciality($id: ID!) {
+        deleteSpeciality(id: $id)
+      }`;
+
+    return this.apollo.mutate<{ deleteSpeciality: boolean }>({
+      mutation,
+      variables: { id }
+    }).pipe(
+      map((response:any) => response.data.deleteSpeciality)
     );
   }
 
   
   public getEspecialidadesByNombre(nombre: string): Observable<Especialidad[]> {
-    console.log('getEspecialidadesByNombre');
-    console.log('nombre: ', nombre);
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    var body = {
-      query:`{
-                    getAllSpecialities(
-                      pageRequest: {page: 1, size: 10}
-                      specification: {name: "${nombre}"}
-                  ) {
-                      specialities {
-                          id
-                          code
-                          name
-                          description
-                      }
-                  }
-                  }`,
-    };
-    console.log('query: ', body);
-    return this.http.post<{ data: { getAllSpecialities: { specialities: Especialidad[] } } }>(
-      this.apiUrl,
-      body,
-      { headers }
-    ).pipe(
-      // Extrae solo la lista de especialidades de la respuesta
+    const query = gql`
+      query GetEspecialidadesByNombre($nombre: String!) {
+        getAllSpecialities(
+          pageRequest: { page: 1, size: 10 }
+          specification: { name: $nombre }
+        ) {
+          specialities {
+            id
+            code
+            name
+            description
+          }
+        }
+      }`;
+
+    return this.apollo.query<{ getAllSpecialities: { specialities: Especialidad[] } }>({
+      query,
+      variables: { nombre }
+    }).pipe(
       map(response => response.data.getAllSpecialities.specialities)
     );
   }
