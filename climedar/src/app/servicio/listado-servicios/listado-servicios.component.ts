@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, signal, ViewChild, WritableSignal} from '@angular/core';
 import {CenteredCardComponent} from '../../shared/components';
 import {MatButton} from '@angular/material/button';
 import {
@@ -19,6 +19,9 @@ import {PaginatorComponent} from '../../shared/components/paginator/paginator.co
 import {MatDialog} from '@angular/material/dialog';
 import {DialogServicioComponent} from '../dialog-servicio/dialog-servicio.component';
 import {infoServicioComponent} from '../info-servicio/info-servicio.component';
+import { ServiciosMedicosService } from '../services/servicio/servicios-medicos.service';
+import { PageInfo } from '../../shared/models/extras.models';
+import { MedicalService } from '../models/services.models';
 
 @Component({
   selector: 'app-listado-servicios',
@@ -55,67 +58,52 @@ import {infoServicioComponent} from '../info-servicio/info-servicio.component';
   styleUrl: './listado-servicios.component.scss'
 })
 export class ListadoServiciosComponent {
-  currentPage = 1;
-  pageSize = 5;
-  totalItems = 30;
-
-  onPageChange(page: number) {
-    this.currentPage = page;
-  }
-
-  //Esto despues se reemplaza por el sort que hizo Lu
-  @ViewChild(MatSort) sort: MatSort = new MatSort;
-
+  pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });  
   displayedColumns: string[] = ["nombre", "precio", "duracionEstimada", "edit"];
-  dataSource = new MatTableDataSource([
-    {nombre: 'Consulta General', descripcion: 'Consulta médica general', precio: 500, duracionEstimada: '00:30', id: 0},
-    {
-      nombre: 'Radiografía',
-      descripcion: 'Radiografía de cualquier parte del cuerpo',
-      precio: 800,
-      duracionEstimada: '00:30',
-      id: 1
-    },
-    {
-      nombre: 'Análisis de Sangre',
-      descripcion: 'Análisis completo de sangre',
-      precio: 300,
-      duracionEstimada: '00:30',
-      id: 2
-    },
-    {
-      nombre: 'Ecografía',
-      descripcion: 'Ecografía de cualquier parte del cuerpo',
-      precio: 1000,
-      duracionEstimada: '01:00',
-      id: 3
-    },
-    {nombre: 'Fisioterapia', descripcion: 'Sesión de fisioterapia', precio: 600, duracionEstimada: '01:00', id: 4}
-  ]);
+  dataSource = new MatTableDataSource<MedicalService>([]);
+  servicios= signal<MedicalService[]>([]);
+  
+  constructor(private dialog: MatDialog,
+    private serviciosMedicosService: ServiciosMedicosService,
+  ) {}
 
-  constructor(private dialog: MatDialog) {
+  ngOnInit() {
+    this.serviciosMedicosService.getAllServiciosMedicos(this.pageInfo().currentPage).subscribe(response => {
+      this.servicios.set(response.services);
+      this.dataSource.data = response.services;
+      this.pageInfo.set(response.pageInfo);
+    });
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  formatDuration(isoDuration: string): string {
+    const match = isoDuration.match(/PT(\d+H)?(\d+M)?/);
+    const hours = match![1] ? match![1].replace('H', ' hs') : '';
+    const minutes = match![2] ? match![2].replace('M', ' mins') : '';
+    return `${hours} ${minutes}`.trim();
+  }  
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  currentPage(): WritableSignal<number> {
+    return signal<number>(this.pageInfo().currentPage);
   }
 
-  editServicio(id: number) {
+  pageChange(page: number) {
+    this.serviciosMedicosService.getAllServiciosMedicos(page).subscribe((response) => {
+        this.servicios.set(response.services);
+        this.pageInfo.set(response.pageInfo);
+    });
+  }
+
+  editServicio(servicio: MedicalService) {
     this.dialog.open(DialogServicioComponent, {
       width: '670px',
       minWidth: '350px',
       maxWidth: '90vw',
       data: {
-        id: id,
-        nombre: this.dataSource.data[id].nombre,
-        descripcion: this.dataSource.data[id].descripcion,
-        precio: this.dataSource.data[id].precio,
-        duracionEstimada: this.dataSource.data[id].duracionEstimada
+        id: servicio.id,
+        nombre: servicio.name,
+        descripcion: servicio.description,
+        precio: servicio.price,
+        duracionEstimada: servicio.estimatedDuration
       }
     });
   }
@@ -129,14 +117,14 @@ export class ListadoServiciosComponent {
     });
   }
 
-  servicioInfo(id: number) {
+  servicioInfo(servicio: MedicalService) {
     this.dialog.open(infoServicioComponent, {
       data: {
-        id: id,
-        nombre: this.dataSource.data[id].nombre,
-        descripcion: this.dataSource.data[id].descripcion,
-        precio: this.dataSource.data[id].precio,
-        duracionEstimada: this.dataSource.data[id].duracionEstimada
+        id: servicio.id,
+        nombre: servicio.name,
+        descripcion: servicio.description,
+        precio: servicio.price,
+        duracionEstimada: servicio.estimatedDuration
       }
     });
   }

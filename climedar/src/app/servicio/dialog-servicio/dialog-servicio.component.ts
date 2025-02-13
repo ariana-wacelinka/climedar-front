@@ -115,9 +115,25 @@ export class DialogServicioComponent {
         });
       }
     } else {
+      const servicioMedico: MedicalService = {
+        id: this.formGroup.value.id!,
+        name: this.formGroup.value.nombre!,
+        description: this.formGroup.value.descripcion!,
+        price: this.formGroup.value.precio!,
+        estimatedDuration: this.formatTime(this.formGroup.value.duracionEstimada!),
+        serviceType: this.formGroup.value.serviceType!,
+        specialityId: this.formGroup.value.specialityId!
+      };
+
       if (this.formGroup.valid) {
-        alert('Servicio editado: ' + this.formGroup.value.nombre);
-        this.onClose();
+        this.serviciosMedicosService.updateMedicalService(servicioMedico).subscribe(response => {
+          console.log(response);
+          alert('Servicio editado: ' + response);
+          this.onClose();
+        }, error => {
+          console.error('Error al editar servicio', error);
+          alert('Error al editar servicio');
+        });
       }
     }
   }
