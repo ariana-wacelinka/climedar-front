@@ -57,52 +57,50 @@ import { ObraSocial } from '../models/obra-social.models';
 })
 export class ListadoObrasSocialesComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
-  obrasSociales = signal<ObraSocial[]>([]);
+  medicalSecures = signal<ObraSocial[]>([]);
   displayedColumns: string[] = ["nombre", "edit"];
   dataSource = new MatTableDataSource<ObraSocial>([]);
 
   constructor(private dialog: MatDialog,
     public obraSocialService: ObraSocialService,
-  ) {
-    this.obraSocialService.getAllObrasSociales(this.pageInfo().currentPage).pipe(
+  ) { }
+
+  ngOnInit() {
+    this.obraSocialService.getAllMedicalSecures(this.pageInfo().currentPage).pipe(
       map(response => response)
     ).subscribe(response => {
       console.log(response);
-      this.obrasSociales.set(response.obrasSociales);
+      this.medicalSecures.set(response.medicalSecures);
       this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = response.obrasSociales;
-    });
-
-    effect(() => {
-      this.dataSource.data = this.obrasSociales();
+      this.dataSource.data = response.medicalSecures;
     });
   }
 
   pageChange(page: number) {
     this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
 
-    this.obraSocialService.getAllObrasSociales(page).pipe(
+    this.obraSocialService.getAllMedicalSecures(page).pipe(
       map(response => response)
     ).subscribe(response => {
-      this.obrasSociales.set(response.obrasSociales);
+      this.medicalSecures.set(response.medicalSecures);
       this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = response.obrasSociales;
+      this.dataSource.data = response.medicalSecures;
     });
   }
 
   currentPage(): WritableSignal<number> {
-    return signal<number>(this.pageInfo().currentPage + 1);
+    return signal<number>(this.pageInfo().currentPage);
   }
 
-  editObraSocial(obrasocial: ObraSocial) {
+  editObraSocial(medicalSecure: ObraSocial) {
     {
       this.dialog.open(DialogObrasocialComponent, {
         width: '670px',
         minWidth: '350px',
         maxWidth: '90vw',
         data: {
-          id: obrasocial.id,
-          nombre: obrasocial.name
+          id: medicalSecure.id,
+          name: medicalSecure.name
         }
       });
     }
@@ -114,6 +112,13 @@ export class ListadoObrasSocialesComponent {
       minWidth: '350px',
       maxWidth: '90vw',
       data: {}
+    });
+  }
+
+  deleteObraSocial(id: number) {
+    this.obraSocialService.deleteMedicalSecure(id).subscribe(() => {
+      console.log('Deleted');
+      window.location.reload();
     });
   }
 }

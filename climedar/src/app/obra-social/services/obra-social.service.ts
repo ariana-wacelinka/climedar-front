@@ -16,15 +16,16 @@ export class ObraSocialService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-
+    console.log(obraSocial);
     const body = {
       query: `
-        mutation CreateMedicalSecure {
-          createMedicalSecure(medicalSecure: {name: $name}) {
-            name
-            id
-          }
-        }`,
+      mutation CreateMedicalSecure($name: String!) {
+        createMedicalSecure(medicalSecure: {name: $name}) {
+          name
+          id
+        }
+      }
+    `,
       variables: {
         name: obraSocial.name
       }
@@ -38,8 +39,8 @@ export class ObraSocialService {
       map(response => response.data.createMedicalSecure)
     );
   }
-  
-  getAllObrasSociales(page: number): Observable<{ obrasSociales: ObraSocial[], pageInfo: PageInfo }> {
+
+  getAllMedicalSecures(page: number): Observable<{ medicalSecures: ObraSocial[], pageInfo: PageInfo }> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
@@ -61,7 +62,7 @@ export class ObraSocialService {
         }`
     };
 
-    return this.http.post < { data: { getAllMedicalSecures: { obrasSociales: ObraSocial[], pageInfo: PageInfo } } }>(
+    return this.http.post<{ data: { getAllMedicalSecures: { medicalSecures: ObraSocial[], pageInfo: PageInfo } } }>(
       'http://localhost:443/apollo-federation',
       body,
       { headers }
@@ -77,7 +78,7 @@ export class ObraSocialService {
 
     const body = {
       query: `
-        mutation MyMutation {
+        mutation UpdateMedicalSecure($id: ID!, $name: String!) {
           updateMedicalSecure(id: $id, medicalSecure: {name: $name}) {
             name
             id
@@ -95,6 +96,30 @@ export class ObraSocialService {
       { headers }
     ).pipe(
       map(response => response.data.updateMedicalSecure)
+    );
+  }
+
+  deleteMedicalSecure(id: number): Observable<boolean> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    const body = {
+      query: `
+        mutation DeleteMedicalSecure($id: ID!) {
+          deleteMedicalSecure(id: $id)
+        }`,
+      variables: {
+        id
+      }
+    };
+
+    return this.http.post<{ data: { deleteMedicalSecure: boolean } }>(
+      'http://localhost:443/apollo-federation',
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.deleteMedicalSecure)
     );
   }
 }

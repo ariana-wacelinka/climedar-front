@@ -1,4 +1,4 @@
-import { Component, Inject, Input, input, signal } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -29,7 +29,7 @@ import { ObraSocial } from '../models/obra-social.models';
   styleUrl: './dialog-obrasocial.component.scss'
 })
 export class DialogObrasocialComponent {
-  obraSocial = signal<ObraSocial>({});
+  obraSocial = signal<ObraSocial>({ id: '', name: '' });
   formGroup = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('', Validators.required)
@@ -41,6 +41,7 @@ export class DialogObrasocialComponent {
     public obraSocialService: ObraSocialService
   ) {
     if (data.id && data.name) {
+      console.log(data);
       this.obraSocial.set(data);
       this.formGroup.setValue({
         id: data.id,
@@ -54,30 +55,21 @@ export class DialogObrasocialComponent {
   }
 
   onSubmit() {
-    if (this.data.id == null) {
-      if (this.formGroup.valid) {
-        const obraSocialSent: ObraSocial = {
-          id: "",
-          name: this.obraSocial().name
-        };
+    if (this.formGroup.valid) {
+      const obraSocialSent: ObraSocial = {
+        id: this.formGroup.get('id')?.value || '',
+        name: this.formGroup.get('name')?.value || ''
+      };
 
+      if (!this.data.id) {
         this.obraSocialService.createObraSocial(obraSocialSent).subscribe(
-          (obraSocial) => {
-            alert('Obra social creada: ' + obraSocial.name);
+          () => {
             this.onClose();
             window.location.reload();
           });
-      }
-    } else {
-      if (this.formGroup.valid) {
-        const obraSocialSent: ObraSocial = {
-          id: this.obraSocial().id,
-          name: this.obraSocial().name
-        };
-
+      } else {
         this.obraSocialService.updateObraSocial(obraSocialSent).subscribe(
-          (obraSocial) => {
-            alert('Obra social actualizada: ' + obraSocial.name);
+          () => {
             this.onClose();
             window.location.reload();
           });

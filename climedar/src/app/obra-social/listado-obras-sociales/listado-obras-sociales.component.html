@@ -30,7 +30,7 @@
                   style="color: black; font-size: 22px; margin-top: 5px">more_vert</mat-icon></button>
               <mat-menu #menu="matMenu">
                 <button (click)="editObraSocial(obraSocial)" mat-menu-item>Modificar</button>
-                <button mat-menu-item>Eliminar</button>
+                <button (click)="deleteObraSocial(obraSocial.id)" mat-menu-item>Eliminar</button>
               </mat-menu>
             </td>
           </ng-container>
