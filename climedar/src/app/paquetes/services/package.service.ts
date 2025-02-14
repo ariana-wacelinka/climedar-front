@@ -133,4 +133,37 @@ export class PackageService {
       map(response => response.data.updatePackage)
     );
   }
+
+  getPackageById(id: number): Observable<PackageResponse> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    const body = {
+      query: `
+        query MyQuery {
+          getMedicalPackageById(id: ${id}) {
+            code
+            estimatedDuration
+            id
+            name
+            price
+            services {
+              id
+              name
+              price
+              estimatedDuration
+            }
+          }
+        }`,
+    };
+
+    return this.httpClient.post<{ data: { getMedicalPackageById: PackageResponse } }>(
+      'http://localhost:443/apollo-federation',
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.getMedicalPackageById)
+    );
+  }
 }

@@ -47,7 +47,6 @@ import { map } from 'rxjs';
     MatRow,
     MatRowDef,
     MatSort,
-    MatSortHeader,
     MatTable,
     PaginatorComponent,
     MatNoDataRow,
@@ -110,17 +109,13 @@ export class ListadoPaquetesComponent {
 
   paqueteInfo(paquete: PackageResponse) {
     this.dialog.open(InfoPaqueteComponent, {
-      data: {
-        id: paquete.id,
-        code: paquete.code,
-        name: paquete.name,
-        services: paquete.services,
-        price: paquete.price,
-        estimatedDuration: paquete.estimatedDuration,
-      }
+      width: '670px',
+      minWidth: '350px',
+      maxWidth: '90vw',
+      data: {id: paquete.id}
     });
   }
-  
+
   deletePaquete(id: number) {
     this.packageService.deletePackage(id).subscribe(response => {
       console.log(response)
