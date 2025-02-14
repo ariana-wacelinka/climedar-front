@@ -106,7 +106,7 @@ export class CreateConsultationComponent implements OnInit {
         this.turnoId.set(id);
 
         // Cambia la URL sin recargar ni reiniciar el componente
-        this.router.navigate(['/consultation/create'], { replaceUrl: true });
+        this.router.navigate(['/consulta/nueva'], { replaceUrl: true });
       }
 
       console.log('turnoId ' + this.turnoId());

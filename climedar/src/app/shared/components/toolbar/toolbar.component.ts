@@ -69,6 +69,10 @@ export class ToolbarComponent {
     this.router.navigate(['doctor/nuevo']);
   }
 
+  listado_obra_social() {
+    this.router.navigate(['obra-social/listado']);
+  }
+
   login() {
     this.router.navigate(['login']);
   }

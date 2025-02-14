@@ -15,8 +15,8 @@ import { AltaTurnoComponent } from './turnos/alta-turno/alta-turno.component';
 export const routes: Routes = [
   { path: '', component: CalendarComponent },
   { path: 'home', component: CenteredCardComponent },
-  { path: 'consultation/create', component: CreateConsultationComponent },
-  { path: 'consultation/create/:turnoId', component: CreateConsultationComponent },
+  { path: 'consulta/nueva', component: CreateConsultationComponent },
+  { path: 'consulta/nueva/:turnoId', component: CreateConsultationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'doctor/nuevo', component: AltaDoctorComponent },
   { path: 'paciente/nuevo', component: AltaPatientsComponent },
