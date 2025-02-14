@@ -95,7 +95,6 @@ export class DialogPaqueteComponent {
 
   pageChange(page: number) {
     this.medicalService.getAllServiciosMedicos(page).subscribe((response) => {
-      console.log(response);
       this.servicios.set(response.services);
       this.pageInfo.set(response.pageInfo);
     });
