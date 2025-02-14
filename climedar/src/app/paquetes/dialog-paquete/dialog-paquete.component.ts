@@ -20,6 +20,7 @@ import { ServiciosMedicosService } from '../../servicio/services/servicio/servic
 import { Duration } from 'luxon';
 import { CurrencyPipe } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
+import { PackageService } from '../services/package.service';
 
 @Component({
   selector: 'app-dialog-paquete',
@@ -54,20 +55,21 @@ export class DialogPaqueteComponent {
   paquete = new FormGroup({
     id: new FormControl<string>(""),
     nombre: new FormControl<string>("", Validators.required),
-    medicalServices: new FormControl<string[]>([])
+    servicesIds: new FormControl<string[]>([])
   })
 
   constructor(public dialogRef: MatDialogRef<DialogPaqueteComponent>,
+    private packageService: PackageService,
     private medicalService: ServiciosMedicosService,
     @Inject(MAT_DIALOG_DATA) public data: {
       id?: number,
       nombre?: string,
-      medicalServices?: MedicalService[]
+      servicesIds?: MedicalService[]
     }) {
     if (data.id) {
       this.paquete.controls.id.setValue(data.id?.toString());
       this.paquete.controls.nombre.setValue(data.nombre!);
-      this.paquete.controls.medicalServices.setValue(data.medicalServices!.map(service => service.id!));
+      this.paquete.controls.servicesIds.setValue(data.servicesIds!.map(service => service.id!));
     }
   }
 
@@ -98,12 +100,12 @@ export class DialogPaqueteComponent {
   }
 
   selectionChange(event: boolean, id: string) {
-    const selectedServices = this.paquete.controls.medicalServices.value || [];
+    const selectedServices = this.paquete.controls.servicesIds.value || [];
 
     if (event) {
-      this.paquete.controls.medicalServices.setValue([...selectedServices, id]);
+      this.paquete.controls.servicesIds.setValue([...selectedServices, id]);
     } else {
-      this.paquete.controls.medicalServices.setValue(selectedServices.filter(serviceId => serviceId !== id));
+      this.paquete.controls.servicesIds.setValue(selectedServices.filter(serviceId => serviceId !== id));
     }
 
     const servicio = this.servicios().find(servicio => servicio.id === id);
@@ -113,7 +115,7 @@ export class DialogPaqueteComponent {
   }
 
   isServicioSelected(id: string): boolean {
-    return this.paquete.controls.medicalServices.value!.includes(id);
+    return this.paquete.controls.servicesIds.value!.includes(id);
   }
 
   onClose() {
@@ -124,22 +126,24 @@ export class DialogPaqueteComponent {
     if (this.data.id == null) {
       if (this.paquete.valid) {
         const paquete = {
-          nombre: this.paquete.value.nombre,
-          medicalServices: this.paquete.value.medicalServices
+          name: this.paquete.value.nombre!,
+          servicesIds: this.paquete.value.servicesIds!
         };
 
         console.log(paquete);
-        alert('Paquete creado' + this.paquete.value);
-        this.onClose();
+        this.packageService.createPackage(paquete).subscribe((response) => {
+          alert('Paquete creado' + response);
+          this.onClose();
+        });
       }
     } else {
       if (this.paquete.valid) {
         const paquete = {
           id: this.paquete.value.id,
           nombre: this.paquete.value.nombre,
-          medicalServices: this.paquete.value.medicalServices
+          servicesIds: this.paquete.value.servicesIds
         };
-        
+
         console.log(paquete);
         alert('Paquete editado: ' + this.paquete.value);
         this.onClose();
