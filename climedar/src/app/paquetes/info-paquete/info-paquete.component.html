@@ -5,7 +5,8 @@
     <div><b>Nombre:</b> {{paquete()?.name}}</div>
     <div><b>Código:</b> {{paquete()?.code}}</div>
     <div><b>Precio:</b> $ {{paquete()?.price}}</div>
-    <div><b>Duración estimada:</b> {{formatDurationTime(paquete()?.estimatedDuration!)}}</div>
+    <div style="margin-bottom: 20px;"><b>Duración estimada:</b> {{formatDurationTime(paquete()?.estimatedDuration!)}}
+    </div>
 
     <mat-card class="full-width card-tab" appearance="outlined">
       <mat-tab-group class="full-width">
@@ -19,7 +20,7 @@
               </div>
             </mat-form-field>
 
-            <table mat-table [dataSource]="this.dataSource" class="mat-elevation-z8">
+            <table mat-table [dataSource]="this.dataSource" class="mat-elevation-z8 lista">
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Nombre </th>
                 <td mat-cell *matCellDef="let servicio"> {{ servicio.name }} </td>

@@ -94,7 +94,8 @@ export class DialogPaqueteComponent {
   }
 
   pageChange(page: number) {
-    this.medicalService.getServiciosMedicos(this.servicioControl.value ?? "", "", page).subscribe((response) => {
+    this.medicalService.getAllServiciosMedicos(page).subscribe((response) => {
+      console.log(response);
       this.servicios.set(response.services);
       this.pageInfo.set(response.pageInfo);
     });
@@ -139,7 +140,7 @@ export class DialogPaqueteComponent {
       }
     } else {
       if (this.paquete.valid) {
-        const paquete : PackageRequest = {
+        const paquete: PackageRequest = {
           id: this.paquete.value.id!,
           name: this.paquete.value.name!,
           servicesIds: this.paquete.value.servicesIds!

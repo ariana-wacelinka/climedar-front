@@ -50,7 +50,7 @@ export class PackageService {
     const body = {
       query: `
         query MyQuery2 {
-          getAllMedicalPackages(input: {page: ${page}, size: 10}) {
+          getAllMedicalPackages(input: {page: ${page}, size: 5, order: {field: "name", direction: ASC}}) {
             packages {
               code
               estimatedDuration
@@ -105,7 +105,7 @@ export class PackageService {
 
   public updatePackage(paquete: PackageRequest): Observable<PackageResponse> {
     console.log(paquete);
-    
+
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });

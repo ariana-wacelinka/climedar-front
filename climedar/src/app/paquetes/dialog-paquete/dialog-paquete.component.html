@@ -38,8 +38,9 @@
             </mat-selection-list>
           </div>
           <div class="paginador">
-            <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="10" (pageChange)="pageChange($event)"
-              [currentPage]="currentPage()"></app-paginator>
+            <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+              [currentPage]="currentPage()">
+            </app-paginator>
           </div>
         </mat-tab>
       </mat-tab-group>

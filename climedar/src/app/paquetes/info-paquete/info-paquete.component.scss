@@ -109,8 +109,3 @@ tr.mat-header-row {
 tr.mat-row {
   height: 48px;
 }
-
-/* Remove hover effect on mat-tab-group */
-.mat-tab-group .mat-tab-label:hover {
-  background-color: transparent !important;
-}

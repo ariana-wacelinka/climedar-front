@@ -1,33 +1,36 @@
 :host ::ng-deep .card-actions {
   justify-content: right !important;
-  }
+}
+
 //Importante para que el paginator esté abajo a la derecha
 
 .full-width {
   width: 100%;
-  }
+}
 
-.buscador{
+.buscador {
   display: flex;
   flex-direction: row;
   position: relative;
-  }
+}
 
 table {
   width: 100%;
-  }
+}
 
-h2{
+h2 {
   padding-left: 140px;
   padding-right: 140px;
-  }
+}
 
-.content{
+.content {
   width: 100%;
+  max-width: 1000px;
+  min-width: 1000px;
   min-height: 392px;
-  }
+}
 
-.row{
+.row {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -36,48 +39,51 @@ h2{
   button {
     height: 55px;
     border-radius: 5px;
-    }
   }
+}
 
 .mat-mdc-form-field {
   font-size: 14px;
   width: 120%;
-  }
+}
 
-td, th {
+td,
+th {
   font-size: 18px;
   min-width: max-content;
   padding: 0 100px 0 20px;
-  }
+}
 
-#edit, .tiempo_estimado{
+#edit,
+.tiempo_estimado {
   padding: 0 !important;
   max-width: fit-content !important;
-  }
+}
 
-#menu{
+#menu {
   border: 0;
   border-radius: 50px;
   background-color: #F9F9F9;
   height: 36px;
   width: 36px;
 
-  &:hover{
+  &:hover {
     background-color: #F1F1F1;
     cursor: pointer;
-    }
   }
+}
 
-  .td-nada{
-    padding: 0 !important;
-  }
+.td-nada {
+  padding: 0 !important;
+}
 
-  .nada{
-    text-align: center;
-    width: 100%;
-    padding: 20px 0;
-    &:hover{
-      cursor: pointer;
-      background-color: #b9b9b923;
-    }
+.nada {
+  text-align: center;
+  width: 100%;
+  padding: 20px 0;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #b9b9b923;
   }
+}
