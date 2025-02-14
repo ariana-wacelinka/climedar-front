@@ -97,24 +97,46 @@ export class CreateConsultationComponent implements OnInit {
   paquetes= signal<MedicalPackage[]>([]);
   turnoId = signal<string | null>(null);
   doctorControl = new FormControl<Doctor | string>("");
-  pacienteControl = new FormControl<string | string>("");
+  pacienteControl = new FormControl<Paciente | string>("");
   filteredPatientOptions: Observable<Doctor[]> | undefined;
   filteredDoctorOptions: Observable<Doctor[]> | undefined;
   servicioControl = new FormControl<string>("");
 
   constructor(private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService) {
+    const navigation = this.router.getCurrentNavigation();
     this.route.queryParamMap.subscribe(params => {
-      const id = params.get('turnoId');
+      const id = params.get('turnoId') || null;
+      var consultation = navigation?.extras?.state?.['consultaData'] || null;
+      var turno = navigation?.extras?.state?.['turno'] || null;
       if (id) {
         // Almacena el valor en la señal antes de cambiar la URL
         this.turnoId.set(id);
 
         // Cambia la URL para que no se pierda el valor en caso de recarga
         this.router.navigate([], { queryParams: { turnoId: null }, queryParamsHandling: 'merge' });
+      } else {
+        if (consultation) {
+          this.doctorControl.setValue(consultation.doctor);
+          this.pacienteControl.setValue(consultation.paciente);
+          this.consultationFG.controls.description.setValue(consultation.descripcion);
+          this.consultationFG.controls.observation.setValue(consultation.observacion);
+          this.consultationFG.controls.medicalServices.setValue(consultation.servicios);
+          console.log('consultation', consultation);
+          this.turno.patchValue({
+            id: turno.id,
+            date: turno.date ? new Date(turno.date + 'T00:00:00') : null,
+            startTime: turno.startTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.startTime.split(":")[0]), parseInt(turno.startTime.split(":")[1]))) : null,
+            endTime: turno.endTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.endTime.split(":")[0]), parseInt(turno.endTime.split(":")[1]))) : null,
+          });
+        }
       }
 
       console.log('turnoId ' + this.turnoId());
     });
+  }
+
+  displayTurno() {
+    return this.turno.value ? this.turno.value.date?.toLocaleDateString("es-AR") + " " + this.turno.value.startTime?.toLocaleTimeString("es-AR", { hour: '2-digit', minute: '2-digit', hour12: false }) + " - " + this.turno.value.endTime?.toLocaleTimeString("es-AR", { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
   }
 
   ngOnInit(): void {
@@ -136,6 +158,8 @@ export class CreateConsultationComponent implements OnInit {
           })
         );
       }),
+
+      
     );
 
     this.filteredPatientOptions = this.pacienteControl.valueChanges.pipe(
@@ -190,6 +214,10 @@ export class CreateConsultationComponent implements OnInit {
             this.pageInfo.set(data.pageInfo);
           }
     });
+  }
+
+  verDisp(): void {
+    this.router.navigate(['/'], {state: {data: {doctor: (this.doctorControl.value as Doctor), paciente: (this.pacienteControl.value as Paciente), servicios: this.consultationFG.controls.medicalServices.value, descripcion: this.consultationFG.controls.description.value, observacion: this.consultationFG.controls.observation.value}, isFromConsultation: true}});
   }
 
   getShift(): void {

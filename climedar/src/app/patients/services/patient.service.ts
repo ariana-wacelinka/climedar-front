@@ -57,6 +57,7 @@ export class PatientService {
           patients {
               id
               name
+              surname
           }
         }
       }

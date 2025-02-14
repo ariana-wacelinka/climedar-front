@@ -37,9 +37,9 @@ export class TurnosService {
     );
   }
 
-  public getTurnosByDate(date: string, doctorId: string, startTime: string, endTime: string, page: number): Observable<{ pageInfo: PageInfo, shifts: Turno[] }> {
+  public getTurnosByDate(date: string = "", doctorId: string = "", startTime: string = "", endTime: string = "", page: number = 1): Observable<{ pageInfo: PageInfo, shifts: Turno[] }> {
     const GET_ALL_SHIFTS = gql`
-      query getAllShifts($date: String!, $doctorId: String!, $startTime: String!, $endTime: String!, $page: Int!) {
+      query getAllShifts($date: String!, $doctorId: ID!, $startTime: String!, $endTime: String!, $page: Int!) {
         getAllShifts(
           pageRequest: { page: $page, size: 10, order: { field: "startTime", direction: ASC } },
           specification: { date: $date, doctorId: $doctorId, fromTime: $startTime, toTime: $endTime }

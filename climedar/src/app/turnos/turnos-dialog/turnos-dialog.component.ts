@@ -53,6 +53,7 @@ import { Router } from '@angular/router';
   styleUrl: './turnos-dialog.component.scss'
 })
 export class TurnosDialogComponent implements OnInit {
+  consulta: any | null = null;
   especialidadControl = new FormControl<String | Especialidad>('');
   doctorControl = new FormControl<String | Doctor>('');
   turnos = signal<Turno[]>([]);
@@ -71,14 +72,19 @@ export class TurnosDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<TurnosDialogComponent>,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: { fechaFormat: string; especialidad: Especialidad; doctor: Doctor }
+    @Inject(MAT_DIALOG_DATA) public data: { fechaFormat: string; especialidad: Especialidad; doctor: Doctor, consulta: any | null }
   ) {
+    this.consulta = data.consulta;
     console.log('data', data);
     this.fecha = data.fechaFormat;
     this.startTime = "";
     this.endTime = "";
     this.especialidadControl.setValue(data.especialidad);
     this.doctorControl.setValue(data.doctor);
+    if (this.consulta) {
+      this.doctorControl.disable();
+      this.especialidadControl.disable();
+    }
     console.log('thisStartTime', this.startTime);
     console.log('thisEndTime', this.endTime);
     if (data.doctor) {
@@ -215,7 +221,11 @@ export class TurnosDialogComponent implements OnInit {
 
   goToCreateConsulta(turno: Turno) {
     this.dialogRef.close();
-    this.router.navigate(['consultation/create', { queryParams: turno.id }]);
+    if (this.consulta) {
+      this.router.navigate(['consultation/create'], { state: { consultaData: this.consulta, turno: turno } });
+      return;
+    }
+    this.router.navigate(['consultation/create'], { queryParams: { turnoId: turno.id} });
   }
 
   isTunoOcuped(turno: Turno): boolean {

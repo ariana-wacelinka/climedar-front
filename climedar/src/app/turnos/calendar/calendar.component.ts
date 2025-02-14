@@ -18,6 +18,7 @@ import { Doctor } from '../../doctors/models/doctor.models';
 import { EspecialidadService } from '../../especialidad/service/especialidad.service';
 import {MatInputModule} from '@angular/material/input';
 import { DoctorService } from '../../doctors/service/doctor.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar',
@@ -55,13 +56,24 @@ export class CalendarComponent implements OnInit {
   dayswithShifts: Date[] = [];
   especialidadControl = new FormControl<String | Especialidad>('');
   doctorControl = new FormControl<String | Doctor>('');
+  consultaDatos: any | null = null;
 
   constructor(
     private especialidadService: EspecialidadService,
     private turnosService: TurnosService,
     private dialog: MatDialog,
     private doctorService: DoctorService,
+    private router: Router
   ) {
+    const navigation = this.router.getCurrentNavigation();
+    this.consultaDatos = navigation?.extras?.state?.['data'] || null;
+    if (this.consultaDatos) {
+      this.doctorControl.setValue(this.consultaDatos.doctor);
+      this.especialidadControl.setValue(this.consultaDatos.doctor.speciality);
+      this.doctorControl.disable();
+      this.especialidadControl.disable();
+    }
+    console.log('this.consultaDatos', this.consultaDatos);
     console.log('this.filteredEspecialidadOptions', this.filteredEspecialidadOptions);
   }
 
@@ -145,12 +157,13 @@ export class CalendarComponent implements OnInit {
 
   openTurnosDialog(fecha: Date) {
     // const turnos = this.turnosService.getTurnosDelDia(fecha);
+    const consulta = this.consultaDatos;
     const fechaFormat = fecha.toISOString().split('T')[0];
     console.log('openTurnosDialog', fecha.toISOString());
     const especialidad = typeof this.especialidadControl.value === 'string' || this.especialidadControl.value === '' ? null : this.especialidadControl.value as Especialidad;
     const doctor = typeof this.doctorControl.value === 'string' || this.doctorControl.value === '' ? null : this.doctorControl.value as Doctor;
     this.dialog.open(TurnosDialogComponent, {
-      data: { fechaFormat , especialidad, doctor },
+      data: { fechaFormat , especialidad, doctor, consulta },
       width: '600px',
       maxWidth: '90vw',
       height: '90vh'

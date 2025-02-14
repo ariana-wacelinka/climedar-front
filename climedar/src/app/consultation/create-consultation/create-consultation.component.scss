@@ -95,6 +95,14 @@ h1 {
   }
 }
 
+.info-fecha {
+  margin-left: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  font-size: 1.2em;
+}
+
 .duracionEstimada {
   margin-top: 10px;
 }
