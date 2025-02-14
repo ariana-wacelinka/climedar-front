@@ -25,12 +25,12 @@
         <table mat-table [dataSource]="dataSource" matSort>
 
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
             <td mat-cell class="nombre" *matCellDef="let paquete"> {{paquete.name}} </td>
           </ng-container>
 
           <ng-container matColumnDef="price">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
+            <th mat-header-cell *matHeaderCellDef> Precio </th>
             <td mat-cell class="precio" *matCellDef="let paquete">$ {{paquete.price}} </td>
           </ng-container>
 

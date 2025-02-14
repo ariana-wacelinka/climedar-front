@@ -102,4 +102,35 @@ export class PackageService {
       map(response => response.data.deleteMedicalPackage)
     );
   }
+
+  public updatePackage(paquete: PackageRequest): Observable<PackageResponse> {
+    console.log(paquete);
+    
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    const body = {
+      query: `
+        mutation UpdateMedicalPackage($id: ID!, $name: String!, $servicesIds: [ID!]!){
+          updateMedicalPackage(id: $id, input: {name: $name, servicesIds: $servicesIds}){
+            id
+            name
+            }
+          }`,
+      variables: {
+        id: paquete.id,
+        name: paquete.name,
+        servicesIds: paquete.servicesIds
+      }
+    };
+
+    return this.httpClient.post<{ data: { updatePackage: PackageResponse } }>(
+      'http://localhost:443/apollo-federation',
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.updatePackage)
+    );
+  }
 }

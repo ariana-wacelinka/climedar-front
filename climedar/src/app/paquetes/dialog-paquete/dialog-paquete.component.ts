@@ -21,6 +21,7 @@ import { Duration } from 'luxon';
 import { CurrencyPipe } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PackageService } from '../services/package.service';
+import { PackageRequest } from '../models/package.models';
 
 @Component({
   selector: 'app-dialog-paquete',
@@ -129,7 +130,7 @@ export class DialogPaqueteComponent {
           name: this.paquete.value.name!,
           servicesIds: this.paquete.value.servicesIds!
         };
-        
+
         this.packageService.createPackage(paquete).subscribe((response) => {
           alert('Paquete creado' + response);
           this.onClose();
@@ -138,15 +139,17 @@ export class DialogPaqueteComponent {
       }
     } else {
       if (this.paquete.valid) {
-        const paquete = {
-          id: this.paquete.value.id,
-          name: this.paquete.value.name,
-          servicesIds: this.paquete.value.servicesIds
+        const paquete : PackageRequest = {
+          id: this.paquete.value.id!,
+          name: this.paquete.value.name!,
+          servicesIds: this.paquete.value.servicesIds!
         };
 
-        alert('Paquete editado: ' + this.paquete.value);
-        this.onClose();
-        window.location.reload();
+        this.packageService.updatePackage(paquete).subscribe((response) => {
+          alert('Paquete editado: ' + response);
+          this.onClose();
+          window.location.reload();
+        });
       }
     }
   }
