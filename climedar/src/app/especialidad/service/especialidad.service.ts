@@ -34,7 +34,7 @@ export class EspecialidadService {
     };
   
     return this.http.post<{ data: { updateSpeciality: Especialidad } }>(
-      this.apiUrl,
+      'http://localhost:443/apollo-federation',
       body,
       { headers }
     ).pipe(
@@ -65,7 +65,7 @@ export class EspecialidadService {
     };
   
     return this.http.post<{ data: { createSpeciality: Especialidad } }>(
-      this.apiUrl,
+      'http://localhost:443/apollo-federation',
       body,
       { headers }
     ).pipe(
@@ -99,7 +99,7 @@ export class EspecialidadService {
     };
   
     return this.http.post<{ data: { getAllSpecialities: { pageInfo: PageInfo, specialities: Especialidad[] } } }>(
-      this.apiUrl,
+      'http://localhost:443/apollo-federation',
       body,
       { headers }
     ).pipe(
@@ -122,7 +122,7 @@ export class EspecialidadService {
     };
   
     return this.http.post<{ data: { deleteSpeciality: boolean } }>(
-      this.apiUrl,
+      'http://localhost:443/apollo-federation',
       body,
       { headers }
     ).pipe(
@@ -154,7 +154,7 @@ export class EspecialidadService {
     };
     console.log('query: ', body);
     return this.http.post<{ data: { getAllSpecialities: { specialities: Especialidad[] } } }>(
-      this.apiUrl,
+      'http://localhost:443/apollo-federation',
       body,
       { headers }
     ).pipe(
@@ -180,7 +180,7 @@ export class EspecialidadService {
     };
   
     return this.http.post<{ data: { getSpecialityById: Especialidad } }>(
-      this.apiUrl,
+      'http://localhost:443/apollo-federation',
       body,
       { headers }
     ).pipe(

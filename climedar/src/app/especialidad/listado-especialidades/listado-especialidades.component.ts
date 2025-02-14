@@ -91,15 +91,6 @@ export class ListadoEspecialidadesComponent {
     });
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
   info_especialidad(especialidad: Especialidad) {
     console.log(especialidad);
     const dialogRef = this.dialog.open(InfoEspecialidadComponent, {

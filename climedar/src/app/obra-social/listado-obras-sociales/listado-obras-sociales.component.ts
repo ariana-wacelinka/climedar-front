@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {CenteredCardComponent} from '../../shared/components';
+import { AfterViewInit, Component, signal, ViewChild, WritableSignal, effect } from '@angular/core';
+import { CenteredCardComponent } from '../../shared/components';
 import {
   MatCell, MatCellDef,
   MatColumnDef,
@@ -10,15 +10,19 @@ import {
   MatTable,
   MatTableDataSource, MatTableModule
 } from '@angular/material/table';
-import {MatFormField, MatFormFieldModule, MatLabel} from '@angular/material/form-field';
-import {MatInput, MatInputModule} from '@angular/material/input';
-import {MatIcon, MatIconModule} from '@angular/material/icon';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatButton} from '@angular/material/button';
-import {DialogObrasocialComponent} from '../dialog-obrasocial/dialog-obrasocial.component';
-import {MatDialog} from '@angular/material/dialog';
-import {PaginatorComponent} from '../../shared/components/paginator/paginator.component';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatButton } from '@angular/material/button';
+import { DialogObrasocialComponent } from '../dialog-obrasocial/dialog-obrasocial.component';
+import { MatDialog } from '@angular/material/dialog';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { PageInfo } from '../../shared/models/extras.models';
+import { ObraSocialService } from '../services/obra-social.service';
+import { map } from 'rxjs';
+import { ObraSocial } from '../models/obra-social.models';
 
 @Component({
   selector: 'app-obra-social',
@@ -51,57 +55,65 @@ import {MatMenuModule} from '@angular/material/menu';
   templateUrl: './listado-obras-sociales.component.html',
   styleUrl: './listado-obras-sociales.component.scss'
 })
-export class ListadoObrasSocialesComponent implements AfterViewInit {
-  currentPage = 1;
-  pageSize = 5;
-  totalItems = 30;
-
-  onPageChange(page: number) {
-    this.currentPage = page;
-  }
-
-  //Esto despues se reemplaza por el sort que hizo Lu
-  @ViewChild(MatSort) sort: MatSort = new MatSort;
-
+export class ListadoObrasSocialesComponent {
+  pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
+  obrasSociales = signal<ObraSocial[]>([]);
   displayedColumns: string[] = ["nombre", "edit"];
-  dataSource = new MatTableDataSource([
-    {nombre: 'OSDOSIM', number: 0},
-    {nombre: 'OSPE', number: 1},
-    {nombre: 'OSDE', number: 2},
-    {nombre: 'PAMI', number: 3},
-    {nombre: 'IOMA', number: 4}
-  ]);
+  dataSource = new MatTableDataSource<ObraSocial>([]);
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog,
+    public obraSocialService: ObraSocialService,
+  ) {
+    this.obraSocialService.getAllObrasSociales(this.pageInfo().currentPage).pipe(
+      map(response => response)
+    ).subscribe(response => {
+      console.log(response);
+      this.obrasSociales.set(response.obrasSociales);
+      this.pageInfo.set(response.pageInfo);
+      this.dataSource.data = response.obrasSociales;
+    });
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
-  editObraSocial(number: number) {
-    this.dialog.open(DialogObrasocialComponent, {
-      width:'670px',
-      minWidth: '350px',
-      maxWidth: '90vw',
-      data: {id: number, nombre: this.dataSource.data[number].nombre}
+    effect(() => {
+      this.dataSource.data = this.obrasSociales();
     });
   }
 
-  createObraSocial(){
+  pageChange(page: number) {
+    this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
+
+    this.obraSocialService.getAllObrasSociales(page).pipe(
+      map(response => response)
+    ).subscribe(response => {
+      this.obrasSociales.set(response.obrasSociales);
+      this.pageInfo.set(response.pageInfo);
+      this.dataSource.data = response.obrasSociales;
+    });
+  }
+
+  currentPage(): WritableSignal<number> {
+    return signal<number>(this.pageInfo().currentPage + 1);
+  }
+
+  editObraSocial(obrasocial: ObraSocial) {
+    {
+      this.dialog.open(DialogObrasocialComponent, {
+        width: '670px',
+        minWidth: '350px',
+        maxWidth: '90vw',
+        data: {
+          id: obrasocial.id,
+          nombre: obrasocial.name
+        }
+      });
+    }
+  }
+
+  createObraSocial() {
     this.dialog.open(DialogObrasocialComponent, {
-      width:'670px',
+      width: '670px',
       minWidth: '350px',
       maxWidth: '90vw',
       data: {}
-      });
+    });
   }
 }
