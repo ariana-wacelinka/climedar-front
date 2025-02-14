@@ -49,12 +49,12 @@ export class DialogPaqueteComponent {
   servicios = signal<MedicalService[]>([]);
   totalAmount = signal<number>(0);
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
-  displayedColumns: string[] = ["select", "nombre", "precio"];
+  displayedColumns: string[] = ["select", "name", "precio"];
   servicioControl = new FormControl<string>("");
 
   paquete = new FormGroup({
     id: new FormControl<string>(""),
-    nombre: new FormControl<string>("", Validators.required),
+    name: new FormControl<string>("", Validators.required),
     servicesIds: new FormControl<string[]>([])
   })
 
@@ -63,13 +63,13 @@ export class DialogPaqueteComponent {
     private medicalService: ServiciosMedicosService,
     @Inject(MAT_DIALOG_DATA) public data: {
       id?: number,
-      nombre?: string,
-      servicesIds?: MedicalService[]
+      name?: string,
+      servicesIds?: string[]
     }) {
     if (data.id) {
-      this.paquete.controls.id.setValue(data.id?.toString());
-      this.paquete.controls.nombre.setValue(data.nombre!);
-      this.paquete.controls.servicesIds.setValue(data.servicesIds!.map(service => service.id!));
+      this.paquete.controls.id.patchValue(data.id?.toString());
+      this.paquete.controls.name.patchValue(data.name!);
+      this.paquete.controls.servicesIds.patchValue(data.servicesIds!);
     }
   }
 
@@ -126,27 +126,27 @@ export class DialogPaqueteComponent {
     if (this.data.id == null) {
       if (this.paquete.valid) {
         const paquete = {
-          name: this.paquete.value.nombre!,
+          name: this.paquete.value.name!,
           servicesIds: this.paquete.value.servicesIds!
         };
-
-        console.log(paquete);
+        
         this.packageService.createPackage(paquete).subscribe((response) => {
           alert('Paquete creado' + response);
           this.onClose();
+          window.location.reload();
         });
       }
     } else {
       if (this.paquete.valid) {
         const paquete = {
           id: this.paquete.value.id,
-          nombre: this.paquete.value.nombre,
+          name: this.paquete.value.name,
           servicesIds: this.paquete.value.servicesIds
         };
 
-        console.log(paquete);
         alert('Paquete editado: ' + this.paquete.value);
         this.onClose();
+        window.location.reload();
       }
     }
   }
