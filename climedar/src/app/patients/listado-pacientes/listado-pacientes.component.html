@@ -1,1 +1,69 @@
-<p>listado-pacientes works!</p>
+<app-centered-card>
+    <ng-container main-header>
+        <h2>Listado de users</h2>
+    </ng-container>
+
+    <ng-container main-content>
+        <div class="content">
+
+            <div class="row full-width">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
+                    <mat-label>Ingrese un user</mat-label>
+                    <input matInput placeholder="Ingrese un user" #input>
+                </mat-form-field>
+
+
+                <button mat-flat-button style="min-width: max-content !important;" (click)="createUser()">Añadir
+                    user</button>
+            </div>
+
+
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                        <td mat-cell class="nombre" *matCellDef="let user"> {{user.name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="price">
+                        <th mat-header-cell *matHeaderCellDef> Precio </th>
+                        <td mat-cell class="precio" *matCellDef="let user">$ {{user.price}} </td>
+                    </ng-container>
+
+                    <ng-container class="edit" matColumnDef="edit">
+                        <th mat-header-cell *matHeaderCellDef></th>
+
+                        <td id="edit" mat-cell *matCellDef="let user" style="text-align: right;">
+                            <button id="menu" [matMenuTriggerFor]="menu"><mat-icon
+                                    style="color: black; font-size: 22px; margin-top: 5px">more_vert
+                                </mat-icon></button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="userInfo(user)">Ver más</button>
+                                <button (click)="editUser(user)" mat-menu-item>Modificar</button>
+                                <button (click)="deleteUser(user.id)" mat-menu-item>Eliminar</button>
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">
+                            <div class="nada">No se han encontrado usuarios</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </ng-container>
+
+    <ng-container main-actions>
+        <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+            [currentPage]="currentPage()"></app-paginator>
+    </ng-container>
+
+</app-centered-card>
