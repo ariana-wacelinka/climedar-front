@@ -1,0 +1,124 @@
+<app-centered-card>
+    <ng-container main-header>
+      @if (turnoID) {
+        <h1>Editar turno</h1>
+      } @else {
+        <h1>Crear turno</h1>
+      }
+    </ng-container>
+
+    <ng-container main-content>
+      <div class="column">
+        <form [formGroup]="range">
+          <div class="form-field">
+            @if (turnoID) {
+              <mat-checkbox [(ngModel)]="dateRange" [ngModelOptions]="{standalone: true}" disabled>
+                Crear múltiples turnos
+              </mat-checkbox>
+            } @else {
+              <mat-checkbox [(ngModel)]="dateRange" [ngModelOptions]="{standalone: true}">
+                Crear múltiples turnos
+              </mat-checkbox>
+            }
+          </div>
+
+
+          @if (turnoID) {
+            <div class="form-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Selecciona una fecha</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="start">
+                <mat-hint>DD/MM/AAAA</mat-hint>
+                <mat-datepicker-toggle disabled matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          } @else {
+            @if (dateRange) {
+              <div class="form-field">
+                <mat-form-field appearance="outline">
+                  <mat-label>Selecciona un rango de fechas</mat-label>
+                  <mat-date-range-input [formGroup]="range" [rangePicker]="picker" [min]="today">
+                    <input matStartDate formControlName="start" placeholder="Start date">
+                    <input matEndDate formControlName="end" placeholder="End date">
+                  </mat-date-range-input>
+                  <mat-hint>MM/DD/AAAA – MM/DD/AAAA</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                  @if (range.get('start')?.hasError('matStartDateInvalid')) {
+                    <mat-error>Día de inicio inválido</mat-error>
+                  }
+                  @if (range.get('end')?.hasError('matEndDateInvalid')) {
+                    <mat-error>Día de fin inválido</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            } @else {
+              <div class="form-field">
+                <mat-form-field appearance="outline">
+                  <mat-label>Selecciona una fecha</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName="start"
+                         (dateChange)="dateChangeEvent('change', $event)" [min]="today">
+                  <mat-hint>MM/DD/AAAA</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            }
+          }
+
+          <div class="form-field">
+            <mat-form-field appearance="outline" [class.mat-form-field-invalid]="range.hasError('timeRangeInvalid')">
+              <mat-label>Hora de inicio</mat-label>
+              <input matInput type="time" formControlName="startTime" (input)="validateTimeRange()">
+              <mat-hint>HH:MM</mat-hint>
+              @if (range.hasError('timeRangeInvalid')) {
+                <mat-error>Hora de inicio inválida</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="form-field">
+            <mat-form-field appearance="outline" [class.mat-form-field-invalid]="range.hasError('timeRangeInvalid')">
+              <mat-label>Hora de fin</mat-label>
+              <input matInput type="time" formControlName="endTime" (input)="validateTimeRange()">
+              <mat-hint>HH:MM</mat-hint>
+              @if (range.hasError('timeRangeInvalid')) {
+                <mat-error>Hora de fin inválida</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+
+        @if (dateRange && !turnoID) {
+          <div style="font-size: 20px; margin-left: 10px">Seleccione los días del turno</div>
+          <mat-divider style="margin: 10px 0"></mat-divider>
+          <div class="day-container">
+            <mat-chip-listbox
+              class="days"
+              multiple="true"
+              aria-label="select activities"
+              (change)="chipsChangeEvent('change', $event)">
+              @for (day of daysOfWeek; track day) {
+                <mat-chip-option [value]="day">
+                  {{ day }}
+                </mat-chip-option>
+              }
+            </mat-chip-listbox>
+          </div>
+        }
+        @if (turnoID) {
+          <div class="check">
+            <mat-checkbox formControlName="multiple" labelPosition="before">Editar todos los siguientes</mat-checkbox>
+          </div>
+        }
+      </form>
+    </div>
+  </ng-container>
+  <ng-container main-actions>
+      <div class="actions">
+          <button mat-flat-button class="warn" (click)="cancelar()">Cancelar</button>
+          <button mat-flat-button (click)="guardar()">Guardar</button>
+      </div>
+  </ng-container>
+</app-centered-card>

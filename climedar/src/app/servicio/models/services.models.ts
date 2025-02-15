@@ -12,6 +12,14 @@ export interface MedicalService extends Services {
     specialityId?: string,
 } 
 
+export interface MedicalServiceResponse extends Services {
+    description?: string,
+    serviceType?: string,
+    speciality?: {
+        id?: string
+    }
+} 
+
 export interface MedicalPackage {
     services?: [MedicalService]
 }

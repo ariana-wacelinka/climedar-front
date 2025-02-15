@@ -2,8 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Turno } from '../../models/turno.models';
-import { Especialidad } from '../../../especialidad';
-import { Doctor } from '../../../doctors/models/doctor.models';
 import { PageInfo } from '../../../shared/models/extras.models';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';

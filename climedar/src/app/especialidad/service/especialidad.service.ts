@@ -134,5 +134,28 @@ export class EspecialidadService {
     );
   }
 
-
+  public getEspecialidadesById(id: number): Observable<Especialidad> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+  
+    const body = {
+      query: `{
+        getSpecialityById(id: ${id}) {
+          id
+          code
+          name
+          description
+        }
+      }`
+    };
+  
+    return this.http.post<{ data: { getSpecialityById: Especialidad } }>(
+      'http://localhost:443/apollo-federation',
+      body,
+      { headers }
+    ).pipe(
+      map(response => response.data.getSpecialityById)
+    );
+  }
 }

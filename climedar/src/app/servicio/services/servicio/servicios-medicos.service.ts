@@ -1,14 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { PageInfo } from '../../../shared/models/extras.models';
-import { MedicalService } from '../../models/services.models';
+import { MedicalService, MedicalServiceResponse } from '../../models/services.models';
 import { map, Observable } from 'rxjs';
 import { Apollo, gql } from 'apollo-angular';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ServiciosMedicosService {
+  pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
 
   constructor(private http: HttpClient, private apollo: Apollo) { }
 

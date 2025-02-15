@@ -10,15 +10,17 @@ import {ListadoEspecialidadesComponent} from './especialidad/listado-especialida
 import {ListadoServiciosComponent} from './servicio/listado-servicios/listado-servicios.component';
 import {ListadoPaquetesComponent} from './paquetes/listado-paquetes/listado-paquetes.component';
 import { CreateConsultationComponent } from './consultation/create-consultation/create-consultation.component';
+import { AltaTurnoComponent } from './turnos/alta-turno/alta-turno.component';
 
 export const routes: Routes = [
   { path: '', component: CalendarComponent },
   { path: 'home', component: CenteredCardComponent },
-  { path: 'consultation/create', component: CreateConsultationComponent },
-  { path: 'consultation/create/:turnoId', component: CreateConsultationComponent },
+  { path: 'consulta/nueva', component: CreateConsultationComponent },
+  { path: 'consulta/nueva/:turnoId', component: CreateConsultationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'doctor/nuevo', component: AltaDoctorComponent },
   { path: 'paciente/nuevo', component: AltaPatientsComponent },
+  { path: 'turno/nuevo', component: AltaTurnoComponent },
   { path: 'obra-social/listado', component: ListadoObrasSocialesComponent },
   { path: 'especialidad/listado', component: ListadoEspecialidadesComponent },
   { path: 'servicio/listado', component: ListadoServiciosComponent },

@@ -1,9 +1,10 @@
 .main {
   display: flex;
   justify-content: center; /* Centra horizontalmente */
-  padding: 100px 0 50px 0; /* Espaciado alrededor del contenido */
+  padding: 0 0 150px 0; /* Espaciado alrededor del contenido */
   overflow-y: auto; /* Habilita el scroll vertical si es necesario */
   height: 100vh; /* Altura completa de la ventana */
+  margin-top: 90px;
   box-sizing: border-box; /* Incluye padding dentro del tamaño total */
 }
 

@@ -1,26 +1,13 @@
-@if (this.data.id == null) {
-  <h2 mat-dialog-title>Añadir obra social</h2>
+<h2 mat-dialog-title>{{ data.id ? 'Modificar obra social' : 'Añadir obra social' }}</h2>
 
-  <div mat-dialog-content>
-    <form [formGroup]="formGroup">
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Nombre</mat-label>
-        <input matInput placeholder="Nombre" formControlName="nombre" required>
-      </mat-form-field>
-    </form>
-  </div>
-} @else {
-  <h2 mat-dialog-title>Modificar obra social</h2>
-
-  <div mat-dialog-content>
-    <form [formGroup]="formGroup2">
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Nombre</mat-label>
-        <input matInput placeholder="Nombre" formControlName="nombreEditar" required>
-      </mat-form-field>
-    </form>
-  </div>
-}
+<div mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput placeholder="Nombre" formControlName="name" required>
+    </mat-form-field>
+  </form>
+</div>
 
 <div style="padding-top: 0" mat-dialog-actions>
   <button mat-flat-button class="warn" (click)="onClose()">Cancelar</button>

@@ -1,0 +1,47 @@
+.column{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+.form-field{
+  width: 100%;
+  min-width: 550px;
+  margin-bottom: 15px;
+  }
+
+mat-form-field {
+  width: 100%;
+  }
+
+mat-hint{
+  margin-top: -2.5px;
+  margin-left: -10px;
+  }
+
+button{
+  border-radius: 10px;
+  margin-left: 20px;
+  }
+
+:host ::ng-deep .card-actions {
+  justify-content: right !important;
+  }
+
+.warn {
+  background-color: #811B1DC9 !important;
+  }
+
+mat-chip-listbox{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 550px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  }
+
+mat-chip-option{
+  display: inline-flex;
+  }

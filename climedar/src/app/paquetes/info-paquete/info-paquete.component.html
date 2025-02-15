@@ -2,47 +2,51 @@
 
 <div class="column" mat-dialog-content>
   <div>
-    <div><b>Nombre:</b> {{paquete.nombre}}</div>
-    <div style="margin-bottom: 10px"><b>Precio:</b> $ {{paquete.precio}}</div>
-    <div class="contenedor-tabla">
-
-      <div class="titulo-tabla"><b>Servicios</b></div>
-
-      <div class="form-field">
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
-          <mat-label>Ingrese un servicio</mat-label>
-          <input matInput
-                 placeholder="Ingrese un servicio"
-                 (keyup)="applyFilter($event)"
-                 #input>
-        </mat-form-field>
-      </div>
-
-      <div class="mat-elevation-z8">
-        <table style="padding: 0 10px; background-color: #F9F9F9" mat-table
-               [dataSource]="dataSource">
-
-          <ng-container matColumnDef="nombre">
-            <th mat-header-cell *matHeaderCellDef> Nombre </th>
-            <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="precio">
-            <th mat-header-cell *matHeaderCellDef> Precio </th>
-            <td mat-cell class="precio" *matCellDef="let element">$ {{element.precio}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="duracionEstimada">
-            <th mat-header-cell class="duracionEstimada" *matHeaderCellDef> Duración estimada </th>
-            <td mat-cell class="duracionEstimada" *matCellDef="let element"><i>{{element.duracionEstimada}}</i></td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </div>
+    <div><b>Nombre:</b> {{paquete()?.name}}</div>
+    <div><b>Código:</b> {{paquete()?.code}}</div>
+    <div><b>Precio:</b> $ {{paquete()?.price}}</div>
+    <div style="margin-bottom: 20px;"><b>Duración estimada:</b> {{formatDurationTime(paquete()?.estimatedDuration!)}}
     </div>
+
+    <mat-card class="full-width card-tab" appearance="outlined">
+      <mat-tab-group class="full-width">
+        <mat-tab label="Servicios">
+          <div class="tab-content">
+            <mat-form-field class="full-width" appearance="outline">
+              <mat-label>Ingrese el nombre del servicio</mat-label>
+              <input type="text" matInput />
+              <div matSuffix style="margin-right: 10px">
+                <mat-icon>search</mat-icon>
+              </div>
+            </mat-form-field>
+
+            <table mat-table [dataSource]="this.dataSource" class="mat-elevation-z8 lista">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                <td mat-cell *matCellDef="let servicio"> {{ servicio.name }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="estimatedDuration">
+                <th mat-header-cell *matHeaderCellDef> Duración </th>
+                <td mat-cell *matCellDef="let servicio"> {{ formatDurationTime(servicio.estimatedDuration!) }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef> Precio </th>
+                <td mat-cell *matCellDef="let servicio"> {{ servicio.price | currency : "ARS" }} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="['name', 'estimatedDuration', 'price']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['name', 'estimatedDuration', 'price'];"></tr>
+            </table>
+          </div>
+          <div class="paginador">
+            <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="10" (pageChange)="pageChange($event)"
+              [currentPage]="currentPage()"></app-paginator>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
   </div>
 </div>
 

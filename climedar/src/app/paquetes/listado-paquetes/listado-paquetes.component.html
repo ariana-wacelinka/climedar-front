@@ -12,7 +12,6 @@
           <mat-label>Ingrese un paquete</mat-label>
           <input matInput
                  placeholder="Ingrese un paquete"
-                 (keyup)="applyFilter($event)"
                  #input>
         </mat-form-field>
 
@@ -25,27 +24,27 @@
       <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort>
 
-          <ng-container matColumnDef="nombre">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-            <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell class="nombre" *matCellDef="let paquete"> {{paquete.name}} </td>
           </ng-container>
 
-          <ng-container matColumnDef="precio">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
-            <td mat-cell class="precio" *matCellDef="let element">$ {{element.precio}} </td>
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Precio </th>
+            <td mat-cell class="precio" *matCellDef="let paquete">$ {{paquete.price}} </td>
           </ng-container>
 
           <ng-container class="edit" matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef></th>
 
-            <td id="edit" mat-cell *matCellDef="let element" style="text-align: right;">
+            <td id="edit" mat-cell *matCellDef="let paquete" style="text-align: right;">
               <button id="menu"
                       [matMenuTriggerFor]="menu"><mat-icon style="color: black; font-size: 22px; margin-top: 5px">more_vert
               </mat-icon></button>
               <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="paqueteInfo(element.id)">Ver más</button>
-                <button (click)="editPaquete(element.id)" mat-menu-item>Modificar</button>
-                <button mat-menu-item>Eliminar</button>
+                <button mat-menu-item (click)="paqueteInfo(paquete)">Ver más</button>
+                <button (click)="editPaquete(paquete)" mat-menu-item>Modificar</button>
+                <button (click)="deletePaquete(paquete.id)" mat-menu-item>Eliminar</button>
               </mat-menu>
             </td>
           </ng-container>
@@ -63,8 +62,8 @@
   </ng-container>
 
   <ng-container main-actions>
-    <app-paginator [totalItems]="totalItems" [pageSize]="pageSize"
-                   (pageChange)="onPageChange($event)"></app-paginator>
+    <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+      [currentPage]="currentPage()"></app-paginator>
   </ng-container>
 
 </app-centered-card>

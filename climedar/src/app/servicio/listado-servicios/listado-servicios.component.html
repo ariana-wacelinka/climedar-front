@@ -10,10 +10,7 @@
         <mat-form-field class="full-width" appearance="outline">
           <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
           <mat-label>Ingrese un servicio</mat-label>
-          <input matInput
-                 placeholder="Ingrese un servicio"
-                 (keyup)="applyFilter($event)"
-                 #input>
+          <input matInput placeholder="Ingrese un servicio" #input>
         </mat-form-field>
 
 
@@ -26,31 +23,33 @@
         <table mat-table [dataSource]="dataSource" matSort>
 
           <ng-container matColumnDef="nombre">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-            <td mat-cell class="nombre" *matCellDef="let element"> {{element.nombre}} </td>
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell class="nombre" *matCellDef="let servicio"> {{servicio.name}} </td>
           </ng-container>
 
           <ng-container matColumnDef="precio">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
-            <td mat-cell class="precio" *matCellDef="let element">$ {{element.precio}} </td>
+            <th mat-header-cell *matHeaderCellDef> Precio </th>
+            <td mat-cell class="precio" *matCellDef="let servicio">$ {{servicio.price}} </td>
           </ng-container>
 
           <ng-container matColumnDef="duracionEstimada">
-            <th mat-header-cell class="duracionEstimada" *matHeaderCellDef mat-sort-header> Duración estimada </th>
-            <td mat-cell class="duracionEstimada" *matCellDef="let element"><i>{{element.duracionEstimada}}</i></td>
+            <th mat-header-cell class="duracionEstimada" *matHeaderCellDef> Duración estimada </th>
+            <td mat-cell class="duracionEstimada" *matCellDef="let servicio">
+              <i>{{formatDuration(servicio.estimatedDuration)}}</i>
+            </td>
           </ng-container>
 
           <ng-container class="edit" matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef></th>
 
-            <td id="edit" mat-cell *matCellDef="let element" style="text-align: right;">
-              <button id="menu"
-                      [matMenuTriggerFor]="menu"><mat-icon style="color: black; font-size: 22px; margin-top: 5px">more_vert
-              </mat-icon></button>
+            <td id="edit" mat-cell *matCellDef="let servicio" style="text-align: right;">
+              <button id="menu" [matMenuTriggerFor]="menu"><mat-icon
+                  style="color: black; font-size: 22px; margin-top: 5px">more_vert
+                </mat-icon></button>
               <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="servicioInfo(element.number)">Ver más</button>
-                <button (click)="editServicio(element.number)" mat-menu-item>Modificar</button>
-                <button mat-menu-item>Eliminar</button>
+                <button mat-menu-item (click)="servicioInfo(servicio)">Ver más</button>
+                <button (click)="editServicio(servicio)" mat-menu-item>Modificar</button>
+                <button (click)="deleteServicio(servicio.id)" mat-menu-item>Eliminar</button>
               </mat-menu>
             </td>
           </ng-container>
@@ -59,7 +58,9 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
           <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4"><div class="nada">No se han encontrado servicios</div></td>
+            <td class="mat-cell" class="td-nada" colspan="8">
+              <div class="nada">No se han encontrado servicios</div>
+            </td>
           </tr>
         </table>
       </div>
@@ -68,8 +69,8 @@
   </ng-container>
 
   <ng-container main-actions>
-    <app-paginator [totalItems]="totalItems" [pageSize]="pageSize"
-                   (pageChange)="onPageChange($event)"></app-paginator>
+    <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+      [currentPage]="currentPage()"></app-paginator>
   </ng-container>
 
 </app-centered-card>
