@@ -207,12 +207,12 @@
   </ng-container>
   <ng-container main-actions>
     <div class="actions">
-      <button mat-flat-button class="warn" [disabled]="!consultationFG.valid">
+      <button mat-flat-button class="warn">
         Cancelar
       </button>
       <button
         mat-flat-button
-        [disabled]="!consultationFG.valid"
+        [disabled]="!canBeCreated()"
         (click)="createConsultation()"
       >
         Agendar consulta

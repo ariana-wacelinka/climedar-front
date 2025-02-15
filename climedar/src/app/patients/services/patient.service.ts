@@ -47,12 +47,12 @@ export class PatientService {
       });
     }
 
-    getPatients(name: string = ""): Observable<Paciente[]> {
+    getPatients(dni: string = ""): Observable<Paciente[]> {
       const GET_PATIENTS = gql`
       query {
         getAllPatients(
           pageRequest: { page: 1, size: 10}
-          specification: {name: "${name}"}
+          specification: {dni: "${dni}"}
         ) {
           patients {
               id
