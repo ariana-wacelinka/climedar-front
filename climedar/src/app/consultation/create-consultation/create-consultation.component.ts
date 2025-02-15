@@ -34,6 +34,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PatientService } from '../../patients/services/patient.service';
 import { CreateConsultation } from '../models/consultation.model';
 import { ConsultationService } from '../services/consultation.service';
+import { PackageResponse } from '../../paquetes/models/package.models';
 @Component({
   selector: 'app-create-consultation',
   imports: [
@@ -94,7 +95,7 @@ export class CreateConsultationComponent implements OnInit {
     name: new FormControl<string>("")
   })
   servicios = signal<MedicalService[]>([]);
-  paquetes = signal<MedicalPackage[]>([]);
+  paquetes = signal<PackageResponse[]>([]);
   turnoId = signal<string | null>(null);
   doctorControl = new FormControl<Doctor | string>("");
   pacienteControl = new FormControl<Paciente | string>("");
@@ -337,6 +338,11 @@ export class CreateConsultationComponent implements OnInit {
       const servicio = this.servicios().find(servicio => servicio.id === id);
       if (servicio) {
         return acc + (Number(servicio.price) ?? 0);
+      } else {
+        const paquete = this.paquetes().find(paquete => paquete.id === id);
+        if (paquete) {
+          return acc + (Number(paquete.price) ?? 0);
+        }
       }
       return acc;
     }, 0);
@@ -347,6 +353,11 @@ export class CreateConsultationComponent implements OnInit {
       const servicio = this.servicios().find(servicio => servicio.id === id);
       if (servicio) {
         return acc + Duration.fromISO(servicio.estimatedDuration!).as('minutes');
+      } else {
+        const paquete = this.paquetes().find(paquete => paquete.id === id);
+        if (paquete) {
+          return acc + Duration.fromISO(paquete.estimatedDuration!).as('minutes');
+        }
       }
       return acc;
     }, 0);
