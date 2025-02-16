@@ -1,0 +1,18 @@
+<h2>Seleccionar Método de Pago</h2>
+    <p>Total a pagar: <strong>{{ price | currency }}</strong></p>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Método de Pago</mat-label>
+      <mat-select [(ngModel)]="selectedPayment">
+        <mat-option *ngFor="let method of paymentMethods" [value]="method">
+          {{ method }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-button (click)="close()">Cancelar</button>
+      <button mat-raised-button color="primary" (click)="confirmPayment()" [disabled]="!selectedPayment">
+        Confirmar Pago
+      </button>
+    </div>
