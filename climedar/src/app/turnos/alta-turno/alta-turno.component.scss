@@ -3,12 +3,28 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    row-gap: 10px;
+  }
+
+  .fechas {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 2.1fr 1fr;
+    gap: 20px
+  }
+  .check {
+    padding-top: 8px;
+  }
+  
+  .timers {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px
   }
 
 .form-field{
   width: 100%;
-  min-width: 550px;
-  margin-bottom: 15px;
   }
 
 mat-form-field {
@@ -37,11 +53,19 @@ mat-chip-listbox{
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  max-width: 550px;
-  margin: 0 auto;
   box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
   }
 
 mat-chip-option{
   display: inline-flex;
+  }
+
+  h1 {
+    margin-top: 10px;
+    margin-bottom: 0
+  }
+  .day-container {
+    width: 100%;
   }

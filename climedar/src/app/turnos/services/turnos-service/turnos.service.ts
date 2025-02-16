@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { Turno } from '../../models/turno.models';
+import { CreateTurno, Turno } from '../../models/turno.models';
 import { PageInfo } from '../../../shared/models/extras.models';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -144,4 +144,46 @@ export class TurnosService {
       map(response => response.data.getShiftById)
     );
   }
+
+  createShift(turno: CreateTurno): Observable<Turno> {
+    const CREATE_SHIFT = gql`
+      mutation createShift($shift: CreateShiftInput!) {
+        createShift(shift: $shift) {
+          id
+          date
+          startTime
+          endTime
+          state
+          timeOfShifts
+          place
+          doctor {
+            id
+            name
+            surname
+        }
+      }
+  }`;
+  
+    return this.apollo.mutate<{ createShift: Turno }>({
+      mutation: CREATE_SHIFT,
+      variables: {
+        shift: {
+          date: turno.date,
+          doctorId: turno.doctorId,
+          startTime: turno.startTime,
+          endTime: turno.endTime,
+          timeOfShifts: turno.timeOfShifts,
+          place: turno.place,
+          recurringShift: {
+            startDate: turno.recurringShift.startDate,
+            endDate: turno.recurringShift.endDate,
+            validDays: turno.recurringShift.validDays//.map(day => day.toString())
+          }
+        }
+      }
+    }).pipe(
+      map((response: any) => response.data.createShift)
+    );
+  }
+
 }
