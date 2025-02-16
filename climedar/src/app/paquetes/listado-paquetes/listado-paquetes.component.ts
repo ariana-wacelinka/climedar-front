@@ -112,7 +112,7 @@ export class ListadoPaquetesComponent {
       width: '670px',
       minWidth: '350px',
       maxWidth: '90vw',
-      data: {id: paquete.id}
+      data: { id: paquete.id }
     });
   }
 
