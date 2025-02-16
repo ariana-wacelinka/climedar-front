@@ -8,11 +8,11 @@ import { Paciente } from '../models/paciente.models';
 })
 export class PatientService {
 
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) { }
 
-  
+
   createPatient(patient: Paciente): Observable<any> {
-      const body =  `
+    const body = `
         mutation {
         createPatient(
           patient: {
@@ -41,14 +41,14 @@ export class PatientService {
         }
         }
       `;
-      console.log('createPatient' + body);
-      return this.apollo.mutate({
-        mutation: gql`${body}`
-      });
-    }
+    console.log('createPatient' + body);
+    return this.apollo.mutate({
+      mutation: gql`${body}`
+    });
+  }
 
-    getPatients(dni: string = ""): Observable<Paciente[]> {
-      const GET_PATIENTS = gql`
+  getPatients(dni: string = ""): Observable<Paciente[]> {
+    const GET_PATIENTS = gql`
       query {
         getAllPatients(
           pageRequest: { page: 1, size: 10}
@@ -62,10 +62,21 @@ export class PatientService {
         }
       }
       `;
-      return this.apollo.query<{ getAllPatients: { patients: Paciente[] } }>({
-        query: GET_PATIENTS
-      }).pipe(
-        map(response => response.data.getAllPatients.patients)
-      );
-    }
+    return this.apollo.query<{ getAllPatients: { patients: Paciente[] } }>({
+      query: GET_PATIENTS
+    }).pipe(
+      map(response => response.data.getAllPatients.patients)
+    );
+  }
+
+  deletePatient(id: number): Observable<any> {
+    const body = `
+        mutation {
+        deletePatient(id: ${id})
+        }
+      `;
+    return this.apollo.mutate({
+      mutation: gql`${body}`
+    });
+  }
 }

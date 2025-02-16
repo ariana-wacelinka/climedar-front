@@ -10,6 +10,7 @@ import { PaginatorComponent } from '../../shared/components/paginator/paginator.
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { PatientService } from '../services/patient.service';
 
 @Component({
   selector: 'app-listado-pacientes',
@@ -33,28 +34,31 @@ export class ListadoPacientesComponent {
   dataSource = new MatTableDataSource<Paciente>();
   pacientes = signal<Paciente[]>([]);
 
-  constructor(public router: Router) {}
+  constructor(private router: Router,
+    private pacienteService: PatientService
+  ) { }
 
   createPaciente() {
     this.router.navigate(['/paciente/nuevo']);
   }
 
   editPaciente(paciente: Paciente) {
-    console.log('Editar usuario', paciente);
+    console.log('Editar paciente', paciente);
   }
 
   deletePaciente(id: number) {
-    console.log('Eliminar usuario', id);
+    this.pacienteService.deletePatient(id).subscribe(() => { });
+    window.location.reload();
   }
 
   pacienteInfo(paciente: Paciente) {
-    console.log('Información de usuario', paciente);
+    console.log('Información de paciente', paciente);
   }
 
   currentPage(): WritableSignal<number> {
-      return signal<number>(this.pageInfo().currentPage + 1);
-    }
-  
+    return signal<number>(this.pageInfo().currentPage + 1);
+  }
+
   pageChange(page: number) {
     this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
 
