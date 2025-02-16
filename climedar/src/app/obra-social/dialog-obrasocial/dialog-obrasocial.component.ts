@@ -10,7 +10,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
-import { ObraSocialService } from '../services/obra-social.service';
+import { ObraSocialService } from '../service/obra-social.service';
 import { ObraSocial } from '../models/obra-social.models';
 
 @Component({

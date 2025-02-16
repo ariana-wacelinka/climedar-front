@@ -20,7 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { PageInfo } from '../../shared/models/extras.models';
-import { ObraSocialService } from '../services/obra-social.service';
+import { ObraSocialService } from '../service/obra-social.service';
 import { map } from 'rxjs';
 import { ObraSocial } from '../models/obra-social.models';
 

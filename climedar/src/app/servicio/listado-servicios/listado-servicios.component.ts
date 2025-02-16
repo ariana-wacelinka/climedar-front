@@ -1,4 +1,4 @@
-import {Component, signal, ViewChild, WritableSignal} from '@angular/core';
+import {Component, signal, WritableSignal} from '@angular/core';
 import {CenteredCardComponent} from '../../shared/components';
 import {MatButton} from '@angular/material/button';
 import {

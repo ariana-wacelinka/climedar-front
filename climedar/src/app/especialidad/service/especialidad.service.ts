@@ -9,8 +9,6 @@ import { Apollo, gql } from 'apollo-angular';
   providedIn: 'root'
 })
 export class EspecialidadService {
-  pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
-
   constructor(private http: HttpClient, private apollo: Apollo) { }
 
   public updateEspecialidad(especialidad: Especialidad): Observable<Especialidad> {
@@ -37,7 +35,7 @@ export class EspecialidadService {
         name: especialidad.name
       }
     }).pipe(
-      map((response:any) => response.data.updateSpeciality)
+      map((response: any) => response.data.updateSpeciality)
     );
   }
 
@@ -105,11 +103,11 @@ export class EspecialidadService {
       mutation,
       variables: { id }
     }).pipe(
-      map((response:any) => response.data.deleteSpeciality)
+      map((response: any) => response.data.deleteSpeciality)
     );
   }
 
-  
+
   public getEspecialidadesByNombre(nombre: string): Observable<Especialidad[]> {
     const query = gql`
       query GetEspecialidadesByNombre($nombre: String!) {
@@ -135,26 +133,20 @@ export class EspecialidadService {
   }
 
   public getEspecialidadesById(id: number): Observable<Especialidad> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-  
-    const body = {
-      query: `{
-        getSpecialityById(id: ${id}) {
+    const query = gql`
+      query GetSpecialityById($id: ID!) {
+        getSpecialityById(id: $id) {
           id
           code
           name
           description
         }
-      }`
-    };
-  
-    return this.http.post<{ data: { getSpecialityById: Especialidad } }>(
-      'http://localhost:443/apollo-federation',
-      body,
-      { headers }
-    ).pipe(
+      }`;
+
+    return this.apollo.query<{ getSpecialityById: Especialidad }>({
+      query,
+      variables: { id }
+    }).pipe(
       map(response => response.data.getSpecialityById)
     );
   }
