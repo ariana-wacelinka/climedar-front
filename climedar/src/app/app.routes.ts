@@ -4,13 +4,14 @@ import { LoginComponent } from './auth/login/login.component';
 import { AltaDoctorComponent } from './doctors/alta-doctor/alta-doctor.component';
 import { AltaPatientsComponent } from './patients/alta-patients/alta-patients.component';
 import { CalendarComponent } from './turnos/calendar/calendar.component';
-import {ListadoObrasSocialesComponent} from './obra-social/listado-obras-sociales/listado-obras-sociales.component';
-import {PaginatorComponent} from './shared/components/paginator/paginator.component';
-import {ListadoEspecialidadesComponent} from './especialidad/listado-especialidades/listado-especialidades.component';
-import {ListadoServiciosComponent} from './servicio/listado-servicios/listado-servicios.component';
-import {ListadoPaquetesComponent} from './paquetes/listado-paquetes/listado-paquetes.component';
+import { ListadoObrasSocialesComponent } from './obra-social/listado-obras-sociales/listado-obras-sociales.component';
+import { PaginatorComponent } from './shared/components/paginator/paginator.component';
+import { ListadoEspecialidadesComponent } from './especialidad/listado-especialidades/listado-especialidades.component';
+import { ListadoServiciosComponent } from './servicio/listado-servicios/listado-servicios.component';
+import { ListadoPaquetesComponent } from './paquetes/listado-paquetes/listado-paquetes.component';
 import { CreateConsultationComponent } from './consultation/create-consultation/create-consultation.component';
 import { AltaTurnoComponent } from './turnos/alta-turno/alta-turno.component';
+import { ListadoPacientesComponent } from './patients/listado-pacientes/listado-pacientes.component';
 
 export const routes: Routes = [
   { path: '', component: CalendarComponent },
@@ -25,5 +26,6 @@ export const routes: Routes = [
   { path: 'especialidad/listado', component: ListadoEspecialidadesComponent },
   { path: 'servicio/listado', component: ListadoServiciosComponent },
   { path: 'paquete/listado', component: ListadoPaquetesComponent },
+  { path: 'paciente/listado', component: ListadoPacientesComponent },
   { path: 'paginator', component: PaginatorComponent },
 ];

@@ -1,5 +1,5 @@
 import { Component, signal, WritableSignal } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
@@ -7,15 +7,22 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Paciente } from '../models/paciente.models';
 import { PageInfo } from '../../shared/models/extras.models';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listado-pacientes',
-  imports: [MatFormFieldModule,
+  imports: [
+    MatFormFieldModule,
     MatIconModule,
     MatMenuModule,
     CenteredCardComponent,
     MatTableModule,
-    PaginatorComponent
+    PaginatorComponent,
+    MatButtonModule,
+    MatLabel,
+    MatInputModule
   ],
   templateUrl: './listado-pacientes.component.html',
   styleUrl: './listado-pacientes.component.scss'
@@ -24,23 +31,23 @@ export class ListadoPacientesComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
   displayedColumns: string[] = ["name", "surname", "dni", "edit"];
   dataSource = new MatTableDataSource<Paciente>();
-  users = signal<Paciente[]>([]);
+  pacientes = signal<Paciente[]>([]);
 
-  constructor() {}
+  constructor(public router: Router) {}
 
-  createUser() {
-    console.log('Crear usuario');
+  createPaciente() {
+    this.router.navigate(['/paciente/nuevo']);
   }
 
-  editUser(paciente: Paciente) {
+  editPaciente(paciente: Paciente) {
     console.log('Editar usuario', paciente);
   }
 
-  deleteUser(paciente: Paciente) {
-    console.log('Eliminar usuario', paciente);
+  deletePaciente(id: number) {
+    console.log('Eliminar usuario', id);
   }
 
-  userInfo(paciente: Paciente) {
+  pacienteInfo(paciente: Paciente) {
     console.log('Información de usuario', paciente);
   }
 
