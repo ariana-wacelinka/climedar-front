@@ -8,7 +8,7 @@ import { ReactiveFormsModule, FormsModule, NgModel, FormGroup, FormControl, Vali
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
@@ -35,6 +35,7 @@ import { PatientService } from '../../patients/services/patient.service';
 import { CreateConsultation } from '../models/consultation.model';
 import { ConsultationService } from '../services/consultation.service';
 import { PackageResponse } from '../../paquetes/models/package.models';
+import { PaymentDialogComponent } from '../../shared/components/payment-dialog/payment-dialog.component';
 @Component({
   selector: 'app-create-consultation',
   imports: [
@@ -103,7 +104,7 @@ export class CreateConsultationComponent implements OnInit {
   filteredDoctorOptions: Observable<Doctor[]> | undefined;
   servicioControl = new FormControl<string>("");
 
-  constructor(private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService) {
+  constructor(private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService, private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('turnoId') || null;
@@ -209,6 +210,26 @@ export class CreateConsultationComponent implements OnInit {
     if (this.consultationFG.valid) {
       if (this.pago) {
         console.log('pago');
+        const dialogRef = this.dialog.open(PaymentDialogComponent, {
+          data: { price: this.totalAmount() }
+        });
+    
+        dialogRef.componentInstance.paymentConfirmed.subscribe((method: string) => {
+          console.log('method', method);
+          console.log('consultationFG', (this.consultationFG.value as CreateConsultation));
+          this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
+            (data) => {
+              console.log('data', data);
+              if (data) {
+                console.log("se manda el pago: ", method);
+
+              }
+            },
+            (error) => {
+              console.log('error', error);
+            }
+          );
+        });
       } else {
         // console.log('no pago');
         // console.log('consultationFG', (this.consultationFG.value as CreateConsultation));

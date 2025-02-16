@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { CreateConsultation } from '../models/consultation.model';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ export class ConsultationService {
 
   constructor(private apollo: Apollo) { }
 
-  createConsultation(consultation: CreateConsultation) {
+  createConsultation(consultation: CreateConsultation): Observable<CreateConsultation> {
     const CREATE_CONSULTATION_MUTATION = gql`
       mutation CreateConsultation($consultation: CreateConsultationInput!) {
         createConsultation(consultation: $consultation) {
@@ -30,8 +30,6 @@ export class ConsultationService {
           shiftId: consultation.shiftId
         }
       }
-    }).pipe(map((result: any) => result.data.createConsultation)).subscribe(result => {
-      console.log('Created consultation: ', result);
-    });
+    }).pipe(map((result: any) => result.data.createConsultation));
   }
 }
