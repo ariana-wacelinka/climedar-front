@@ -47,7 +47,7 @@ export class DoctorService {
   }
 
   createDoctor(doctor: any): Observable<any> {
-    const body =  `
+    const body = `
       mutation {
       createDoctor(
         doctor: {
@@ -77,6 +77,40 @@ export class DoctorService {
       }
     `;
     console.log('createDoctor' + body);
+    return this.apollo.mutate({
+      mutation: gql`${body}`
+    });
+  }
+
+  getAllDoctors(page: number): Observable<{ doctors: Doctor[], pageInfo: any }> {
+    const query = gql`
+      query {
+        getAllDoctors(pageRequest: {page: ${page}, size: 10}) {
+          doctors {
+            dni
+            email
+            id
+            name
+            surname
+          }
+          pageInfo {
+            totalPages
+            totalItems
+            currentPage
+          }
+        }
+      }`;
+    return this.apollo.watchQuery<{ getAllDoctors: { doctors: Doctor[], pageInfo: any } }>({ query: query }).valueChanges.pipe(
+      map(result => result.data.getAllDoctors)
+    );
+  }
+
+  deleteDoctor(id: number): Observable<any> {
+    const body = `
+      mutation {
+        deleteDoctor(id: ${id})
+      }
+    `;
     return this.apollo.mutate({
       mutation: gql`${body}`
     });

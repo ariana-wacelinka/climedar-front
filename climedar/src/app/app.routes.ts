@@ -12,6 +12,7 @@ import { ListadoPaquetesComponent } from './paquetes/listado-paquetes/listado-pa
 import { CreateConsultationComponent } from './consultation/create-consultation/create-consultation.component';
 import { AltaTurnoComponent } from './turnos/alta-turno/alta-turno.component';
 import { ListadoPacientesComponent } from './patients/listado-pacientes/listado-pacientes.component';
+import { ListadoDoctoresComponent } from './doctors/listado-doctores/listado-doctores.component';
 
 export const routes: Routes = [
   { path: '', component: CalendarComponent },
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'doctor/nuevo', component: AltaDoctorComponent },
   { path: 'paciente/nuevo', component: AltaPatientsComponent },
   { path: 'turno/nuevo', component: AltaTurnoComponent },
+  { path: 'doctor/listado', component: ListadoDoctoresComponent },
   { path: 'obra-social/listado', component: ListadoObrasSocialesComponent },
   { path: 'especialidad/listado', component: ListadoEspecialidadesComponent },
   { path: 'servicio/listado', component: ListadoServiciosComponent },

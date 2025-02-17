@@ -1,6 +1,6 @@
 <app-centered-card>
     <ng-container main-header>
-        <h2>Listado de pacientes</h2>
+        <h2>Listado de médicos</h2>
     </ng-container>
 
     <ng-container main-content>
@@ -9,13 +9,13 @@
             <div class="row full-width">
                 <mat-form-field class="full-width" appearance="outline">
                     <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
-                    <mat-label>Ingrese un paciente</mat-label>
-                    <input matInput placeholder="Ingrese un paciente" #input>
+                    <mat-label>Ingrese un médico</mat-label>
+                    <input matInput placeholder="Ingrese un médico" #input>
                 </mat-form-field>
 
 
-                <button mat-flat-button style="min-width: max-content !important;" (click)="createPaciente()">Añadir
-                    paciente</button>
+                <button mat-flat-button style="min-width: max-content !important;" (click)="createDoctor()">Añadir
+                    médico</button>
             </div>
 
 
@@ -24,30 +24,30 @@
 
                     <ng-container matColumnDef="surname">
                         <th mat-header-cell *matHeaderCellDef> Apellido </th>
-                        <td mat-cell class="surname" *matCellDef="let paciente">{{paciente.surname}}</td>
+                        <td mat-cell class="surname" *matCellDef="let doctor">{{doctor.surname}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                        <td mat-cell class="nombre" *matCellDef="let paciente">{{paciente.name}}</td>
+                        <td mat-cell class="nombre" *matCellDef="let doctor">{{doctor.name}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="dni">
                         <th mat-header-cell *matHeaderCellDef> DNI </th>
-                        <td mat-cell class="dni" *matCellDef="let paciente">{{paciente.dni}}</td>
+                        <td mat-cell class="dni" *matCellDef="let doctor">{{doctor.dni}}</td>
                     </ng-container>
 
                     <ng-container class="edit" matColumnDef="edit">
                         <th mat-header-cell *matHeaderCellDef></th>
 
-                        <td id="edit" mat-cell *matCellDef="let paciente" style="text-align: right;">
+                        <td id="edit" mat-cell *matCellDef="let doctor" style="text-align: right;">
                             <button id="menu" [matMenuTriggerFor]="menu"><mat-icon
                                     style="color: black; font-size: 22px; margin-top: 5px">more_vert
                                 </mat-icon></button>
                             <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="pacienteInfo(paciente)">Ver más</button>
-                                <button (click)="editPaciente(paciente)" mat-menu-item>Modificar</button>
-                                <button (click)="deletePaciente(paciente.id)" mat-menu-item>Eliminar</button>
+                                <button mat-menu-item (click)="doctorInfo(doctor)">Ver más</button>
+                                <button (click)="editDoctor(doctor)" mat-menu-item>Modificar</button>
+                                <button (click)="deleteDoctor(doctor.id)" mat-menu-item>Eliminar</button>
                             </mat-menu>
                         </td>
                     </ng-container>
@@ -57,7 +57,7 @@
 
                     <tr class="mat-row" *matNoDataRow>
                         <td class="mat-cell" colspan="4">
-                            <div class="nada">No se han encontrado pacientes</div>
+                            <div class="nada">No se han encontrado médicos</div>
                         </td>
                     </tr>
                 </table>
