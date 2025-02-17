@@ -3,12 +3,13 @@
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
 
 mat-toolbar {
-    padding-top: 10px;
+    // padding-top: 10px;
     color: #f9f9f9;
-    flex: 0 0 auto; /* Mantiene su tamaño natural */
+    // flex: 0 0 auto; /* Mantiene su tamaño natural */
     z-index: 2;
     // background-color: rgba(0, 0, 0, 0.1);
-    position: absolute;
+    height: 10vh;
+    // position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -35,7 +36,7 @@ mat-toolbar {
     display: flex;
     height: 100%;
     flex-direction: column;
-    justify-content: end;
+    justify-content: center;
 
     button{
         border: 1px solid #F9F9F9;
@@ -45,7 +46,7 @@ mat-toolbar {
 }
 
 .menu {
-    margin-top: 13px;
+    // margin-top: 13px;
     display: flex;
     gap: 16px;
     height: 100%;
@@ -74,7 +75,7 @@ mat-icon{
 }
 
 .logo{
-    padding-top: 10px;
+    // padding-top: 10px;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.231));
     margin-right: 10px;
     max-width: 250px;

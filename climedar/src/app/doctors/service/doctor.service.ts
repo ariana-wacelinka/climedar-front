@@ -11,7 +11,7 @@ export class DoctorService {
   apiurl = 'http://localhost:8083/graphql';
   constructor(private http: HttpClient, private apollo: Apollo) { }
 
-  public getDoctorsByName(name: string, specialityid: string): Observable<Doctor[]> {
+  public getDoctorsByName(name: string, specialityid: string = ""): Observable<Doctor[]> {
     console.log('getDoctorsByName');
     console.log('name: ', name);
     const query = gql`

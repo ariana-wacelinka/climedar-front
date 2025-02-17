@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { RecurringShift } from './../models/turno.models';
+import { Component, Input, OnInit } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatFormFieldModule, MatHint, MatLabel} from '@angular/material/form-field';
@@ -17,6 +18,13 @@ import {MatButtonModule} from '@angular/material/button';
 import {CommonModule} from '@angular/common';
 import {MAT_DATE_LOCALE, provideNativeDateAdapter} from '@angular/material/core';
 import {MatDivider} from '@angular/material/divider';
+import { TurnosService } from '../services/turnos-service/turnos.service';
+import { MatTimepicker, MatTimepickerModule } from '@angular/material/timepicker';
+import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
+import { Doctor } from '../../doctors/models/doctor.models';
+import { DoctorService } from '../../doctors/service/doctor.service';
+import { Especialidad } from '../../especialidad';
+import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 const today = new Date();
 const month = today.getMonth();
@@ -40,34 +48,69 @@ const year = today.getFullYear();
     MatHint,
     MatDatepickerToggle,
     CommonModule,
-    MatChipsModule, MatDivider,
+    MatChipsModule, MatDivider, MatTimepickerModule,
+    MatAutocompleteModule
   ],
   providers: [provideNativeDateAdapter(), {provide: MAT_DATE_LOCALE, useValue: 'es-ES'},],
   templateUrl: './alta-turno.component.html',
   styleUrl: './alta-turno.component.scss'
 })
-export class AltaTurnoComponent {
+export class AltaTurnoComponent implements OnInit {
 
   @Input() turnoID: string | null = null;
   today: Date = new Date();
   dateRange = false;
   daysOfWeek = Object.values(DayOfWeek);
-
+  doctorControl = new FormControl<String | Doctor>('');
   public timeRangeInvalid: boolean = false;
+  filteredDoctorOptions: Observable<Doctor[]> | undefined;
 
-  readonly range: FormGroup = new FormGroup({
-    start: new FormControl<Date | null>(null, [Validators.required]),
-    end: new FormControl<Date | null>(null, [Validators.required]),
-    daysOfWeek: new FormControl<DayOfWeek[] | []>([]),
+  public range = new FormGroup({
+    date: new FormControl<Date | null>(null, [Validators.required]),
+    recurringShift: new FormGroup({
+      startDate: new FormControl<Date | null>(null, [Validators.required]),
+      endDate: new FormControl<Date | null>(null, [Validators.required]),
+      validDays: new FormControl<DayOfWeek[]>([], [Validators.required]),
+    }),
     startTime: new FormControl<string | null>(this.formatTime(new Date()), [Validators.required]),
     endTime: new FormControl<string | null>(this.formatTime(new Date(new Date().setHours(new Date().getHours() + 1))), [Validators.required]),
+    place: new FormControl<string>("", Validators.required),
+    doctorId: new FormControl<string | null>(null, [Validators.required]),
+    timeOfShifts: new FormControl<number>(20, [Validators.required, Validators.min(1)]),
     multiple: new FormControl<boolean | null>(false),
   }, {validators: Validators.compose([this.timeRangeValidator.bind(this)])});
 
-  readonly rangePicker: FormGroup = new FormGroup({
-    start: new FormControl<Date | null>(null, [Validators.required]),
-    end: new FormControl<Date | null>(null, [Validators.required]),
-  }, {validators: Validators.compose([this.timeRangeValidator.bind(this)])});
+  constructor(private turnosService: TurnosService, private doctorService: DoctorService,) {}
+
+  ngOnInit(): void {
+    this.filteredDoctorOptions = this.doctorControl.valueChanges.pipe(
+          startWith(''),
+          filter((value): value is string => typeof value === 'string'),
+          debounceTime(300),
+          switchMap(value => {
+            const title = value;
+            return this.doctorService.getDoctorsByName(title).pipe(
+              map((doctors: Doctor[]) => {
+                return doctors;
+              })
+            );
+          }),
+        );
+  }
+
+  displayDoctor(doctor: Doctor | null): string {
+    return doctor
+      ? doctor.gender == "MALE"
+        ? `Dr. ${doctor.surname} ${doctor.name}`
+        : `Dra. ${doctor.surname} ${doctor.name}`
+      : '';
+  }
+
+  selectedDoctor(event: MatAutocompleteSelectedEvent) {
+      console.log('selected', event.option.value);
+      this.doctorControl.setValue(event.option.value);
+      this.range.controls.doctorId.setValue((event.option.value as Doctor).id)
+    }
 
   formatTime(date: Date): string {
     const hours = date.getHours().toString().padStart(2, '0');
@@ -91,11 +134,9 @@ export class AltaTurnoComponent {
     return null;
   }
 
-  dateChangeEvent(change: string, $event: MatDatepickerInputEvent<any, any>) {
-    this.range.patchValue({start: $event.value, end: $event.value});
-    console.log(this.range.value.start.toISOString());
-    console.log(this.range.value.end.toISOString());
-    console.log(this.range.value.start.toLocaleString('es-ES', {
+  onStartDateChange($event: MatDatepickerInputEvent<any, any>) {
+    this.range.patchValue({date: $event.value});
+    console.log(this.range.value.date!.toLocaleString('es-ES', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -117,13 +158,13 @@ export class AltaTurnoComponent {
 
   validateTimeRange() {
     if (this.range.get("endTime") && this.range.get("startTime")) {
-      this.timeRangeInvalid = this.range.get("startTime")?.value >= this.range.get("endTime")?.value;
+      this.timeRangeInvalid = this.range.get("startTime")?.value! >= this.range.get("endTime")?.value!;
       console.log(this.timeRangeInvalid);
     }
   }
 
   chipsChangeEvent(arg0: string, $event: MatChipListboxChange) {
-    this.range.patchValue({daysOfWeek: Array.from($event.value)});
-    console.log(this.range.value.daysOfWeek);
+    this.range.controls.recurringShift.patchValue({validDays: Array.from($event.value)});
+    console.log(this.range.controls.recurringShift.value.validDays);
   }
 }
