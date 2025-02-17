@@ -24,17 +24,17 @@
 
                     <ng-container matColumnDef="surname">
                         <th mat-header-cell *matHeaderCellDef> Apellido </th>
-                        <td mat-cell class="surname" *matCellDef="let paciente">$ {{paciente.surname}} </td>
+                        <td mat-cell class="surname" *matCellDef="let paciente">{{paciente.surname}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                        <td mat-cell class="nombre" *matCellDef="let paciente"> {{paciente.name}} </td>
+                        <td mat-cell class="nombre" *matCellDef="let paciente">{{paciente.name}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="dni">
                         <th mat-header-cell *matHeaderCellDef> DNI </th>
-                        <td mat-cell class="dni" *matCellDef="let paciente">$ {{paciente.dni}} </td>
+                        <td mat-cell class="dni" *matCellDef="let paciente">{{paciente.dni}}</td>
                     </ng-container>
 
                     <ng-container class="edit" matColumnDef="edit">
@@ -67,7 +67,7 @@
     </ng-container>
 
     <ng-container main-actions>
-        <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+        <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="10" (pageChange)="pageChange($event)"
             [currentPage]="currentPage()"></app-paginator>
     </ng-container>
 

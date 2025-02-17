@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { Paciente } from '../models/paciente.models';
+import { PageInfo } from '../../shared/models/extras.models';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,29 @@ export class PatientService {
 
   constructor(private apollo: Apollo) { }
 
+  getAllPatients(page: number): Observable<{ pageInfo: PageInfo, patients: Paciente[] }> {
+    const body = `
+      query {
+        getAllPatients(
+          pageRequest: { page: ${page}, size: 10}
+        ) {
+            patients {
+              id
+              name
+              surname
+              dni
+            }
+            pageInfo {
+              totalItems
+              currentPage
+              totalPages
+            }
+          }
+        }`;
+    return this.apollo.query<{ getAllPatients: { patients: Paciente[], pageInfo: PageInfo } }>({ query: gql`${body}` }).pipe(
+      map(response => response.data.getAllPatients)
+    );
+  }
 
   createPatient(patient: Paciente): Observable<any> {
     const body = `

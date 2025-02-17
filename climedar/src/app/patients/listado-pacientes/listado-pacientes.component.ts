@@ -38,6 +38,14 @@ export class ListadoPacientesComponent {
     private pacienteService: PatientService
   ) { }
 
+  ngOnInit() {
+    this.pacienteService.getAllPatients(1).subscribe(response => {
+      this.pacientes.set(response.patients);
+      this.pageInfo.set(response.pageInfo);
+      this.dataSource.data = this.pacientes()
+    });
+  }
+
   createPaciente() {
     this.router.navigate(['/paciente/nuevo']);
   }
@@ -56,16 +64,16 @@ export class ListadoPacientesComponent {
   }
 
   currentPage(): WritableSignal<number> {
-    return signal<number>(this.pageInfo().currentPage + 1);
+    return signal<number>(this.pageInfo().currentPage);
   }
 
   pageChange(page: number) {
     this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
 
-    // this.packageService.getAllPackages(page).subscribe(response => {
-    //   this.packages.set(response.packages);
-    //   this.pageInfo.set(response.pageInfo);
-    //   this.dataSource.data = this.packages()
-    // });
+    this.pacienteService.getAllPatients(page).subscribe(response => {
+      this.pacientes.set(response.patients);
+      this.pageInfo.set(response.pageInfo);
+      this.dataSource.data = this.pacientes()
+    });
   }
 }
