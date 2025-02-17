@@ -55,7 +55,9 @@ export class ListadoDoctoresComponent {
   }
 
   deleteDoctor(id: number) {
-    this.doctorService.deleteDoctor(id).subscribe(() => { });
+    this.doctorService.deleteDoctor(id).subscribe(() => {
+      console.log('Doctor eliminado');
+    });
     window.location.reload();
   }
 

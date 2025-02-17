@@ -1,16 +1,13 @@
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
-import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatLabel } from '@angular/material/form-field';
 import { DatosContactoComponent, DatosDireccionComponent, DatosPersonalesComponent } from '../../shared/components';
 import { DatosProfesionalesComponent } from './datos-profesionales/datos-profesionales.component';
 import { DoctorService } from '../service/doctor.service';
 import { Doctor } from '../models/doctor.models';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-alta-doctor',

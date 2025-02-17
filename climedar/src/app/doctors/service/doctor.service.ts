@@ -115,4 +115,30 @@ export class DoctorService {
       mutation: gql`${body}`
     });
   }
+
+  getDoctorById(id: string): Observable<Doctor> {
+    const query = gql`
+      query {
+        getDoctorById(id: ${id}) {
+            birthdate
+            dni
+            email
+            gender
+            id
+            name
+            phone
+            salary
+            surname
+            speciality {
+              code
+              description
+              id
+              name
+            }
+          }
+        }`;
+    return this.apollo.watchQuery<{ getDoctorById: Doctor }>({ query: query }).valueChanges.pipe(
+      map(result => result.data.getDoctorById)
+    );
+  }
 }
