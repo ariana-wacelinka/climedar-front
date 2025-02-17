@@ -1,4 +1,4 @@
-import { RecurringShift } from './../models/turno.models';
+import { CreateTurno, RecurringShift, ShiftBuilder } from './../models/turno.models';
 import { Component, Input, OnInit } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,7 +11,7 @@ import {
   MatDatepickerToggle,
   MatDateRangePicker
 } from '@angular/material/datepicker';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import {MatChipListbox, MatChipListboxChange, MatChipOption, MatChipsModule} from "@angular/material/chips";
 import { MatIconModule } from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,7 +19,7 @@ import {CommonModule} from '@angular/common';
 import {MAT_DATE_LOCALE, provideNativeDateAdapter} from '@angular/material/core';
 import {MatDivider} from '@angular/material/divider';
 import { TurnosService } from '../services/turnos-service/turnos.service';
-import { MatTimepicker, MatTimepickerModule } from '@angular/material/timepicker';
+import { MatTimepicker, MatTimepickerInput, MatTimepickerModule, MatTimepickerOption } from '@angular/material/timepicker';
 import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
 import { Doctor } from '../../doctors/models/doctor.models';
 import { DoctorService } from '../../doctors/service/doctor.service';
@@ -72,17 +72,19 @@ export class AltaTurnoComponent implements OnInit {
       endDate: new FormControl<Date | null>(null, [Validators.required]),
       validDays: new FormControl<DayOfWeek[]>([], [Validators.required]),
     }),
-    startTime: new FormControl<string | null>(this.formatTime(new Date()), [Validators.required]),
-    endTime: new FormControl<string | null>(this.formatTime(new Date(new Date().setHours(new Date().getHours() + 1))), [Validators.required]),
+    startTime: new FormControl<Date | null>(new Date(), [Validators.required, this.timeRangeValidator]),
+    endTime: new FormControl<Date | null>(new Date(new Date().setHours(new Date().getHours() + 1)), [Validators.required, this.timeRangeValidator]),
     place: new FormControl<string>("", Validators.required),
     doctorId: new FormControl<string | null>(null, [Validators.required]),
     timeOfShifts: new FormControl<number>(20, [Validators.required, Validators.min(1)]),
-    multiple: new FormControl<boolean | null>(false),
+    shiftBuilder: new FormControl<ShiftBuilder>(ShiftBuilder.REGULAR, Validators.required),
   }, {validators: Validators.compose([this.timeRangeValidator.bind(this)])});
-
+  
+  
   constructor(private turnosService: TurnosService, private doctorService: DoctorService,) {}
 
   ngOnInit(): void {
+    (this.range as FormGroup).removeControl('recurringShift');
     this.filteredDoctorOptions = this.doctorControl.valueChanges.pipe(
           startWith(''),
           filter((value): value is string => typeof value === 'string'),
@@ -109,7 +111,7 @@ export class AltaTurnoComponent implements OnInit {
   selectedDoctor(event: MatAutocompleteSelectedEvent) {
       console.log('selected', event.option.value);
       this.doctorControl.setValue(event.option.value);
-      this.range.controls.doctorId.setValue((event.option.value as Doctor).id)
+      this.range.controls.doctorId.patchValue((event.option.value as Doctor).id)
     }
 
   formatTime(date: Date): string {
@@ -118,20 +120,42 @@ export class AltaTurnoComponent implements OnInit {
     return `${hours}:${minutes}`;
   }
 
-  private timeRangeValidator(control: AbstractControl): { [key: string]: boolean } | null {
+  private timeRangeValidator(control: AbstractControl): { [key: string]: any } | null {
     const group = control as FormGroup;
     const startTime = group.get('startTime')?.value;
     const endTime = group.get('endTime')?.value;
+    console.log("validacion: ",new Date(startTime), new Date(endTime));
 
-    if (startTime && endTime && startTime > endTime) {
-      group.get('startTime')?.setErrors({timeRangeInvalid: true});
-      group.get('endTime')?.setErrors({timeRangeInvalid: true});
-      return {timeRangeInvalid: true};
-    } else {
-      group.get('startTime')?.setErrors(null);
-      group.get('endTime')?.setErrors(null);
+    if (startTime && endTime) {
+      if (new Date(startTime) >= new Date(endTime)) {
+        console.log("invalido");
+        group.get('startTime')?.setErrors({ timeRangeInvalid: true });
+        group.get('endTime')?.setErrors({ timeRangeInvalid: true });
+        return { timeRangeInvalid: true };
+      }
     }
+    console.log("valido");
+    group.get('startTime')?.setErrors(null);
+    group.get('endTime')?.setErrors(null);
     return null;
+  }
+
+  onDateRangeChange($event: MatCheckboxChange) {
+    console.log($event.checked);
+    if ($event.checked) {
+      if (!this.range.get('recurringShift')) {
+        this.range.patchValue({shiftBuilder: ShiftBuilder.RECURRING});
+        this.range.addControl('recurringShift', new FormGroup({
+          startDate: new FormControl<Date | null>(null, [Validators.required]),
+          endDate: new FormControl<Date | null>(null, [Validators.required]),
+          validDays: new FormControl<DayOfWeek[]>([], [Validators.required]),
+        }));
+      }
+    } else {
+      this.range.patchValue({shiftBuilder: ShiftBuilder.REGULAR});
+      (this.range as FormGroup).removeControl('recurringShift');
+    }
+    console.log(this.range.value);
   }
 
   onStartDateChange($event: MatDatepickerInputEvent<any, any>) {
@@ -150,6 +174,10 @@ export class AltaTurnoComponent implements OnInit {
 
   guardar() {
     console.log(this.range.value);
+    console.log((this.range.value as CreateTurno));
+    this.turnosService.createShift(this.range.value as CreateTurno).subscribe((turno) => {
+      console.log(turno);
+    });
   }
 
   cancelar() {

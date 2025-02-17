@@ -174,11 +174,12 @@ export class TurnosService {
           endTime: turno.endTime,
           timeOfShifts: turno.timeOfShifts,
           place: turno.place,
-          recurringShift: {
-            startDate: turno.recurringShift.startDate,
-            endDate: turno.recurringShift.endDate,
-            validDays: turno.recurringShift.validDays//.map(day => day.toString())
-          }
+          shiftBuilder: turno.shiftBuilder,
+          recurringShift: turno.shiftBuilder === 'RECURRING' ? {
+            startDate: turno.recurringShift!.startDate,
+            endDate: turno.recurringShift!.endDate,
+            validDays: turno.recurringShift!.validDays//.map(day => day.toString())
+          } : null,
         }
       }
     }).pipe(

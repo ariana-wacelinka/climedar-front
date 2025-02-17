@@ -22,7 +22,8 @@ export interface Turno extends TurnoI {
 
 export interface CreateTurno extends TurnoI {
     doctorId: string;
-    recurringShift: RecurringShift;
+    recurringShift?: RecurringShift;
+    shiftBuilder: ShiftBuilder;
 }
 
 export interface RecurringShift {
@@ -39,4 +40,10 @@ export enum ValidDays {
     FRIDAY = 'FRIDAY',
     SATURDAY = 'SATURDAY',
     SUNDAY = 'SUNDAY'
+}
+
+export enum ShiftBuilder {
+    REGULAR = 'REGULAR',
+    RECURRING = 'RECURRING',
+    OVERTIME = 'OVERTIME'
 }
