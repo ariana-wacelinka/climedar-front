@@ -91,6 +91,7 @@
           <mat-checkbox
             [(ngModel)]="dateRange"
             [ngModelOptions]="{ standalone: true }"
+            (change)="onDateRangeChange($event)"
           >
             Crear múltiples turnos
           </mat-checkbox>
@@ -104,10 +105,13 @@
             <input
               matInput
               [matTimepicker]="startTimePicker"
-              [(ngModel)]="range.controls.startTime"
-            />
+              [formControl]="range.controls.startTime"
+              />
             <mat-timepicker #startTimePicker />
             <mat-timepicker-toggle [for]="startTimePicker" matSuffix />
+            @if (range.controls.startTime.dirty && range.controls.startTime.invalid) {
+            <mat-error>Horario inválido</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="form-field">
@@ -116,10 +120,13 @@
             <input
               matInput
               [matTimepicker]="endTimePicker"
-              [(ngModel)]="range.controls.endTime"
+              [formControl]="range.controls.endTime"
             />
             <mat-timepicker #endTimePicker />
             <mat-timepicker-toggle [for]="endTimePicker" matSuffix />
+            @if (range.controls.endTime.dirty && range.controls.endTime.invalid) {
+            <mat-error>Horario inválido</mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -199,7 +206,7 @@
       <button mat-flat-button class="warn" (click)="cancelar()">
         Cancelar
       </button>
-      <button mat-flat-button (click)="guardar()">Guardar</button>
+      <button mat-flat-button (click)="guardar()" [disabled]="range.invalid">Guardar</button>
     </div>
   </ng-container>
 </app-centered-card>
