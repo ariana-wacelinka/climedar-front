@@ -88,7 +88,7 @@ export class TurnosDialogComponent implements OnInit {
     console.log('thisStartTime', this.startTime);
     console.log('thisEndTime', this.endTime);
     if (data.doctor) {
-      this.turnosService.getTurnosByDate(this.fecha, data.doctor.id, '08:00', '20:00', this.pageInfo().currentPage).pipe(
+      this.turnosService.getTurnosByDate(this.fecha, data.doctor.id, '', '', this.pageInfo().currentPage).pipe(
         map(response => response)
       ).subscribe(response => {
         this.turnos.set(response.shifts);
