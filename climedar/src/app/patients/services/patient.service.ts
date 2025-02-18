@@ -103,4 +103,66 @@ export class PatientService {
       mutation: gql`${body}`
     });
   }
+
+  getPatientById(id: string): Observable<Paciente> {
+    const body = `
+      query {
+        getPatientById(id: ${id}) {
+          birthdate
+          dni
+          email
+          gender
+          id
+          medicalSecure {
+            name
+            id
+          }
+          name
+          phone
+          surname
+          address {
+            apartment
+            floor
+            number
+            street
+          }
+    }
+  }`;
+    return this.apollo.query<{ getPatientById: Paciente }>({ query: gql`${body}` }).pipe(
+      map(response => response.data.getPatientById)
+    );
+  }
+
+  updatePatient(patient: Paciente): Observable<any> {
+    const body = `
+        mutation {
+          updatePatient(
+            id: ${patient.id},
+            patient: {
+              name: "${patient.name}",
+              surname: "${patient.surname}"
+              dni: "${patient.dni}",
+              gender: ${patient.gender},
+              birthDate: "${patient.birthdate}",
+              email: "${patient.email}",
+              phone: "${patient.phone}",
+              address: {
+                street: "${patient.address!.street}",
+                number: "${patient.address!.number}",
+                apartment: "${patient.address!.apartment}",
+                floor: "${patient.address!.floor}"
+              }
+            }
+          ) {
+            id
+            name
+            surname
+          }
+        }
+      `;
+    console.log('modify patient' + body);
+    return this.apollo.mutate({
+      mutation: gql`${body}`
+    });
+  }
 }

@@ -50,8 +50,10 @@ export class ListadoPacientesComponent {
     this.router.navigate(['/paciente/nuevo']);
   }
 
-  editPaciente(paciente: Paciente) {
-    console.log('Editar paciente', paciente);
+  editPaciente(id: number) {
+    this.router.navigate(['/paciente/editar'],
+      { state: { id } }
+    );
   }
 
   deletePaciente(id: number) {
