@@ -21,6 +21,7 @@ export const routes: Routes = [
   { path: 'consulta/nueva/:turnoId', component: CreateConsultationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'doctor/nuevo', component: AltaDoctorComponent },
+  { path: 'doctor/editar', component: AltaDoctorComponent },
   { path: 'paciente/nuevo', component: AltaPatientsComponent },
   { path: 'paciente/editar', component: AltaPatientsComponent },
   { path: 'turno/nuevo', component: AltaTurnoComponent },

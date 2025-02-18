@@ -30,7 +30,7 @@ export class AltaPatientsComponent {
   public patientForm: FormGroup = new FormGroup({
     id: new FormControl('', [Validators.required])
   });
-  private pacienteId = signal<string>('');
+  public pacienteId = signal<string>('');
 
   constructor(private patientService: PatientService,
     private router: Router

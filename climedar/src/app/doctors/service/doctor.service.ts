@@ -135,10 +135,50 @@ export class DoctorService {
               id
               name
             }
+            address{
+              street
+              number
+              apartment
+              floor
+            }
           }
         }`;
     return this.apollo.watchQuery<{ getDoctorById: Doctor }>({ query: query }).valueChanges.pipe(
       map(result => result.data.getDoctorById)
     );
+  }
+
+  updateDoctor(doctor: Doctor): Observable<any> {
+    console.log(doctor);
+    const body = `
+      mutation {
+      updateDoctor(
+        doctor: {
+        address: {
+          street: "${doctor.address?.street}",
+          floor: "${doctor.address?.floor}",
+          number: "${doctor.address?.number}",
+          apartment: "${doctor.address?.apartment}"
+        },
+        surname: "${doctor.surname}",
+        specialityId: "${doctor.speciality?.id}",
+        salary: ${doctor.salary},
+        phone: "${doctor.phone}",
+        name: "${doctor.name}",
+        gender: ${doctor.gender},
+        email: "${doctor.email}",
+        dni: "${doctor.dni}",
+        birthdate: "${doctor.birthdate}"
+        },
+        id: "${doctor.id}"
+      ) {
+        id
+        name
+        surname
+      }
+      }`;
+    return this.apollo.mutate({
+      mutation: gql`${body}`
+    });
   }
 }

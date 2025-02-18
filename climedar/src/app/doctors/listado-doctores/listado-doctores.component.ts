@@ -50,8 +50,10 @@ export class ListadoDoctoresComponent {
     this.router.navigate(['/doctor/nuevo']);
   }
 
-  editDoctor(doctor: Doctor) {
-    console.log('Editar doctor', doctor);
+  editDoctor(id: number) {
+    this.router.navigate(['/doctor/editar'],
+      { state: { id } }
+    );
   }
 
   deleteDoctor(id: number) {
