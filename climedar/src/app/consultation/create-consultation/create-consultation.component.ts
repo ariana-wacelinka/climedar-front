@@ -206,6 +206,7 @@ export class CreateConsultationComponent implements OnInit {
   }
 
   createConsultation(): void {
+    this.consultationFG.controls.medicalServicesId.updateValueAndValidity();
     console.log('consultationFG', this.consultationFG.value);
     if (this.consultationFG.valid) {
       if (this.pago) {
@@ -231,12 +232,29 @@ export class CreateConsultationComponent implements OnInit {
           );
         });
       } else {
-        // console.log('no pago');
-        // console.log('consultationFG', (this.consultationFG.value as CreateConsultation));
-        // this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation);
+        console.log('no pago');
+        console.log('consultationFG', (this.consultationFG.value as CreateConsultation));
+        this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
+          (data) => {
+            console.log('data', data);
+          },
+          (error) => {
+            console.log('error', error);
+          });
         }
     } else {
       console.log('invalid');
+      console.log('consultationFG', this.consultationFG.value);
+      //errores:
+      if (this.consultationFG.controls.medicalServicesId.errors) {
+        console.log('servicios requeridos');
+      }
+      if (this.consultationFG.controls.patientId.errors) {
+        console.log('paciente requerido');
+      }
+      if (this.consultationFG.controls.shiftId.errors) {
+        console.log('turno requerido');
+      }
     }
   }
 

@@ -12,7 +12,7 @@ export class ConsultationService {
 
   createConsultation(consultation: CreateConsultation): Observable<CreateConsultation> {
     const CREATE_CONSULTATION_MUTATION = gql`
-      mutation CreateConsultation($consultation: CreateConsultationInput!) {
+      mutation CreateConsultation($consultation: ConsultationInput!) {
         createConsultation(consultation: $consultation) {
           id
           finalPrice
