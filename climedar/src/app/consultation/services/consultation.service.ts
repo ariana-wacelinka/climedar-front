@@ -27,7 +27,8 @@ export class ConsultationService {
           medicalServicesId: consultation.medicalServicesId,
           observation: consultation.observation,
           patientId: consultation.patientId,
-          shiftId: consultation.shiftId
+          shiftId: consultation.shiftId || null,
+          doctorId: consultation.doctorId || null,
         }
       }
     }).pipe(map((result: any) => result.data.createConsultation));

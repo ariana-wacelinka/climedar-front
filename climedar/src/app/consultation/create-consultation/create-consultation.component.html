@@ -169,7 +169,7 @@
         </div>
         <span class="slider">
           @if(!!!turnoId()) {
-          <mat-slide-toggle labelPosition="before" [(ngModel)]="isSobreTurno"
+          <mat-slide-toggle labelPosition="before" [(ngModel)]="isSobreTurno" (change)="changeSobreTurno()"
             >Sobre turno</mat-slide-toggle
           >
           }

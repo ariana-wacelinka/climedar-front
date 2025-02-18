@@ -75,6 +75,7 @@ export class CreateConsultationComponent implements OnInit {
   consultationFG = new FormGroup({
     patientId: new FormControl<string>("", [Validators.required]),
     shiftId: new FormControl<string>("", [Validators.required]),
+    doctorId: new FormControl<string>(""),
     description: new FormControl<string>(""),
     observation: new FormControl<string>(""),
     medicalServicesId: new FormControl<string[]>([], [Validators.required]), //pueden ser servicios o paquetes (se guarda el id)
@@ -138,6 +139,26 @@ export class CreateConsultationComponent implements OnInit {
 
       console.log('turnoId ' + this.turnoId());
     });
+  }
+
+
+  changeSobreTurno() {
+    if (this.isSobreTurno) {
+      this.consultationFG.controls.shiftId.setValue("");
+      this.consultationFG.controls.shiftId.removeValidators([Validators.required]);
+      this.consultationFG.controls.doctorId.setValidators([Validators.required]);
+      if ((this.doctorControl.value as Doctor).id) {
+        this.consultationFG.controls.doctorId.setValue((this.doctorControl.value as Doctor).id);
+      }
+      this.consultationFG.controls.doctorId.updateValueAndValidity();
+      this.consultationFG.controls.shiftId.updateValueAndValidity();
+    } else {
+      this.consultationFG.controls.shiftId.setValidators([Validators.required]);
+      this.consultationFG.controls.doctorId.setValue("");
+      this.consultationFG.controls.doctorId.removeValidators([Validators.required]);
+      this.consultationFG.controls.doctorId.updateValueAndValidity();
+      this.consultationFG.controls.shiftId.updateValueAndValidity();
+    }
   }
 
   displayTurno() {
@@ -223,7 +244,6 @@ export class CreateConsultationComponent implements OnInit {
               console.log('data', data);
               if (data) {
                 console.log("se manda el pago: ", method);
-
               }
             },
             (error) => {
@@ -233,14 +253,13 @@ export class CreateConsultationComponent implements OnInit {
         });
       } else {
         console.log('no pago');
-        console.log('consultationFG', (this.consultationFG.value as CreateConsultation));
-        this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
-          (data) => {
-            console.log('data', data);
-          },
-          (error) => {
-            console.log('error', error);
-          });
+            this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
+              (data) => {
+                console.log('data', data);
+              },
+              (error) => {
+                console.log('error', error);
+              });
         }
     } else {
       console.log('invalid');
@@ -304,6 +323,7 @@ export class CreateConsultationComponent implements OnInit {
   selectedDoctor(event: MatAutocompleteSelectedEvent) {
     this.doctorControl.setValue(event.option.value);
     this.getServices("", (event.option.value as Doctor).speciality!.id);
+    this.consultationFG.controls.doctorId.setValue((event.option.value as Doctor).id);
     if (!this.isFromShift()) {
       this.turno.patchValue({
         id: "",
@@ -410,8 +430,9 @@ export class CreateConsultationComponent implements OnInit {
     const startTime = this.turno.controls.startTime.value;
     const endTime = this.turno.controls.endTime.value;
     const availableTime = endTime && startTime ? (endTime.getTime() - startTime.getTime()) / 60000 : 0;
-    console.log(this.displayPatient(this.pacienteControl.value as Paciente));
-    return this.totalTime() > 0 && this.consultationFG.controls.medicalServicesId.value!.length > 0 && this.consultationFG.controls.patientId.value !== "" && this.consultationFG.controls.shiftId.value !== "" && (this.isSobreTurno || this.totalTime() <= availableTime) && this.isMedicoSelected() && this.isPatientSelected();
+    console.log("shiftId",this.consultationFG.get("shiftId") != null && this.consultationFG.controls.shiftId.value !== "");
+    console.log("doctorId",this.consultationFG.get("doctorId") != null && this.consultationFG.get("doctorId")!.value != "");
+    return this.totalTime() > 0 && this.consultationFG.controls.medicalServicesId.value!.length > 0 && this.consultationFG.controls.patientId.value !== "" && ((this.consultationFG.get("shiftId") != null && this.consultationFG.controls.shiftId.value !== "") || (this.consultationFG.get("doctorId") != null && this.consultationFG.get("doctorId")!.value != "" ) ) && (this.isSobreTurno || this.totalTime() <= availableTime) && this.isMedicoSelected() && this.isPatientSelected();
   }
 
 }
