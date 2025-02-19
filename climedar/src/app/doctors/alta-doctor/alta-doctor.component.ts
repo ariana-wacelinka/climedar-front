@@ -65,10 +65,11 @@ export class AltaDoctorComponent {
       return;
     }
 
-    if (this.doctorId() !== '') {
+    if (this.isNumber(this.doctorId())) {
       this.doctorService.updateDoctor((this.doctorForm.value as Doctor)).subscribe(
         (response) => {
           console.log('Doctor actualizado', response);
+          this.router.navigate(['/medico/listado']);
         },
         (error) => {
           console.error('Error al actualizar doctor', error);
@@ -79,6 +80,7 @@ export class AltaDoctorComponent {
       this.doctorService.createDoctor(this.doctorForm.value).subscribe(
         (response) => {
           console.log('Doctor creado', response);
+          this.router.navigate(['/medico/listado']);
         },
         (error) => {
           console.error('Error al crear doctor', error);

@@ -58,7 +58,7 @@ export class DatosPersonalesComponent implements OnInit {
     dni: new FormControl<string>('', [Validators.required, Validators.min(0), Validators.max(99999999), Validators.pattern('^[0-9]*$')]),
     birthdate: new FormControl('', [Validators.required]),
     gender: new FormControl('', [Validators.required]),
-  })
+  });
 
   ngOnInit(): void {
     this.datosPersonales.emit(this.infoPersonal);

@@ -47,11 +47,11 @@ export class ListadoDoctoresComponent {
   }
 
   createDoctor() {
-    this.router.navigate(['/doctor/nuevo']);
+    this.router.navigate(['/medico/nuevo']);
   }
 
   editDoctor(id: number) {
-    this.router.navigate(['/doctor/editar'],
+    this.router.navigate(['/medico/editar'],
       { state: { id } }
     );
   }

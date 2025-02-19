@@ -149,7 +149,6 @@ export class DoctorService {
   }
 
   updateDoctor(doctor: Doctor): Observable<any> {
-    console.log(doctor);
     const body = `
     mutation MyMutation {
       updateDoctor(

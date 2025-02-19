@@ -57,7 +57,7 @@ export class PatientService {
               apartment: "${patient.address!.apartment}",
               floor: "${patient.address!.floor}"
             }
-      }
+          }
         ) {
           id
           name
@@ -142,10 +142,14 @@ export class PatientService {
               name: "${patient.name}",
               surname: "${patient.surname}"
               dni: "${patient.dni}",
-              gender: ${patient.gender},
-              birthDate: "${patient.birthdate}",
+              gender: ${patient.gender!},
+              birthdate: "${patient.birthdate}",
               email: "${patient.email}",
               phone: "${patient.phone}",
+              medicalSecure: { 
+                id: "${patient.medicalSecure!.id}"
+                name: "${patient.medicalSecure!.name}"
+              },
               address: {
                 street: "${patient.address!.street}",
                 number: "${patient.address!.number}",
@@ -154,9 +158,24 @@ export class PatientService {
               }
             }
           ) {
+            birthdate
+            dni
+            email
+            gender
             id
+            medicalSecure {
+              name
+              id
+            }
             name
+            phone
             surname
+            address {
+              apartment
+              floor
+              number
+              street
+            }
           }
         }
       `;

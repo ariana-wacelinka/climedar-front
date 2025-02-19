@@ -44,7 +44,9 @@ export class AltaPatientsComponent {
       this.patientService.getPatientById(this.pacienteId()).subscribe(
         (response) => {
           console.log('Paciente obtenido', response);
-          this.patientForm.patchValue(response);
+          const birthdate = new Date(response.birthdate!);
+          const formattedBirthdate = birthdate.toISOString().split('T')[0];
+          this.patientForm.patchValue({ ...response, birthdate: formattedBirthdate });
         },
         (error) => {
           console.error('Error al obtener paciente', error);
@@ -64,26 +66,31 @@ export class AltaPatientsComponent {
       return;
     }
 
-    if (this.pacienteId() === '') {
-      console.log('Guardando paciente:' + (this.patientForm.value as Paciente).name);
-      this.patientService.createPatient(this.patientForm.value as Paciente).subscribe(
-        (response) => {
-          console.log('Paciente creado', response);
-        },
-        (error) => {
-          console.error('Error al crear paciente', error);
-        }
-      );
-    } else {
+    if (this.isNumber(this.pacienteId())) {
       console.log('Actualizando paciente:' + this.patientForm.value.id);
       this.patientService.updatePatient(this.patientForm.value as Paciente).subscribe(
         (response) => {
           console.log('Paciente actualizado', response);
+          this.router.navigate(['/paciente/listado']);
+          window.location.reload();
         },
         (error) => {
           console.error('Error al actualizar paciente', error);
         }
       );
+    } else {
+      console.log('Guardando paciente:' + (this.patientForm.value as Paciente).name);
+      this.patientService.createPatient(this.patientForm.value as Paciente).subscribe(
+        (response) => {
+          console.log('Paciente creado', response);
+          this.router.navigate(['/paciente/listado']);
+          window.location.reload();
+        },
+        (error) => {
+          console.error('Error al crear paciente', error);
+        }
+      );
+
     }
   }
 
