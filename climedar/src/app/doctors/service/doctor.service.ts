@@ -184,6 +184,7 @@ export class DoctorService {
             surname
           }
         }`;
+    console.log('updateDoctor' + body);
     return this.apollo.mutate({
       mutation: gql`${body}`
     });
