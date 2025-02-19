@@ -62,11 +62,11 @@ export class ToolbarComponent {
   }
 
   listado_medicos() {
-    this.router.navigate(['doctor/listado']);
+    this.router.navigate(['medico/listado']);
   }
 
   alta_medico() {
-    this.router.navigate(['doctor/nuevo']);
+    this.router.navigate(['medico/nuevo']);
   }
 
   listado_obra_social() {

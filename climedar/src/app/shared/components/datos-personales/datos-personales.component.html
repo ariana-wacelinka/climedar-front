@@ -46,14 +46,15 @@
         <input
           matInput
           [matDatepicker]="picker"
-            (dateChange)="infoPersonal.controls.birthdate.setValue($event.value!.toISOString().split('T')[0])"
+          [formControl]="infoPersonal.controls.birthdate"
+          (dateChange)="infoPersonal.controls.birthdate.setValue($event.value!.toISOString().split('T')[0])"
           [matDatepickerFilter]="dateFilter"
         />
-        <mat-hint style="color: #004454">DD/MM/YYYY</mat-hint>
+        <mat-hint style="color: #004454">DD/MM/AAAA</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker startView="month"></mat-datepicker>
         @if (infoPersonal.controls.birthdate.invalid && infoPersonal.controls.birthdate.touched) {
-          <mat-error>Por favor, ingrese una fecha válida en formato DD/MM/YYYY</mat-error>
+          <mat-error>Por favor, ingrese una fecha válida en formato DD/MM/AAAA</mat-error>
         }
       </mat-form-field>
       

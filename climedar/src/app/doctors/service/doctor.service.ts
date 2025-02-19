@@ -47,7 +47,7 @@ export class DoctorService {
   }
 
   createDoctor(doctor: any): Observable<any> {
-    const body =  `
+    const body = `
       mutation {
       createDoctor(
         doctor: {
@@ -77,6 +77,114 @@ export class DoctorService {
       }
     `;
     console.log('createDoctor' + body);
+    return this.apollo.mutate({
+      mutation: gql`${body}`
+    });
+  }
+
+  getAllDoctors(page: number): Observable<{ doctors: Doctor[], pageInfo: any }> {
+    const query = gql`
+      query {
+        getAllDoctors(pageRequest: {page: ${page}, size: 10}) {
+          doctors {
+            dni
+            email
+            id
+            name
+            surname
+          }
+          pageInfo {
+            totalPages
+            totalItems
+            currentPage
+          }
+        }
+      }`;
+    return this.apollo.watchQuery<{ getAllDoctors: { doctors: Doctor[], pageInfo: any } }>({ query: query }).valueChanges.pipe(
+      map(result => result.data.getAllDoctors)
+    );
+  }
+
+  deleteDoctor(id: number): Observable<any> {
+    const body = `
+      mutation {
+        deleteDoctor(id: ${id})
+      }
+    `;
+    return this.apollo.mutate({
+      mutation: gql`${body}`
+    });
+  }
+
+  getDoctorById(id: string): Observable<Doctor> {
+    const query = gql`
+      query {
+        getDoctorById(id: ${id}) {
+            birthdate
+            dni
+            email
+            gender
+            id
+            name
+            phone
+            salary
+            surname
+            speciality {
+              code
+              description
+              id
+              name
+            }
+            address{
+              street
+              number
+              apartment
+              floor
+            }
+          }
+        }`;
+    return this.apollo.watchQuery<{ getDoctorById: Doctor }>({ query: query }).valueChanges.pipe(
+      map(result => result.data.getDoctorById)
+    );
+  }
+
+  updateDoctor(doctor: Doctor): Observable<any> {
+    const body = `
+    mutation MyMutation {
+      updateDoctor(
+        doctor: {address: {number: "${doctor.address?.number}",
+        apartment: "${doctor.address?.apartment}", 
+        floor: "${doctor.address?.floor}", 
+        street: "${doctor.address?.street}"}, 
+        birthDate: "${doctor.birthdate}", 
+        dni: "${doctor.dni}", 
+        gender: ${doctor.gender}, 
+        email: "${doctor.email}", 
+        name: "${doctor.name}", 
+        phone: "${doctor.phone}", 
+        salary: ${doctor.salary}, 
+        specialityId: "${doctor.speciality?.id}", 
+        surname: "${doctor.surname}"}
+        id: "${doctor.id}"
+          ) {
+            address {
+              apartment
+              floor
+              number
+              street
+            }
+            birthdate
+            dni
+            email
+            gender
+            name
+            id
+            phone
+            salary
+            surname
+          }
+        }`;
+    console.log('updateDoctor' + body);
     return this.apollo.mutate({
       mutation: gql`${body}`
     });

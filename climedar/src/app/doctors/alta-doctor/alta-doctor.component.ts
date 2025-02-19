@@ -1,16 +1,14 @@
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, DoCheck, signal } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
-import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatLabel } from '@angular/material/form-field';
 import { DatosContactoComponent, DatosDireccionComponent, DatosPersonalesComponent } from '../../shared/components';
 import { DatosProfesionalesComponent } from './datos-profesionales/datos-profesionales.component';
 import { DoctorService } from '../service/doctor.service';
 import { Doctor } from '../models/doctor.models';
-import { JsonPipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-alta-doctor',
@@ -29,35 +27,76 @@ import { JsonPipe } from '@angular/common';
   styleUrl: './alta-doctor.component.scss'
 })
 export class AltaDoctorComponent {
-
+  public doctorId = signal<string>('');
   public doctorForm = new FormGroup({});
 
-  constructor(private doctorService: DoctorService) {}
-  
-  public guardar(){
-    if(this.doctorForm.invalid){
+  constructor(private doctorService: DoctorService,
+    private router: Router
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    this.doctorId.set(navigation?.extras.state?.['id']);
+    console.log('doctorId', this.doctorId());
+  }
+
+  ngOnInit() {
+    if (this.isNumber(this.doctorId())) {
+      const id = new FormControl(this.doctorId(), [Validators.required]);
+      this.doctorForm.addControl('id', id);
+      this.doctorService.getDoctorById(this.doctorId()).subscribe(
+        (response) => {
+          console.log('Doctor obtenido', response);
+          this.doctorForm.patchValue(response);
+        },
+        (error) => {
+          console.error('Error al obtener doctor', error);
+        }
+      );
+    }
+  }
+
+  public isNumber(value: string): boolean {
+    return !isNaN(Number(value));
+  }
+
+  public guardar() {
+    if (this.doctorForm.invalid) {
       this.doctorForm.markAllAsTouched();
       this.doctorForm.markAsDirty();
       return;
     }
-    console.log('doctor:' + JSON.stringify(this.doctorForm.value as Doctor).replace(/"([^"]+)":/g, '$1:'));
-    this.doctorService.createDoctor(this.doctorForm.value).subscribe(
-      (response) => {
-        console.log('Doctor creado', response);
-      },
-      (error) => {
-        console.error('Error al crear doctor', error);
-      }
-    );
-    console.log(this.doctorForm.value);
+
+    if (this.isNumber(this.doctorId())) {
+      this.doctorService.updateDoctor((this.doctorForm.value as Doctor)).subscribe(
+        (response) => {
+          console.log('Doctor actualizado', response);
+          this.router.navigate(['/medico/listado']);
+        },
+        (error) => {
+          console.error('Error al actualizar doctor', error);
+        }
+      );
+    } else {
+      console.log('doctor:' + JSON.stringify(this.doctorForm.value as Doctor).replace(/"([^"]+)":/g, '$1:'));
+      this.doctorService.createDoctor(this.doctorForm.value).subscribe(
+        (response) => {
+          console.log('Doctor creado', response);
+          this.router.navigate(['/medico/listado']);
+        },
+        (error) => {
+          console.error('Error al crear doctor', error);
+        }
+      );
+      console.log(this.doctorForm.value);
+    }
+
   }
 
-  public cancelar(){
-    return;
+  public cancelar() {
+    window.history.back();
   }
 
-  onFormChanges(form: FormGroup){
-    if (Object.keys(form.controls).includes('street')){
+  onFormChanges(form: FormGroup) {
+    if (Object.keys(form.controls).includes('street')) {
       this.doctorForm.addControl('address', form);
     } else {
       Object.keys(form.controls).forEach(key => {
