@@ -1,4 +1,4 @@
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, DoCheck, signal } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
 import { MatInputModule } from '@angular/material/input';
@@ -39,11 +39,12 @@ export class AltaDoctorComponent {
 
   ngOnInit() {
     if (this.doctorId() !== '') {
+      const id = new FormControl(this.doctorId(), [Validators.required]);
+      this.doctorForm.addControl('id', id);
       this.doctorService.getDoctorById(this.doctorId()).subscribe(
         (response) => {
           console.log('Doctor obtenido', response);
           this.doctorForm.patchValue(response);
-          this.doctorForm.patchValue({ id: response.id });
         },
         (error) => {
           console.error('Error al obtener doctor', error);

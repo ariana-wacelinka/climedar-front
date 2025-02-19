@@ -151,32 +151,40 @@ export class DoctorService {
   updateDoctor(doctor: Doctor): Observable<any> {
     console.log(doctor);
     const body = `
-      mutation {
+    mutation MyMutation {
       updateDoctor(
-        doctor: {
-        address: {
-          street: "${doctor.address?.street}",
-          floor: "${doctor.address?.floor}",
-          number: "${doctor.address?.number}",
-          apartment: "${doctor.address?.apartment}"
-        },
-        surname: "${doctor.surname}",
-        specialityId: "${doctor.speciality?.id}",
-        salary: ${doctor.salary},
-        phone: "${doctor.phone}",
-        name: "${doctor.name}",
-        gender: ${doctor.gender},
-        email: "${doctor.email}",
-        dni: "${doctor.dni}",
-        birthdate: "${doctor.birthdate}"
-        },
+        doctor: {address: {number: "${doctor.address?.number}",
+        apartment: "${doctor.address?.apartment}", 
+        floor: "${doctor.address?.floor}", 
+        street: "${doctor.address?.street}"}, 
+        birthDate: "${doctor.birthdate}", 
+        dni: "${doctor.dni}", 
+        gender: ${doctor.gender}, 
+        email: "${doctor.email}", 
+        name: "${doctor.name}", 
+        phone: "${doctor.phone}", 
+        salary: ${doctor.salary}, 
+        specialityId: "${doctor.speciality?.id}", 
+        surname: "${doctor.surname}"}
         id: "${doctor.id}"
-      ) {
-        id
-        name
-        surname
-      }
-      }`;
+          ) {
+            address {
+              apartment
+              floor
+              number
+              street
+            }
+            birthdate
+            dni
+            email
+            gender
+            name
+            id
+            phone
+            salary
+            surname
+          }
+        }`;
     return this.apollo.mutate({
       mutation: gql`${body}`
     });

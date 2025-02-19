@@ -27,9 +27,7 @@ import { Router } from '@angular/router';
   styleUrl: './alta-patients.component.scss'
 })
 export class AltaPatientsComponent {
-  public patientForm: FormGroup = new FormGroup({
-    id: new FormControl('', [Validators.required])
-  });
+  public patientForm: FormGroup = new FormGroup({});
   public pacienteId = signal<string>('');
 
   constructor(private patientService: PatientService,
@@ -41,11 +39,12 @@ export class AltaPatientsComponent {
 
   ngOnInit() {
     if (this.pacienteId() !== '') {
+      const id = new FormControl(this.pacienteId(), [Validators.required]);
+      this.patientForm.addControl('id', id);
       this.patientService.getPatientById(this.pacienteId()).subscribe(
         (response) => {
           console.log('Paciente obtenido', response);
           this.patientForm.patchValue(response);
-          this.patientForm.patchValue({ id: response.id });
         },
         (error) => {
           console.error('Error al obtener paciente', error);
