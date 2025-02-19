@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { PageInfo } from '../../../shared/models/extras.models';
-import { MedicalService, MedicalServiceResponse } from '../../models/services.models';
+import { MedicalPackage, MedicalService, MedicalServiceResponse } from '../../models/services.models';
 import { map, Observable } from 'rxjs';
 import { Apollo, gql } from 'apollo-angular';
+import { PackageResponse } from '../../../paquetes/models/package.models';
 
 @Injectable({
   providedIn: 'root',
@@ -209,5 +210,35 @@ export class ServiciosMedicosService {
     );
   }
 
+  public getPaquetesMedicos(name: string = "", specialityId: string = "", page: number = 1): Observable<{ packages: PackageResponse[], pageInfo: PageInfo }> {
+    const GET_PAQUETES_MEDICOS = `
+      query {
+        getAllMedicalPackages(input: {page: ${page}, size: 10}, specialityId: "${specialityId}", name: "${name}") {
+          packages {
+            id
+            services {
+              name
+            }
+            price
+            name
+            estimatedDuration
+          }
+          pageInfo {
+            currentPage
+            totalItems
+            totalPages
+          }
+        }
+      }
+    `;
+
+    console.log(GET_PAQUETES_MEDICOS);
+
+    return this.apollo.watchQuery<{ getAllMedicalPackages: { packages: PackageResponse[], pageInfo: PageInfo } }>({
+      query: gql(GET_PAQUETES_MEDICOS),
+    }).valueChanges.pipe(
+      map(result => result.data.getAllMedicalPackages)
+    );
+  }
 
 }

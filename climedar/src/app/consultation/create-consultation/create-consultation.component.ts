@@ -106,6 +106,7 @@ export class CreateConsultationComponent implements OnInit {
   filteredPatientOptions: Observable<Paciente[]> | undefined;
   filteredDoctorOptions: Observable<Doctor[]> | undefined;
   servicioControl = new FormControl<string>("");
+  paqueteControl = new FormControl<string>("");
 
   constructor(private paymentService: PaymentService,private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService, private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
@@ -207,19 +208,34 @@ export class CreateConsultationComponent implements OnInit {
         if (!(this.doctorControl.value as Doctor).id) {
           return [];
         }
-        return this.medicalService.getServiciosMedicos(title, (this.doctorControl.value as Doctor).speciality?.id).pipe(
-          map(response => {
-            console.log('response', response);
-            this.servicios.set(response.services);
-            this.pageInfo.set(response.pageInfo);
-          })
-        );
+        this.getServices(title, (this.doctorControl.value as Doctor).speciality?.id)
+        return [];
+      }),
+    ).subscribe();
+
+    this.paqueteControl.valueChanges.pipe(
+      startWith(''),
+      filter((value): value is string => typeof value === 'string'),
+      debounceTime(300),
+      switchMap(value => {
+        console.log('value', value);
+        const title = value;
+        console.log('doctorControl', (this.doctorControl.value as Doctor));
+        if (!(this.doctorControl.value as Doctor).id) {
+          return [];
+        }
+        this.getPackages(title, (this.doctorControl.value as Doctor).speciality?.id);
+        return [];
       }),
     ).subscribe();
   }
 
   isFromShift(): boolean {
     return !!this.turnoId();
+  }
+
+  serviciosDelPaquete(paquete: PackageResponse): string {
+    return paquete.services!.map(service => service.name).join(', ');
   }
 
   createConsultation(): void {
@@ -291,11 +307,21 @@ export class CreateConsultationComponent implements OnInit {
     }
   }
 
-  getServices(name: string = "", specialityId: string = ""): void {
+  getServices(name: string = this.servicioControl.value!, specialityId: string = ""): void {
     this.medicalService.getServiciosMedicos(name, specialityId).subscribe((data) => {
       console.log('doctorControl', (this.doctorControl.value as Doctor));
       if ((this.doctorControl.value as Doctor).id) {
         this.servicios.set(data.services);
+        this.pageInfo.set(data.pageInfo);
+      }
+    });
+  }
+
+  getPackages(name: string = this.paqueteControl.value!, specialityId: string = ""): void {
+    this.medicalService.getPaquetesMedicos(name, specialityId).subscribe((data) => {
+      console.log('doctorControl', (this.doctorControl.value as Doctor));
+      if ((this.doctorControl.value as Doctor).id) {
+        this.paquetes.set(data.packages);
         this.pageInfo.set(data.pageInfo);
       }
     });
@@ -337,6 +363,7 @@ export class CreateConsultationComponent implements OnInit {
   selectedDoctor(event: MatAutocompleteSelectedEvent) {
     this.doctorControl.setValue(event.option.value);
     this.getServices("", (event.option.value as Doctor).speciality!.id);
+    this.getPackages("", (event.option.value as Doctor).speciality!.id);
     this.consultationFG.controls.doctorId.setValue((event.option.value as Doctor).id);
     if (!this.isFromShift()) {
       this.turno.patchValue({
@@ -412,7 +439,7 @@ export class CreateConsultationComponent implements OnInit {
     console.log("totalAmount");
     this.consultationService.getConsultationPrice(this.consultationFG.controls.medicalServicesId.value!, this.consultationFG.controls.patientId.value!).subscribe((data: number) => {
         console.log('data', data);
-        this.consultationPrice.set(data);
+        this.consultationPrice.set(data || 0);
       });
   }
 
