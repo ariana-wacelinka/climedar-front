@@ -148,7 +148,6 @@ export class PatientService {
               phone: "${patient.phone}",
               medicalSecure: { 
                 id: "${patient.medicalSecure!.id}"
-                name: "${patient.medicalSecure!.name}"
               },
               address: {
                 street: "${patient.address!.street}",
