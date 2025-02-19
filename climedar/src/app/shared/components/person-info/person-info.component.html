@@ -1,0 +1,31 @@
+<app-centered-card>
+    <ng-container main-header>
+    </ng-container>
+
+    <ng-container main-content>
+        <div class="content">
+            <div class="row">
+                <div class="column">
+                    <div><b>Nombre y apellido:</b> {{ person()?.name }} {{ person()?.surname }}</div>
+                    <div><b>DNI:</b> {{ person()?.dni }}</div>
+                    <div><b>Fecha de nacimiento:</b> {{ person()?.birthdate?.toLocaleLowerCase() }}</div>
+                    <div><b>Género:</b> @if (person()?.gender === 'FEMALE'){ Femenino} @else { Masculino}</div>
+                    @if (doctor()?.speciality) {
+                        <div><b>Especialidad:</b> {{ doctor()?.speciality?.name }}</div>
+                        <div><b>Salario:</b> {{ doctor()?.salary }}</div>
+                    } @else {
+                        <div><b>Obra social:</b> {{ paciente()?.medicalSecure?.name }}</div>
+                    }
+                </div>
+                <div class="column">
+                    <div><b>Correo electrónico:</b> {{ person()?.email }}</div>
+                    <div><b>Teléfono:</b> {{ person()?.phone }}</div>
+                    <div><b>Dirección:</b> Calle {{ person()?.address?.street }} Nº{{ person()?.address?.number }} {{ person()?.address?.floor }}{{ person()?.address?.apartment }}</div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container main-actions>
+    </ng-container>
+</app-centered-card>

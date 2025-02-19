@@ -58,13 +58,17 @@ export class ListadoDoctoresComponent {
 
   deleteDoctor(id: number) {
     this.doctorService.deleteDoctor(id).subscribe(() => {
-      console.log('Doctor eliminado');
+      console.log('Médico eliminado');
     });
     window.location.reload();
   }
 
   doctorInfo(doctor: Doctor) {
-    console.log('Información de doctor', doctor);
+    this.doctorService.getDoctorById(doctor.id).subscribe(response => {
+      this.router.navigate(['/medico/info'],
+        { state: { doctorInfo: response } }
+      );
+    });
   }
 
   currentPage(): WritableSignal<number> {

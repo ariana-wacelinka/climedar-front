@@ -13,6 +13,7 @@ import { CreateConsultationComponent } from './consultation/create-consultation/
 import { AltaTurnoComponent } from './turnos/alta-turno/alta-turno.component';
 import { ListadoPacientesComponent } from './patients/listado-pacientes/listado-pacientes.component';
 import { ListadoDoctoresComponent } from './doctors/listado-doctores/listado-doctores.component';
+import { PersonInfoComponent } from './shared/components/person-info/person-info.component';
 
 export const routes: Routes = [
   { path: '', component: CalendarComponent },
@@ -32,4 +33,6 @@ export const routes: Routes = [
   { path: 'paquete/listado', component: ListadoPaquetesComponent },
   { path: 'paciente/listado', component: ListadoPacientesComponent },
   { path: 'paginator', component: PaginatorComponent },
+  { path: 'medico/info', component: PersonInfoComponent },
+  { path: 'paciente/info', component: PersonInfoComponent },
 ];

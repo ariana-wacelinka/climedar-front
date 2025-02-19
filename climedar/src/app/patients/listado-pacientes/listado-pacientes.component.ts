@@ -62,7 +62,13 @@ export class ListadoPacientesComponent {
   }
 
   pacienteInfo(paciente: Paciente) {
-    console.log('Información de paciente', paciente);
+    this.pacienteService.getPatientById(paciente.id).subscribe
+      (response => {
+        const pacienteInfo = response
+        this.router.navigate(['/paciente/info'],
+          { state: { pacienteInfo: response } }
+        );
+      });
   }
 
   currentPage(): WritableSignal<number> {
