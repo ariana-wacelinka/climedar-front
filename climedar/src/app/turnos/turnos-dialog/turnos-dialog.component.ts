@@ -225,7 +225,7 @@ export class TurnosDialogComponent implements OnInit {
       this.router.navigate(['consulta/nueva'], { state: { consultaData: this.consulta, turno: turno } });
       return;
     }
-    this.router.navigate(['consulta/nueva'], { queryParams: { turnoId: turno.id} });
+    this.router.navigate(['consulta/nueva'], { state: { turnoId: turno.id} });
   }
 
   isTunoOcuped(turno: Turno): boolean {

@@ -109,17 +109,12 @@ export class CreateConsultationComponent implements OnInit {
 
   constructor(private paymentService: PaymentService,private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService, private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
-    this.route.queryParamMap.subscribe(params => {
-      const id = params.get('turnoId') || null;
+      const id = navigation?.extras?.state?.['turnoId'] || null;
       var consultation = navigation?.extras?.state?.['consultaData'] || null;
       var turno = navigation?.extras?.state?.['turno'] || null;
       if (id) {
-        // Almacena el valor en la señal antes de cambiar la URL
         this.turnoId.set(id);
         this.consultationFG.controls.shiftId.setValue(id);
-
-        // Cambia la URL para que no se pierda el valor en caso de recarga
-        this.router.navigate([], { queryParams: { turnoId: null }, queryParamsHandling: 'merge' });
       } else {
         if (consultation) {
           this.doctorControl.setValue(consultation.doctor);
@@ -140,7 +135,6 @@ export class CreateConsultationComponent implements OnInit {
       }
 
       console.log('turnoId ' + this.turnoId());
-    });
   }
 
 
@@ -420,18 +414,6 @@ export class CreateConsultationComponent implements OnInit {
         console.log('data', data);
         this.consultationPrice.set(data);
       });
-    // return this.consultationFG.controls.medicalServicesId.value!.reduce((acc: number, id: string) => {
-    //   const servicio = this.servicios().find(servicio => servicio.id === id);
-    //   if (servicio) {
-    //     return acc + (Number(servicio.price) ?? 0);
-    //   } else {
-    //     const paquete = this.paquetes().find(paquete => paquete.id === id);
-    //     if (paquete) {
-    //       return acc + (Number(paquete.price) ?? 0);
-    //     }
-    //   }
-    //   return acc;
-    // }, 0);
   }
 
   totalTime(): number {
