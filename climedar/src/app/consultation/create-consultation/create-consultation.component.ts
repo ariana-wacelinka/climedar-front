@@ -28,7 +28,7 @@ import { Observable, startWith, filter, debounceTime, switchMap, map } from 'rxj
 import { DoctorService } from '../../doctors/service/doctor.service';
 import { Paciente } from '../../patients/models/paciente.models';
 import { ServiciosMedicosService } from '../../servicio/services/servicio/servicios-medicos.service';
-import { PageInfo } from '../../shared/models/extras.models';
+import { PageInfo, PaymentMethods } from '../../shared/models/extras.models';
 import { Duration } from 'luxon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PatientService } from '../../patients/services/patient.service';
@@ -238,18 +238,21 @@ export class CreateConsultationComponent implements OnInit {
     
         dialogRef.componentInstance.paymentConfirmed.subscribe((method: string) => {
           console.log('method', method);
+          const paymentMethodKey = Object.keys(PaymentMethods).find(key => PaymentMethods[key as keyof typeof PaymentMethods] === method);
+          console.log(`method enum ${paymentMethodKey}`);
+
           console.log('consultationFG', (this.consultationFG.value as CreateConsultation));
-          this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
-            (data) => {
-              console.log('data', data);
-              if (data) {
-                console.log("se manda el pago: ", method);
-              }
-            },
-            (error) => {
-              console.log('error', error);
-            }
-          );
+          // this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
+          //   (data) => {
+          //     console.log('data', data);
+          //     if (data) {
+          //       console.log("se manda el pago: ", method);
+          //     }
+          //   },
+          //   (error) => {
+          //     console.log('error', error);
+          //   }
+          // );
         });
       } else {
         console.log('no pago');
