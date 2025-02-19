@@ -38,7 +38,7 @@ export class AltaPatientsComponent {
   }
 
   ngOnInit() {
-    if (this.pacienteId() !== '') {
+    if (this.isNumber(this.pacienteId())) {
       const id = new FormControl(this.pacienteId(), [Validators.required]);
       this.patientForm.addControl('id', id);
       this.patientService.getPatientById(this.pacienteId()).subscribe(
@@ -51,6 +51,10 @@ export class AltaPatientsComponent {
         }
       );
     }
+  }
+
+  public isNumber(value: string): boolean {
+    return !isNaN(Number(value));
   }
 
   public guardar() {

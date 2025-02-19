@@ -35,10 +35,11 @@ export class AltaDoctorComponent {
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.doctorId.set(navigation?.extras.state?.['id']);
+    console.log('doctorId', this.doctorId());
   }
 
   ngOnInit() {
-    if (this.doctorId() !== '') {
+    if (this.isNumber(this.doctorId())) {
       const id = new FormControl(this.doctorId(), [Validators.required]);
       this.doctorForm.addControl('id', id);
       this.doctorService.getDoctorById(this.doctorId()).subscribe(
@@ -51,6 +52,10 @@ export class AltaDoctorComponent {
         }
       );
     }
+  }
+
+  public isNumber(value: string): boolean {
+    return !isNaN(Number(value));
   }
 
   public guardar() {

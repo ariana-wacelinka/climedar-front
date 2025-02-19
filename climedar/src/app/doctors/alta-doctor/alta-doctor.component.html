@@ -1,6 +1,6 @@
 <app-centered-card>
     <ng-container main-header>
-        @if (this.doctorId() !== '') {
+        @if (this.isNumber(this.doctorId())) {
             <h1>Editar médico</h1>
         } @else {
             <h1>Añadir médico</h1>
