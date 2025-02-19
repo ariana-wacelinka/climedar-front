@@ -32,10 +32,11 @@ import { PageInfo, PaymentMethods } from '../../shared/models/extras.models';
 import { Duration } from 'luxon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PatientService } from '../../patients/services/patient.service';
-import { CreateConsultation } from '../models/consultation.model';
+import { Consultation, CreateConsultation } from '../models/consultation.model';
 import { ConsultationService } from '../services/consultation.service';
 import { PackageResponse } from '../../paquetes/models/package.models';
 import { PaymentDialogComponent } from '../../shared/components/payment-dialog/payment-dialog.component';
+import { PaymentService } from '../../shared/services/payment/payment.service';
 @Component({
   selector: 'app-create-consultation',
   imports: [
@@ -71,6 +72,7 @@ import { PaymentDialogComponent } from '../../shared/components/payment-dialog/p
 export class CreateConsultationComponent implements OnInit {
   isSobreTurno = false;
   pago = false;
+  consultationPrice = signal<number>(0);
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
   consultationFG = new FormGroup({
     patientId: new FormControl<string>("", [Validators.required]),
@@ -101,11 +103,11 @@ export class CreateConsultationComponent implements OnInit {
   turnoId = signal<string | null>(null);
   doctorControl = new FormControl<Doctor | string>("");
   pacienteControl = new FormControl<Paciente | string>("");
-  filteredPatientOptions: Observable<Doctor[]> | undefined;
+  filteredPatientOptions: Observable<Paciente[]> | undefined;
   filteredDoctorOptions: Observable<Doctor[]> | undefined;
   servicioControl = new FormControl<string>("");
 
-  constructor(private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService, private dialog: MatDialog) {
+  constructor(private paymentService: PaymentService,private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService, private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('turnoId') || null;
@@ -233,26 +235,41 @@ export class CreateConsultationComponent implements OnInit {
       if (this.pago) {
         console.log('pago');
         const dialogRef = this.dialog.open(PaymentDialogComponent, {
-          data: { price: this.totalAmount() }
+          data: { price: this.consultationPrice() }
         });
     
         dialogRef.componentInstance.paymentConfirmed.subscribe((method: string) => {
           console.log('method', method);
-          const paymentMethodKey = Object.keys(PaymentMethods).find(key => PaymentMethods[key as keyof typeof PaymentMethods] === method);
-          console.log(`method enum ${paymentMethodKey}`);
 
           console.log('consultationFG', (this.consultationFG.value as CreateConsultation));
-          // this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
-          //   (data) => {
-          //     console.log('data', data);
-          //     if (data) {
-          //       console.log("se manda el pago: ", method);
-          //     }
-          //   },
-          //   (error) => {
-          //     console.log('error', error);
-          //   }
-          // );
+          this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
+            (data: Consultation) => {
+              console.log('data', data);
+              if (data) {
+                console.log("se manda el pago: ", method);
+                this.paymentService.createPayment(method, data.id!).subscribe(
+                  (blob) => {
+                    console.log('blob', blob);
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    const nombrePaciente = (this.pacienteControl.value as Paciente).name + "-" + (this.pacienteControl.value as Paciente).surname;
+                    a.download = `factura-${data.id}-${nombrePaciente}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                  },
+                  (error) => {
+                    console.log('error', error);
+                  }
+                );
+              }
+            },
+            (error) => {
+              console.log('error', error);
+            }
+          );
         });
       } else {
         console.log('no pago');
@@ -350,6 +367,7 @@ export class CreateConsultationComponent implements OnInit {
   selectedPatient(event: MatAutocompleteSelectedEvent) {
     this.pacienteControl.setValue(event.option.value);
     this.consultationFG.controls.patientId.setValue((event.option.value as Paciente).id);
+    this.totalAmount();
   }
 
   displayPatient(paciente: Paciente | null): string {
@@ -381,6 +399,7 @@ export class CreateConsultationComponent implements OnInit {
         this.consultationFG.controls.medicalServicesId.value!.splice(this.consultationFG.controls.medicalServicesId.value!.indexOf(id), 1);
       }
     }
+    this.totalAmount();
   }
 
   isServicioSelected(id: string): boolean {
@@ -395,19 +414,24 @@ export class CreateConsultationComponent implements OnInit {
     return (this.pacienteControl.value as Paciente).id !== "" && (this.pacienteControl.value as Paciente).id !== undefined && (this.pacienteControl.value as Paciente).id !== null;
   }
 
-  totalAmount(): number {
-    return this.consultationFG.controls.medicalServicesId.value!.reduce((acc: number, id: string) => {
-      const servicio = this.servicios().find(servicio => servicio.id === id);
-      if (servicio) {
-        return acc + (Number(servicio.price) ?? 0);
-      } else {
-        const paquete = this.paquetes().find(paquete => paquete.id === id);
-        if (paquete) {
-          return acc + (Number(paquete.price) ?? 0);
-        }
-      }
-      return acc;
-    }, 0);
+  totalAmount() {
+    console.log("totalAmount");
+    this.consultationService.getConsultationPrice(this.consultationFG.controls.medicalServicesId.value!, this.consultationFG.controls.patientId.value!).subscribe((data: number) => {
+        console.log('data', data);
+        this.consultationPrice.set(data);
+      });
+    // return this.consultationFG.controls.medicalServicesId.value!.reduce((acc: number, id: string) => {
+    //   const servicio = this.servicios().find(servicio => servicio.id === id);
+    //   if (servicio) {
+    //     return acc + (Number(servicio.price) ?? 0);
+    //   } else {
+    //     const paquete = this.paquetes().find(paquete => paquete.id === id);
+    //     if (paquete) {
+    //       return acc + (Number(paquete.price) ?? 0);
+    //     }
+    //   }
+    //   return acc;
+    // }, 0);
   }
 
   totalTime(): number {
@@ -433,8 +457,6 @@ export class CreateConsultationComponent implements OnInit {
     const startTime = this.turno.controls.startTime.value;
     const endTime = this.turno.controls.endTime.value;
     const availableTime = endTime && startTime ? (endTime.getTime() - startTime.getTime()) / 60000 : 0;
-    console.log("shiftId",this.consultationFG.get("shiftId") != null && this.consultationFG.controls.shiftId.value !== "");
-    console.log("doctorId",this.consultationFG.get("doctorId") != null && this.consultationFG.get("doctorId")!.value != "");
     return this.totalTime() > 0 && this.consultationFG.controls.medicalServicesId.value!.length > 0 && this.consultationFG.controls.patientId.value !== "" && ((this.consultationFG.get("shiftId") != null && this.consultationFG.controls.shiftId.value !== "") || (this.consultationFG.get("doctorId") != null && this.consultationFG.get("doctorId")!.value != "" ) ) && (this.isSobreTurno || this.totalTime() <= availableTime) && this.isMedicoSelected() && this.isPatientSelected();
   }
 

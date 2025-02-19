@@ -6,3 +6,8 @@ export interface CreateConsultation {
     shiftId?: String;
     doctorId?: String;
 }
+
+export interface Consultation {
+    id: string;
+    finalPrice: number;
+}

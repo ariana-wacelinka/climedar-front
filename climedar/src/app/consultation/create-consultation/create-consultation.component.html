@@ -195,7 +195,7 @@
       <div class="pagos">
         <div class="monto">
           <span>Monto total:</span>
-          <span>{{ totalAmount() | currency : "ARS" }}</span>
+          <span>{{ consultationPrice() | currency : "ARS" }}</span>
         </div>
         <span class="slider">
           <mat-slide-toggle labelPosition="before" [(ngModel)]="pago"
