@@ -107,6 +107,40 @@ export class EspecialidadService {
     );
   }
 
+  public getEspecailidadesFiltered(page: number, name: string): Observable<{ pageInfo: PageInfo, especialidades: Especialidad[] }> {
+    const query = gql`
+      query GetSpecialitiesFiltered($page: Int!, $name: String!) {
+        getAllSpecialities(
+          pageRequest: { page: $page, size: 5, order: {field: "name", direction: ASC}}
+          specification: { name: $name }
+        ) {
+          pageInfo {
+            totalItems
+            currentPage
+            totalPages
+          }
+          specialities {
+            id
+            code
+            name
+            description
+          }
+        }
+      }`;
+
+    return this.apollo.query<{ getAllSpecialities: { pageInfo: PageInfo, specialities: Especialidad[] } }>({
+      query,
+      variables: {
+        page: page,
+        name: name
+      }
+    }).pipe(
+      map(response => ({
+        pageInfo: response.data.getAllSpecialities.pageInfo,
+        especialidades: response.data.getAllSpecialities.specialities
+      }))
+    );
+  }
 
   public getEspecialidadesByNombre(nombre: string): Observable<Especialidad[]> {
     const query = gql`

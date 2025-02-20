@@ -59,8 +59,8 @@ import { map } from 'rxjs';
 export class ListadoEspecialidadesComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
   especialidades = signal<Especialidad[]>([]);
-  dataSource = new MatTableDataSource<Especialidad>([]);
   displayedColumns: string[] = ["nombre", "edit"];
+  filterValue = signal<string>('');
 
   constructor(private dialog: MatDialog, private especialidadService: EspecialidadService) {};
 
@@ -84,11 +84,15 @@ export class ListadoEspecialidadesComponent {
   }
   
   loadEspecialidades() {
-    this.especialidadService.getAllEspecialidades(this.pageInfo().currentPage).subscribe(response => {
+    this.especialidadService.getEspecailidadesFiltered(this.pageInfo().currentPage, this.filterValue().trim().toLowerCase()).subscribe(response => {
       this.especialidades.set(response.especialidades);
-      this.dataSource.data = response.especialidades;
       this.pageInfo.set(response.pageInfo);
     });
+  }
+
+  applyFilter(event: Event) {
+    this.filterValue.set((event.target as HTMLInputElement).value);
+    this.loadEspecialidades();
   }
 
   info_especialidad(especialidad: Especialidad) {
