@@ -61,6 +61,9 @@ export class DialogPaqueteComponent {
   servicioControl = new FormControl<string>("");
   filteredEspecialidadOptions: Observable<Especialidad[]> | undefined;
 
+  especialidadId = signal<string>('');
+  filterValue = signal<string>('');
+
   paquete = new FormGroup({
     id: new FormControl<string>(""),
     name: new FormControl<string>("", Validators.required),
@@ -112,9 +115,9 @@ export class DialogPaqueteComponent {
 
   selectedEspeciality(event: MatAutocompleteSelectedEvent) {
     this.paquete.controls.specialityId.setValue(event.option.value.id);
-    console.log(this.paquete.controls.specialityId.value);
+    this.especialidadId.set(this.paquete.controls.specialityId.value!);
 
-    this.medicalService.getAllServiciosMedicosByEspecialidadId(this.pageInfo().currentPage, event.option.value.id).subscribe((data) => {
+    this.medicalService.getAllServiciosMedicosFiltro(this.pageInfo().currentPage, this.especialidadId(), this.filterValue().trim().toLowerCase()).subscribe((data) => {
       console.log(data);
       this.servicios.set(data.services);
       this.pageInfo.set(data.pageInfo);
@@ -137,17 +140,10 @@ export class DialogPaqueteComponent {
   }
 
   pageChange(page: number) {
-    if (this.paquete.controls.specialityId.value) {
-      this.medicalService.getAllServiciosMedicosByEspecialidadId(page, this.paquete.controls.specialityId.value).subscribe((response) => {
-        this.servicios.set(response.services);
-        this.pageInfo.set(response.pageInfo);
-      });
-    } else {
-      this.medicalService.getAllServiciosMedicos(page).subscribe((response) => {
-        this.servicios.set(response.services);
-        this.pageInfo.set(response.pageInfo);
-      });
-    }
+    this.medicalService.getAllServiciosMedicosFiltro(page, this.especialidadId(), this.filterValue().trim().toLowerCase()).subscribe((response) => {
+      this.servicios.set(response.services);
+      this.pageInfo.set(response.pageInfo);
+    });
   }
 
   selectionChange(event: boolean, id: string) {
@@ -173,6 +169,15 @@ export class DialogPaqueteComponent {
     this.dialogRef.close();
   }
 
+  applyFilterService(event: Event) {
+    this.filterValue.set((event.target as HTMLInputElement).value);
+
+    this.medicalService.getAllServiciosMedicosFiltro(this.pageInfo().currentPage, this.especialidadId(), this.filterValue().trim().toLowerCase()).subscribe(response => {
+      this.servicios.set(response.services);
+      this.pageInfo.set(response.pageInfo);
+    });
+  }
+
   onSubmit() {
     if (this.data.id == null) {
       if (this.paquete.valid) {
@@ -184,9 +189,8 @@ export class DialogPaqueteComponent {
         console.log(paquete);
 
         this.packageService.createPackage(paquete).subscribe((response) => {
-          alert('Paquete creado' + response);
+          console.log('Paquete creado' + response);
           this.onClose();
-          window.location.reload();
         });
       }
     } else {

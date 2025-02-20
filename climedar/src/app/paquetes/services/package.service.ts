@@ -11,7 +11,7 @@ import { map, Observable } from 'rxjs';
 export class PackageService {
   constructor(private apollo: Apollo) { }
 
-  createPackage(paquete: PackageRequest): Observable<any> {
+  createPackage(paquete: PackageRequest): Observable<PackageResponse> {
     const body = `
       mutation CreateMedicalPackage($name: String!, $servicesIds: [ID!]!, $specialityId: ID!) {
           createMedicalPackage(input: {name: $name, servicesIds: $servicesIds, specialityId: $specialityId}) {
@@ -29,7 +29,9 @@ export class PackageService {
     return this.apollo.mutate({
       mutation: gql`${body}`,
       variables: variables
-    });
+    }).pipe(
+      map(response => response.data!)
+    );
   }
 
   getAllPackages(page: number): Observable<{ pageInfo: PageInfo, packages: Package[] }> {

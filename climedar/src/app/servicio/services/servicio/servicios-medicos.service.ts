@@ -136,7 +136,7 @@ export class ServiciosMedicosService {
     );
   }
 
-  public getAllServiciosMedicos(page: number): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
+  public getAllServiciosMedicos(page: number, name: string = ''): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
@@ -144,8 +144,9 @@ export class ServiciosMedicosService {
     const body = {
       query: `{
           getAllMedicalServices(
-            pageRequest: { page: ${page}, size: 5, order: {field: "name", direction: ASC}},
-            ) {
+          pageRequest: { page: ${page}, size: 10 }
+          specification: { name: "${name}" }
+          ) {
               services {
               serviceType
               price
@@ -209,7 +210,7 @@ export class ServiciosMedicosService {
     );
   }
 
-  getAllServiciosMedicosByEspecialidadId(page: number, specialityId: string): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
+  getAllServiciosMedicosFiltro(page: number, specialityId: string, name: string = ''): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
@@ -219,7 +220,7 @@ export class ServiciosMedicosService {
         query MyQuery {
           getAllMedicalServices(
             pageRequest: {page: ${page}, size: 5}
-            specification: {specialityId: ${specialityId}}
+            specification: { name: "${name}", specialityId: ${specialityId}}
           ) {
             services {
               id

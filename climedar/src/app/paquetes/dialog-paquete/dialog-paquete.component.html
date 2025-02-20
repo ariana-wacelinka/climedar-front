@@ -30,7 +30,7 @@
           <div class="tab-content">
             <mat-form-field class="full-width" appearance="outline">
               <mat-label>Ingrese el nombre del servicio</mat-label>
-              <input type="text" matInput [formControl]="servicioControl" />
+              <input type="text" matInput [formControl]="servicioControl" (keyup)="applyFilterService($event)" #input/>
               <div matSuffix style="margin-right: 10px">
                 <mat-icon>search</mat-icon>
               </div>
