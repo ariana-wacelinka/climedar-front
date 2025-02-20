@@ -144,7 +144,7 @@ export class ServiciosMedicosService {
     const body = {
       query: `{
           getAllMedicalServices(
-          pageRequest: { page: ${page}, size: 10 }
+          pageRequest: { page: ${page}, size: 5 }
           specification: { name: "${name}" }
           ) {
               services {

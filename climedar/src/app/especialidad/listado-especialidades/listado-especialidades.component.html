@@ -56,9 +56,12 @@
   </ng-container>
 
   <ng-container main-actions>
-    <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
-      [currentPage]="currentPage()">
-    </app-paginator>
+    @if (especialidades().length === 0) {
+      <div style="height: 34px;"></div>
+    } @else {
+      <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+        [currentPage]="currentPage()"></app-paginator>
+    }
   </ng-container>
 
 </app-centered-card>

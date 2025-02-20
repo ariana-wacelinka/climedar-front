@@ -116,7 +116,10 @@ export class DialogPaqueteComponent {
   selectedEspeciality(event: MatAutocompleteSelectedEvent) {
     this.paquete.controls.specialityId.setValue(event.option.value.id);
     this.especialidadId.set(this.paquete.controls.specialityId.value!);
+    this.loadEspecialidades();    
+  }
 
+  loadEspecialidades() {
     this.medicalService.getAllServiciosMedicosFiltro(this.pageInfo().currentPage, this.especialidadId(), this.filterValue().trim().toLowerCase()).subscribe((data) => {
       console.log(data);
       this.servicios.set(data.services);
@@ -165,17 +168,9 @@ export class DialogPaqueteComponent {
     return this.paquete.controls.servicesIds.value!.includes(id);
   }
 
-  onClose() {
-    this.dialogRef.close();
-  }
-
   applyFilterService(event: Event) {
     this.filterValue.set((event.target as HTMLInputElement).value);
-
-    this.medicalService.getAllServiciosMedicosFiltro(this.pageInfo().currentPage, this.especialidadId(), this.filterValue().trim().toLowerCase()).subscribe(response => {
-      this.servicios.set(response.services);
-      this.pageInfo.set(response.pageInfo);
-    });
+    this.loadEspecialidades();
   }
 
   onSubmit() {
@@ -209,5 +204,9 @@ export class DialogPaqueteComponent {
         });
       }
     }
+  }
+  
+  onClose() {
+    this.dialogRef.close();
   }
 }
