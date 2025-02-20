@@ -8,8 +8,7 @@ import { Apollo, gql } from 'apollo-angular';
   providedIn: 'root'
 })
 export class DoctorService {
-  apiurl = 'http://localhost:8083/graphql';
-  constructor(private http: HttpClient, private apollo: Apollo) { }
+  constructor(private apollo: Apollo) { }
 
   public getDoctorsByName(name: string, specialityid: string = ""): Observable<Doctor[]> {
     console.log('getDoctorsByName');

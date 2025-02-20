@@ -20,7 +20,7 @@
 
 
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" matSort>
+                <table mat-table [dataSource]="pacientes()" matSort>
 
                     <ng-container matColumnDef="surname">
                         <th mat-header-cell *matHeaderCellDef> Apellido </th>
@@ -67,8 +67,12 @@
     </ng-container>
 
     <ng-container main-actions>
-        <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="10" (pageChange)="pageChange($event)"
+        @if (pacientes().length === 0) {
+        <div style="height: 34px;"></div>
+        } @else {
+        <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
             [currentPage]="currentPage()"></app-paginator>
+        }
     </ng-container>
 
 </app-centered-card>

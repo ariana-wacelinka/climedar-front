@@ -31,7 +31,6 @@ import { PatientService } from '../services/patient.service';
 export class ListadoPacientesComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
   displayedColumns: string[] = ["name", "surname", "dni", "edit"];
-  dataSource = new MatTableDataSource<Paciente>();
   pacientes = signal<Paciente[]>([]);
 
   constructor(private router: Router,
@@ -42,8 +41,12 @@ export class ListadoPacientesComponent {
     this.pacienteService.getAllPatients(1).subscribe(response => {
       this.pacientes.set(response.patients);
       this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = this.pacientes()
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    
   }
 
   createPaciente() {
@@ -81,7 +84,6 @@ export class ListadoPacientesComponent {
     this.pacienteService.getAllPatients(page).subscribe(response => {
       this.pacientes.set(response.patients);
       this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = this.pacientes()
     });
   }
 }
