@@ -52,7 +52,7 @@ export class InfoPaqueteComponent {
   servicios = signal<MedicalService[]>([]);
   dataSource = new MatTableDataSource<MedicalService>();
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
-
+  
   constructor(
     public dialogRef: MatDialogRef<InfoPaqueteComponent>,
     public dialog: MatDialog,
@@ -87,8 +87,13 @@ export class InfoPaqueteComponent {
     });
   }
 
+  applyFilterService(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   formatDurationTime(duration: string | null): string {
-    return (!duration) ? 'Tiro error xd' : Duration.fromISO(duration).as('minutes') + ' min';
+    return (!duration) ? 'Error' : Duration.fromISO(duration).as('minutes') + ' min';
   }
 
   currentPage(): WritableSignal<number> {

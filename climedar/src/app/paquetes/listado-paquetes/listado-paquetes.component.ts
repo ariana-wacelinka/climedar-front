@@ -60,7 +60,6 @@ export class ListadoPaquetesComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
   packages = signal<PackageResponse[]>([]);
   displayedColumns: string[] = ["name", "price", "edit"];
-  dataSource = new MatTableDataSource();
   filterValue = signal<string>('');
 
   constructor(private dialog: MatDialog,
@@ -68,7 +67,6 @@ export class ListadoPaquetesComponent {
     packageService.getAllPackages(this.pageInfo().currentPage).subscribe(response => {
       this.packages.set(response.packages);
       this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = this.packages()
     });
   }
 
@@ -105,13 +103,11 @@ export class ListadoPaquetesComponent {
       this.packageService.getAllPackages(page).subscribe(response => {
         this.packages.set(response.packages);
         this.pageInfo.set(response.pageInfo);
-        this.dataSource.data = this.packages()
       });
     } else {
       this.packageService.getPackagesByName(page, this.filterValue().trim().toLowerCase()).subscribe(response => {
         this.packages.set(response.packages);
         this.pageInfo.set(response.pageInfo);
-        this.dataSource.data = this.packages()
       });
     }
   }
@@ -138,7 +134,6 @@ export class ListadoPaquetesComponent {
     this.packageService.getPackagesByName(this.pageInfo().currentPage, this.filterValue().trim().toLowerCase()).subscribe(response => {
       this.packages.set(response.packages);
       this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = response.packages;
     });
   }
 }

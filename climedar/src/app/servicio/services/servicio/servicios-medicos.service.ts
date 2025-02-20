@@ -114,7 +114,7 @@ export class ServiciosMedicosService {
     const query = gql`
       query getAllMedicalServices($page: Int!, $name: String!) {
         getAllMedicalServices(
-          pageRequest: { page: $page, size: 5 }
+          pageRequest: { page: $page, size: 5, order: {field: "name", direction: ASC}},
           specification: { name: $name }
         ) {
           services {
@@ -188,7 +188,7 @@ export class ServiciosMedicosService {
   public getPaquetesMedicos(name: string = "", specialityId: string = "", page: number = 1): Observable<{ packages: PackageResponse[], pageInfo: PageInfo }> {
     const GET_PAQUETES_MEDICOS = `
       query {
-        getAllMedicalPackages(input: {page: ${page}, size: 10}, specialityId: "${specialityId}", name: "${name}") {
+        getAllMedicalPackages(input: {page: ${page}, size: 10, order: {field: "name", direction: ASC}}, specialityId: "${specialityId}", name: "${name}") {
           packages {
             id
             services {
@@ -220,7 +220,7 @@ export class ServiciosMedicosService {
     const query = gql`
       query getAllMedicalServices($page: Int!, $name: String!, $specialityId: ID!) {
         getAllMedicalServices(
-          pageRequest: { page: $page, size: 5 }
+          pageRequest: { page: $page, size: 5, order: {field: "name", direction: ASC}},
           specification: { name: $name, specialityId: $specialityId }
         ) {
           services {
