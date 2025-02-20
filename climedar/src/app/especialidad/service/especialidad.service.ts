@@ -166,7 +166,7 @@ export class EspecialidadService {
     );
   }
 
-  public getEspecialidadesById(id: number): Observable<Especialidad> {
+  public getEspecialidadesById(id: string): Observable<Especialidad> {
     const query = gql`
       query GetSpecialityById($id: ID!) {
         getSpecialityById(id: $id) {
@@ -179,7 +179,9 @@ export class EspecialidadService {
 
     return this.apollo.query<{ getSpecialityById: Especialidad }>({
       query,
-      variables: { id }
+      variables: {
+        id
+      }
     }).pipe(
       map(response => response.data.getSpecialityById)
     );

@@ -12,9 +12,8 @@ import { MatFormField, MatHint, MatLabel, MatPrefix } from "@angular/material/fo
 import { MatInput } from "@angular/material/input";
 import { ServiciosMedicosService } from '../services/servicio/servicios-medicos.service';
 import { MedicalService } from '../models/services.models';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { Especialidad, EspecialidadService } from '../../especialidad';
-import { map } from 'rxjs';
 import { ServiceType } from '../../shared/models/extras.models';
 
 @Component({
@@ -41,18 +40,11 @@ export class DialogServicioComponent {
     key,
     value
   }));
-
+  servicio = signal<MedicalService | null>(null);
+  medicalServiceId = signal<string>('');
   especialidades = signal<Especialidad[]>([]);
 
-  formGroup = new FormGroup({
-    id: new FormControl(''),
-    name: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
-    price: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
-    estimatedDuration: new FormControl('', Validators.required),
-    serviceType: new FormControl('', Validators.required),
-    specialityId: new FormControl('', Validators.required)
-  });
+  formGroup = new FormGroup({});
 
   constructor(
     public dialogRef: MatDialogRef<DialogServicioComponent>,
@@ -62,35 +54,49 @@ export class DialogServicioComponent {
       id?: string,
       name?: string,
       description?: string,
-      price?: number,
+      price?: string,
       estimatedDuration?: string,
       serviceType?: string,
       specialityId?: string
     }
   ) {
-    this.specialityService.getAllEspecialidades(1).subscribe(response => {
-      this.especialidades.set(response.especialidades);
-    });
+    this.medicalServiceId.set(data.id || '');
 
-    if (data) {
+    this.formGroup.addControl('name', new FormControl('', Validators.required));
+    this.formGroup.addControl('description', new FormControl('', Validators.required));
+    this.formGroup.addControl('price', new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]));
+    this.formGroup.addControl('estimatedDuration', new FormControl('', Validators.required));
+    this.formGroup.addControl('serviceType', new FormControl(this.data.serviceType || '', this.data.id ? [] : [Validators.required]));
+    this.formGroup.addControl('specialityId', new FormControl(this.data.specialityId || '', this.data.id ? [] : [Validators.required]));
+
+    if (this.data && this.data.id) {
       let estimatedDuration = '';
-      if (data.estimatedDuration && data.estimatedDuration.includes("PT")) {
-        const match = data.estimatedDuration.match(/PT(\d+H)?(\d+M)?/);
+      if (this.data.estimatedDuration && this.data.estimatedDuration.includes("PT")) {
+        const match = this.data.estimatedDuration.match(/PT(\d+H)?(\d+M)?/);
         const horas = match![1] ? match![1].replace("H", "") : "00";
         const minutos = match![2] ? match![2].replace("M", "") : "00";
         estimatedDuration = `${horas.padStart(2, "0")}:${minutos.padStart(2, "0")}`;
       }
 
       this.formGroup.patchValue({
-        id: data.id,
-        name: data.name,
-        description: data.description,
-        price: data.price?.toString(),
+        name: this.data.name,
+        description: this.data.description,
+        price: this.data.price,
         estimatedDuration: estimatedDuration,
-        serviceType: data.serviceType,
-        specialityId: data.specialityId
+        serviceType: this.data.serviceType,
+        specialityId: this.data.specialityId
       });
+
+      this.formGroup.addControl('id', new FormControl(this.data.id, [Validators.required]));
     }
+
+    this.specialityService.getAllEspecialidades(1).subscribe(response => {
+      this.especialidades.set(response.especialidades);
+    });
+  }
+
+  public isNumber(value: string): boolean {
+    return !isNaN(Number(value));
   }
 
   onClose() {
@@ -98,21 +104,23 @@ export class DialogServicioComponent {
   }
 
   onSubmit() {
-    if (!this.data.id || this.data.id.trim() === '') {
-      console.log('Ejecutando creación, form value:', this.formGroup.value);
-      const servicioMedico: MedicalService = {
-        id: '',
-        name: this.formGroup.value.name!,
-        description: this.formGroup.value.description!,
-        price: this.formGroup.value.price!,
-        estimatedDuration: this.formatTime(this.formGroup.value.estimatedDuration!),
-        serviceType: this.formGroup.value.serviceType!,
-        specialityId: this.formGroup.value.specialityId!
+    if (this.formGroup.valid) {
+      const servicioData: MedicalService = {
+        ...this.formGroup.value,
+        estimatedDuration: this.formatTime((this.formGroup.value as MedicalService).estimatedDuration!)
       };
 
-      if (this.formGroup.valid) {
-        this.serviciosMedicosService.createMedicalService(servicioMedico).subscribe(response => {
-          console.log(response);
+      if (this.isNumber(this.medicalServiceId())) {
+        this.serviciosMedicosService.updateMedicalService(servicioData).subscribe(response => {
+          alert('Servicio editado: ' + response);
+          window.location.reload();
+          this.onClose();
+        }, error => {
+          console.error('Error al editar servicio', error);
+          alert('Error al editar servicio');
+        });
+      } else {
+        this.serviciosMedicosService.createMedicalService(servicioData).subscribe(response => {
           alert('Servicio creado: ' + response);
           window.location.reload();
           this.onClose();
@@ -122,26 +130,7 @@ export class DialogServicioComponent {
         });
       }
     } else {
-      const servicioMedico: MedicalService = {
-        id: this.formGroup.value.id!,
-        name: this.formGroup.value.name!,
-        description: this.formGroup.value.description!,
-        price: this.formGroup.value.price!,
-        estimatedDuration: this.formatTime(this.formGroup.value.estimatedDuration!)
-      };
-      console.log('Ejecutando edición, form value:', servicioMedico);
-
-      if (this.formGroup.valid) {
-        this.serviciosMedicosService.updateMedicalService(servicioMedico).subscribe(response => {
-          console.log(response);
-          alert('Servicio editado: ' + response);
-          window.location.reload();
-          this.onClose();
-        }, error => {
-          console.error('Error al editar servicio', error);
-          alert('Error al editar servicio');
-        });
-      }
+      console.error('Formulario inválido');
     }
   }
 

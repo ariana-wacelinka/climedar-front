@@ -1,5 +1,5 @@
-import {Component, Inject, signal} from '@angular/core';
-import {MatButton} from '@angular/material/button';
+import { Component, Inject, signal } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA, MatDialog,
   MatDialogActions,
@@ -7,7 +7,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from '@angular/material/dialog';
-import {DialogServicioComponent} from '../dialog-servicio/dialog-servicio.component';
+import { DialogServicioComponent } from '../dialog-servicio/dialog-servicio.component';
 import { MedicalService } from '../models/services.models';
 import { EspecialidadService } from '../../especialidad';
 import { ServiceType } from '../../shared/models/extras.models';
@@ -25,8 +25,8 @@ import { ServiceType } from '../../shared/models/extras.models';
 })
 export class infoServicioComponent {
   servicio = signal<MedicalService>({});
-  minutos :string = '00';
-  horas :string = '00';
+  minutos: string = '00';
+  horas: string = '00';
   servicioName = signal<string>;
   tipoServicio = '';
 
@@ -35,29 +35,29 @@ export class infoServicioComponent {
     public dialogRef: MatDialogRef<infoServicioComponent>,
     public specialityService: EspecialidadService,
     @Inject(MAT_DIALOG_DATA) public data: {
-      id: number,
+      id: string,
       code: string,
       name: string,
       description: string,
-      price: number,
-      estimatedDuration: number,
+      price: string,
+      estimatedDuration: string,
       serviceType: string,
-      specialityId: number,
+      specialityId: string,
     }
-  ) {    
+  ) {
     this.tipoServicio = ServiceType[data.serviceType as keyof typeof ServiceType];
 
     this.servicio.set({
-      id: data.id.toString(),
+      id: data.id,
       code: data.code,
       name: data.name,
       description: data.description,
-      price: data.price.toString(),
-      estimatedDuration: data.estimatedDuration.toString(),
+      price: data.price,
+      estimatedDuration: data.estimatedDuration,
       serviceType: data.serviceType,
-      specialityId: data.specialityId.toString()
+      specialityId: data.specialityId
     });
-    
+
     this.specialityService.getEspecialidadesById(data.specialityId).subscribe(response => {
       this.servicioName(response.name!);
     });
@@ -68,16 +68,16 @@ export class infoServicioComponent {
     const hours = match![1] ? match![1].replace('H', ' hs') : '';
     const minutes = match![2] ? match![2].replace('M', ' mins') : '';
     return `${hours} ${minutes}`.trim();
-  }  
+  }
 
   onClose() {
     this.dialogRef.close();
   }
 
-  onModify(){
+  onModify() {
     this.dialogRef.close(this.servicio);
     this.dialog.open(DialogServicioComponent, {
-      width:'670px',
+      width: '670px',
       minWidth: '350px',
       maxWidth: '90vw',
       data: {

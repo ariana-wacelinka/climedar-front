@@ -17,7 +17,7 @@
       </div>
 
       <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource" matSort>
+        <table mat-table [dataSource]="medicalSecures()" matSort>
           <ng-container matColumnDef="nombre">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
             <td mat-cell class="nombre" *matCellDef="let obraSocial"> {{obraSocial.name}} </td>
@@ -49,7 +49,11 @@
   </ng-container>
 
   <ng-container main-actions>
-    <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+    @if (medicalSecures().length === 0) {
+      <div style="height: 34px;"></div>
+    } @else {
+      <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
       [currentPage]="currentPage()"></app-paginator>
+    }
   </ng-container>
 </app-centered-card>

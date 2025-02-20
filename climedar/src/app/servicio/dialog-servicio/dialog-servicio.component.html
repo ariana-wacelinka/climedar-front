@@ -1,7 +1,7 @@
 @if (this.data.id == null) {
-  <h2 mat-dialog-title>Añadir servicio</h2>
+<h2 mat-dialog-title>Añadir servicio</h2>
 } @else {
-  <h2 mat-dialog-title>Modificar servicio</h2>
+<h2 mat-dialog-title>Modificar servicio</h2>
 }
 
 <div mat-dialog-content>
@@ -14,31 +14,31 @@
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>Descripción</mat-label>
       <textarea matInput placeholder="Descripción" formControlName="description" required></textarea>
-      <mat-hint align="end">{{ formGroup.get('description')?.value?.length || 0 }} / 150</mat-hint>
+      <mat-hint align="end">{{ (formGroup.get('description')?.value || '').length }} / 150</mat-hint>
     </mat-form-field>
 
     @if (this.data.id == null) {
-      <div class="row">
+    <div class="row">
 
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Tipo de servicio</mat-label>
-          <mat-select formControlName="serviceType" placeholder="Seleccione el tipo de servicio" required>
-            @for (serviceType of tipoServicio; track serviceType) {
-              <mat-option [value]="serviceType.key">{{serviceType.value}}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-  
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Especialidad</mat-label>
-          <mat-select formControlName="specialityId" placeholder="Seleccione una especialidad" required>
-            @for (speciality of especialidades(); track speciality) {
-              <mat-option [value]="speciality.id?.toString()">{{speciality.name}}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-  
-      </div>
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Tipo de servicio</mat-label>
+        <mat-select formControlName="serviceType" placeholder="Seleccione el tipo de servicio" required>
+          @for (serviceType of tipoServicio; track serviceType) {
+          <mat-option [value]="serviceType.key">{{serviceType.value}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Especialidad</mat-label>
+        <mat-select formControlName="specialityId" placeholder="Seleccione una especialidad" required>
+          @for (speciality of especialidades(); track speciality) {
+          <mat-option [value]="speciality.id?.toString()">{{speciality.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+    </div>
     }
 
     <div class="row">

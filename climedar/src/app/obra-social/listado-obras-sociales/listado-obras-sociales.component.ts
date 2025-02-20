@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, signal, ViewChild, WritableSignal, effect } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
 import {
   MatCell, MatCellDef,
@@ -7,8 +7,7 @@ import {
   MatHeaderCellDef,
   MatHeaderRow, MatHeaderRowDef,
   MatRow, MatRowDef,
-  MatTable,
-  MatTableDataSource, MatTableModule
+  MatTable, MatTableModule
 } from '@angular/material/table';
 import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInput, MatInputModule } from '@angular/material/input';
@@ -59,7 +58,6 @@ export class ListadoObrasSocialesComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
   medicalSecures = signal<ObraSocial[]>([]);
   displayedColumns: string[] = ["nombre", "edit"];
-  dataSource = new MatTableDataSource<ObraSocial>([]);
 
   constructor(private dialog: MatDialog,
     public obraSocialService: ObraSocialService,
@@ -72,7 +70,6 @@ export class ListadoObrasSocialesComponent {
       console.log(response);
       this.medicalSecures.set(response.medicalSecures);
       this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = response.medicalSecures;
     });
   }
 
@@ -84,7 +81,6 @@ export class ListadoObrasSocialesComponent {
     ).subscribe(response => {
       this.medicalSecures.set(response.medicalSecures);
       this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = response.medicalSecures;
     });
   }
 
