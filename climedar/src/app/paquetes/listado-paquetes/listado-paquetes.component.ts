@@ -94,7 +94,7 @@ export class ListadoPaquetesComponent {
   }
 
   currentPage(): WritableSignal<number> {
-    return signal<number>(this.pageInfo().currentPage + 1);
+    return signal<number>(this.pageInfo().currentPage);
   }
 
   pageChange(page: number) {
