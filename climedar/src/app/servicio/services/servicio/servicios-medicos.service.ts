@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { PageInfo } from '../../../shared/models/extras.models';
-import { MedicalService, MedicalServiceResponse } from '../../models/services.models';
+import { MedicalPackage, MedicalService, MedicalServiceResponse } from '../../models/services.models';
 import { map, Observable } from 'rxjs';
 import { Apollo, gql } from 'apollo-angular';
+import { PackageResponse } from '../../../paquetes/models/package.models';
 
 @Injectable({
   providedIn: 'root',
@@ -30,20 +31,20 @@ export class ServiciosMedicosService {
   public createMedicalService(medicalService: MedicalService): Observable<MedicalService> {
     const mutation = gql`
       mutation createMedicalService(
-        $description: String!, 
-        $name: String!, 
-        $estimatedDuration: String!, 
-        $price: Float!, 
-        $serviceType: ServiceType!, 
+        $description: String!,
+        $name: String!,
+        $estimatedDuration: String!,
+        $price: Float!,
+        $serviceType: ServiceType!,
         $specialityId: ID!
       ) {
         createMedicalService(
           input: {
-            description: $description, 
-            name: $name, 
-            estimatedDuration: $estimatedDuration, 
-            price: $price, 
-            serviceType: $serviceType, 
+            description: $description,
+            name: $name,
+            estimatedDuration: $estimatedDuration,
+            price: $price,
+            serviceType: $serviceType,
             specialityId: $specialityId
           }
         ) {
@@ -55,7 +56,7 @@ export class ServiciosMedicosService {
           serviceType
           speciality {
             id
-          } 
+          }
         }
       }
     `;
@@ -79,13 +80,13 @@ export class ServiciosMedicosService {
     const mutation = gql`
       mutation updateMedicalService($id: ID!,
         $description: String!,
-        $name: String!, 
-        $estimatedDuration: String!, 
+        $name: String!,
+        $estimatedDuration: String!,
         $price: Float!) {
-          updateMedicalService(id: $id, 
-            input: {description: $description, 
-            name: $name, 
-            estimatedDuration: $estimatedDuration, 
+          updateMedicalService(id: $id,
+            input: {description: $description,
+            name: $name,
+            estimatedDuration: $estimatedDuration,
             price: $price}) {
               id
               name
@@ -184,6 +185,37 @@ export class ServiciosMedicosService {
     );
   }
 
+  public getPaquetesMedicos(name: string = "", specialityId: string = "", page: number = 1): Observable<{ packages: PackageResponse[], pageInfo: PageInfo }> {
+    const GET_PAQUETES_MEDICOS = `
+      query {
+        getAllMedicalPackages(input: {page: ${page}, size: 10}, specialityId: "${specialityId}", name: "${name}") {
+          packages {
+            id
+            services {
+              name
+            }
+            price
+            name
+            estimatedDuration
+          }
+          pageInfo {
+            currentPage
+            totalItems
+            totalPages
+          }
+        }
+      }
+    `;
+
+    console.log(GET_PAQUETES_MEDICOS);
+
+    return this.apollo.watchQuery<{ getAllMedicalPackages: { packages: PackageResponse[], pageInfo: PageInfo } }>({
+      query: gql(GET_PAQUETES_MEDICOS),
+    }).valueChanges.pipe(
+      map(result => result.data.getAllMedicalPackages)
+    );
+  }
+
   public getAllServiciosMedicosFiltro(page: number, specialityId: string, name: string): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
     const query = gql`
       query getAllMedicalServices($page: Int!, $name: String!, $specialityId: ID!) {
@@ -205,7 +237,6 @@ export class ServiciosMedicosService {
         }
       }
     `;
-
     return this.apollo.query<{ getAllMedicalServices: { pageInfo: PageInfo, services: MedicalServiceResponse[] } }>({
       query,
       variables: {

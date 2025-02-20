@@ -47,3 +47,12 @@ export enum ShiftBuilder {
     RECURRING = 'RECURRING',
     OVERTIME = 'OVERTIME'
 }
+
+export function getShiftBuilderByValue(value: string): ShiftBuilder {
+    switch (value) {
+        case 'REGULAR': return ShiftBuilder.REGULAR;
+        case 'RECURRING': return ShiftBuilder.RECURRING;
+        case 'OVERTIME': return ShiftBuilder.OVERTIME;
+        default: throw new Error('Invalid value');
+    }
+}

@@ -10,10 +10,20 @@ h1 {
     padding: 0;
 }
 
+.servicios-del-paquete{
+  font-size: 0.8em;
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
 .servicioNombre {
     margin-right: 20px;
 }
 
+.paqueteTitulo {
+    margin-top: 5px;
+    margin-bottom: -5px;
+}
 .paginador {
     display: flex;
     justify-content: end;

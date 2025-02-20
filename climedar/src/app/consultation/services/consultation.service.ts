@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { CreateConsultation } from '../models/consultation.model';
+import { Consultation, CreateConsultation } from '../models/consultation.model';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -10,9 +10,9 @@ export class ConsultationService {
 
   constructor(private apollo: Apollo) { }
 
-  createConsultation(consultation: CreateConsultation): Observable<CreateConsultation> {
+  createConsultation(consultation: CreateConsultation): Observable<Consultation> {
     const CREATE_CONSULTATION_MUTATION = gql`
-      mutation CreateConsultation($consultation: CreateConsultationInput!) {
+      mutation CreateConsultation($consultation: ConsultationInput!) {
         createConsultation(consultation: $consultation) {
           id
           finalPrice
@@ -27,9 +27,24 @@ export class ConsultationService {
           medicalServicesId: consultation.medicalServicesId,
           observation: consultation.observation,
           patientId: consultation.patientId,
-          shiftId: consultation.shiftId
+          shiftId: consultation.shiftId || null,
+          doctorId: consultation.doctorId || null,
         }
       }
     }).pipe(map((result: any) => result.data.createConsultation));
+  }
+
+  getConsultationPrice(servicesIds: string[] = [], patientId: string = ""): Observable<number> {
+    const GET_CONSULTATION_PRICE_QUERY = `
+      query {
+        getConsultationPrice(servicesIds: [${servicesIds}], patientId: "${patientId}")
+      }
+    `;
+    console.log(GET_CONSULTATION_PRICE_QUERY);
+    return this.apollo.query({
+      query: gql(GET_CONSULTATION_PRICE_QUERY),
+    }).pipe(map((result: any) => {
+      console.log(result);
+      return result.data.getConsultationPrice}));
   }
 }

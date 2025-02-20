@@ -23,10 +23,10 @@ export enum ServiceType{
 }
 
 export enum PaymentMethods {
-    CASH = 'CASH',
-    DEBIT = 'DEBIT_CARD',
-    CREDIT = 'CREDIT_CARD',
-    TRANSFER = 'TRANSFER',
-    CDNI = 'CUENTA_DNI',
-    MP = 'MERCADO_PAGO', 
+    CASH = 'Efectivo',
+    DEBIT_CARD = 'Debito',
+    CREDIT_CARD = 'Credito',
+    TRANSFER = 'Transferencia',
+    CUENTA_DNI = 'Cuenta DNI',
+    MERCADO_PAGO = 'Mercado Pago', 
 }

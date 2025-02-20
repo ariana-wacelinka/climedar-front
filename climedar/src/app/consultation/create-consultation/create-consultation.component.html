@@ -148,7 +148,40 @@
 
           <mat-tab label="Paquetes">
             <div class="tab-content">
-              <!-- Similar a servicios -->
+              <div class="tab-content">
+                <mat-form-field class="full-width" appearance="outline">
+                  <mat-label>Ingrese el nombre del paquete</mat-label>
+                  <input type="text" matInput [formControl]="paqueteControl" />
+                  <div matSuffix style="margin-right: 10px">
+                    <mat-icon>search</mat-icon>
+                  </div>
+                </mat-form-field>
+  
+                <mat-selection-list class="lista" #servicioList [multiple]="true">
+                  @for (paquete of paquetes(); track paquete.id) {
+                  <mat-list-option
+                    checkboxPosition="before"
+                    [value]="paquete.id"
+                    [selected]="isServicioSelected(paquete.id!)"
+                    (selectedChange)="selectionChange($event, paquete.id!)"
+                  >
+                    <div class="list-item">
+                      <div class="packageDescription">
+                      <div class="paqueteTitulo">
+                        <span class="servicioNombre">{{ paquete.name }}</span>
+                        <span class="servicioTiempo">{{
+                          formatDurationTime(paquete.estimatedDuration!)
+                        }}</span>
+                      </div>
+                      <span class="servicios-del-paquete">{{serviciosDelPaquete(paquete)}}</span>
+                    </div>
+                      <span>{{ paquete.price | currency : "ARS" }}</span>
+                    </div>
+                  </mat-list-option>
+                  <mat-divider></mat-divider>
+                  }
+                </mat-selection-list>
+              </div>
             </div>
           </mat-tab>
         </mat-tab-group>
@@ -169,7 +202,7 @@
         </div>
         <span class="slider">
           @if(!!!turnoId()) {
-          <mat-slide-toggle labelPosition="before" [(ngModel)]="isSobreTurno"
+          <mat-slide-toggle labelPosition="before" [(ngModel)]="isSobreTurno" (change)="changeSobreTurno()"
             >Sobre turno</mat-slide-toggle
           >
           }
@@ -195,7 +228,7 @@
       <div class="pagos">
         <div class="monto">
           <span>Monto total:</span>
-          <span>{{ totalAmount() | currency : "ARS" }}</span>
+          <span>{{ consultationPrice() | currency : "ARS" }}</span>
         </div>
         <span class="slider">
           <mat-slide-toggle labelPosition="before" [(ngModel)]="pago"

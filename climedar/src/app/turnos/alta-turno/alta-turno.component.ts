@@ -25,6 +25,7 @@ import { Doctor } from '../../doctors/models/doctor.models';
 import { DoctorService } from '../../doctors/service/doctor.service';
 import { Especialidad } from '../../especialidad';
 import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Duration } from 'luxon';
 
 const today = new Date();
 const month = today.getMonth();
@@ -76,7 +77,7 @@ export class AltaTurnoComponent implements OnInit {
     endTime: new FormControl<Date | null>(new Date(new Date().setHours(new Date().getHours() + 1)), [Validators.required, this.timeRangeValidator]),
     place: new FormControl<string>("", Validators.required),
     doctorId: new FormControl<string | null>(null, [Validators.required]),
-    timeOfShifts: new FormControl<number>(20, [Validators.required, Validators.min(1)]),
+    timeOfShifts: new FormControl<number | string>(20, [Validators.required, Validators.min(1)]),
     shiftBuilder: new FormControl<ShiftBuilder>(ShiftBuilder.REGULAR, Validators.required),
   }, {validators: Validators.compose([this.timeRangeValidator.bind(this)])});
   
@@ -175,6 +176,9 @@ export class AltaTurnoComponent implements OnInit {
   guardar() {
     console.log(this.range.value);
     console.log((this.range.value as CreateTurno));
+    // const timeOfShifts = this.range.value.timeOfShifts as number ?? 0;
+    // this.range.patchValue({timeOfShifts: Duration.fromObject({minutes: timeOfShifts}).toISO()});
+    console.log(this.range.value.timeOfShifts);
     this.turnosService.createShift(this.range.value as CreateTurno).subscribe((turno) => {
       console.log(turno);
     });

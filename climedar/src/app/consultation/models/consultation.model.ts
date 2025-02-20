@@ -3,5 +3,11 @@ export interface CreateConsultation {
     medicalServicesId: String[];
     observation: string;
     patientId: String;
-    shiftId: String;
+    shiftId?: String;
+    doctorId?: String;
+}
+
+export interface Consultation {
+    id: string;
+    finalPrice: number;
 }

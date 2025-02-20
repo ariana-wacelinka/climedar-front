@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { CreateTurno, Turno } from '../../models/turno.models';
-import { PageInfo } from '../../../shared/models/extras.models';
+import { CreateTurno, ShiftBuilder, Turno, ValidDays } from '../../models/turno.models';
+import { DayOfWeek, PageInfo } from '../../../shared/models/extras.models';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 
@@ -145,43 +145,75 @@ export class TurnosService {
     );
   }
 
-  createShift(turno: CreateTurno): Observable<Turno> {
-    const CREATE_SHIFT = gql`
-      mutation createShift($shift: CreateShiftInput!) {
-        createShift(shift: $shift) {
-          id
-          date
-          startTime
-          endTime
-          state
-          timeOfShifts
-          place
-          doctor {
-            id
-            name
-            surname
-        }
-      }
-  }`;
-  
-    return this.apollo.mutate<{ createShift: Turno }>({
-      mutation: CREATE_SHIFT,
-      variables: {
+  createShift(turno: CreateTurno): Observable<number> {
+    
+console.log("shiftBuilder: ", ShiftBuilder[turno.shiftBuilder] === ShiftBuilder.RECURRING ? "RECURRING" : "REGULAR");
+    let CREATE_SHIFT;
+    if(ShiftBuilder[turno.shiftBuilder] === ShiftBuilder.RECURRING) {
+      CREATE_SHIFT = `
+        mutation {
+          createShift(
         shift: {
-          date: turno.date,
-          doctorId: turno.doctorId,
-          startTime: turno.startTime,
-          endTime: turno.endTime,
-          timeOfShifts: turno.timeOfShifts,
-          place: turno.place,
-          shiftBuilder: turno.shiftBuilder,
-          recurringShift: turno.shiftBuilder === 'RECURRING' ? {
-            startDate: turno.recurringShift!.startDate,
-            endDate: turno.recurringShift!.endDate,
-            validDays: turno.recurringShift!.validDays//.map(day => day.toString())
-          } : null,
+          date: "${(turno.date as unknown as Date).toISOString().split('T')[0]}",
+          doctorId: "${turno.doctorId}",
+          startTime: "${(turno.startTime as unknown as Date).toISOString().split('T')[1].substring(0, 5)}",
+          endTime: "${(turno.endTime as unknown as Date).toISOString().split('T')[1].substring(0, 5)}",
+          timeOfShifts: "PT${turno.timeOfShifts}M",
+          place: "${turno.place}",
+          shiftBuilder: ${ShiftBuilder[turno.shiftBuilder]},
+          recurringShift: {
+            startDate: "${(turno.recurringShift as any).startDate.toISOString().split('T')[0]}",
+            endDate: "${(turno.recurringShift as any).endDate.toISOString().split('T')[0]}",
+            validDays: [${(turno.recurringShift as any).validDays
+          .map((day: string) => {
+            const key = (Object.keys(DayOfWeek) as Array<keyof typeof DayOfWeek>).find(k => DayOfWeek[k] === day);
+            return `${key}`;
+          })
+          .join(',')}]
+          }
         }
+          )
+        }
+      `;
+
+      console.log("recurringShift: ", {
+        startDate: (turno.recurringShift as any).startDate.toISOString().split('T')[0],
+        endDate: (turno.recurringShift as any).endDate.toISOString().split('T')[0],
+        validDays: (turno.recurringShift as any).validDays.map((day: any) => `${day}`)
+      });
+    } else {
+      CREATE_SHIFT = `
+      mutation {
+        createShift(
+          shift: {
+              date: "${(turno.date as unknown as Date).toISOString().split('T')[0]}",
+              doctorId: "${turno.doctorId}",
+              startTime: "${(turno.startTime as unknown as Date).toISOString().split('T')[1].substring(0, 5)}",
+              endTime: "${(turno.endTime as unknown as Date).toISOString().split('T')[1].substring(0, 5)}",
+              timeOfShifts: "PT${turno.timeOfShifts}M",
+              place: "${turno.place}",
+              shiftBuilder: ${ShiftBuilder[turno.shiftBuilder]}
+          }
+        )
       }
+`;
+    }
+
+  console.log(turno);
+
+  console.log("consulta: ", CREATE_SHIFT);
+  console.log({
+    date: (turno.date as unknown as Date).toISOString().split('T')[0],
+    doctorId: turno.doctorId,
+    startTime: (turno.startTime as unknown as Date).toISOString().split('T')[1].substring(0, 5),
+    endTime: (turno.endTime as unknown as Date).toISOString().split('T')[1].substring(0, 5),
+    timeOfShifts: `PT${turno.timeOfShifts}M`,
+    place: turno.place,
+    shiftBuilder: ShiftBuilder[turno.shiftBuilder],
+  });
+  
+    return this.apollo.mutate<{ createShift: number }>({
+      mutation: gql`${CREATE_SHIFT}`
     }).pipe(
       map((response: any) => response.data.createShift)
     );
