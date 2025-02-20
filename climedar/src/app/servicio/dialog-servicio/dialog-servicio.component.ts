@@ -41,7 +41,7 @@ export class DialogServicioComponent {
     value
   }));
   servicio = signal<MedicalService | null>(null);
-  medicalServiceId = signal<string>('');
+  medicalServiceId = signal<boolean>(false);
   especialidades = signal<Especialidad[]>([]);
 
   formGroup = new FormGroup({});
@@ -60,16 +60,15 @@ export class DialogServicioComponent {
       specialityId?: string
     }
   ) {
-    this.medicalServiceId.set(data.id || '');
 
     this.formGroup.addControl('name', new FormControl('', Validators.required));
     this.formGroup.addControl('description', new FormControl('', Validators.required));
     this.formGroup.addControl('price', new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]));
     this.formGroup.addControl('estimatedDuration', new FormControl('', Validators.required));
-    this.formGroup.addControl('serviceType', new FormControl(this.data.serviceType || '', this.data.id ? [] : [Validators.required]));
-    this.formGroup.addControl('specialityId', new FormControl(this.data.specialityId || '', this.data.id ? [] : [Validators.required]));
 
     if (this.data && this.data.id) {
+      this.medicalServiceId.set(true);
+      
       let estimatedDuration = '';
       if (this.data.estimatedDuration && this.data.estimatedDuration.includes("PT")) {
         const match = this.data.estimatedDuration.match(/PT(\d+H)?(\d+M)?/);
@@ -87,16 +86,19 @@ export class DialogServicioComponent {
         specialityId: this.data.specialityId
       });
 
-      this.formGroup.addControl('id', new FormControl(this.data.id, [Validators.required]));
+      const id = new FormControl(this.data.id, [Validators.required]);
+      this.formGroup.addControl('id', id);
+    } else {
+      const serviceType = new FormControl('', [Validators.required]);
+      this.formGroup.addControl('serviceType', serviceType);
+
+      const specialityId = new FormControl('', [Validators.required]);
+      this.formGroup.addControl('specialityId', specialityId);
     }
 
     this.specialityService.getAllEspecialidades(1).subscribe(response => {
       this.especialidades.set(response.especialidades);
     });
-  }
-
-  public isNumber(value: string): boolean {
-    return !isNaN(Number(value));
   }
 
   onClose() {
@@ -110,7 +112,8 @@ export class DialogServicioComponent {
         estimatedDuration: this.formatTime((this.formGroup.value as MedicalService).estimatedDuration!)
       };
 
-      if (this.isNumber(this.medicalServiceId())) {
+      if (this.medicalServiceId()) {
+        console.log('Editando servicio', servicioData);
         this.serviciosMedicosService.updateMedicalService(servicioData).subscribe(response => {
           alert('Servicio editado: ' + response);
           window.location.reload();
@@ -120,6 +123,7 @@ export class DialogServicioComponent {
           alert('Error al editar servicio');
         });
       } else {
+        console.log('Creando servicio', servicioData);
         this.serviciosMedicosService.createMedicalService(servicioData).subscribe(response => {
           alert('Servicio creado: ' + response);
           window.location.reload();
