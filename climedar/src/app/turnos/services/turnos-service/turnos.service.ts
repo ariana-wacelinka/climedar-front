@@ -158,7 +158,7 @@ console.log("shiftBuilder: ", ShiftBuilder[turno.shiftBuilder] === ShiftBuilder.
           doctorId: "${turno.doctorId}",
           startTime: "${(turno.startTime as unknown as Date).toISOString().split('T')[1].substring(0, 5)}",
           endTime: "${(turno.endTime as unknown as Date).toISOString().split('T')[1].substring(0, 5)}",
-          timeOfShifts: "${turno.timeOfShifts}",
+          timeOfShifts: "PT${turno.timeOfShifts}M",
           place: "${turno.place}",
           shiftBuilder: ${ShiftBuilder[turno.shiftBuilder]},
           recurringShift: {
@@ -190,7 +190,7 @@ console.log("shiftBuilder: ", ShiftBuilder[turno.shiftBuilder] === ShiftBuilder.
               doctorId: "${turno.doctorId}",
               startTime: "${(turno.startTime as unknown as Date).toISOString().split('T')[1].substring(0, 5)}",
               endTime: "${(turno.endTime as unknown as Date).toISOString().split('T')[1].substring(0, 5)}",
-              timeOfShifts: "${turno.timeOfShifts}",
+              timeOfShifts: "PT${turno.timeOfShifts}M",
               place: "${turno.place}",
               shiftBuilder: ${ShiftBuilder[turno.shiftBuilder]}
           }
@@ -207,7 +207,7 @@ console.log("shiftBuilder: ", ShiftBuilder[turno.shiftBuilder] === ShiftBuilder.
     doctorId: turno.doctorId,
     startTime: (turno.startTime as unknown as Date).toISOString().split('T')[1].substring(0, 5),
     endTime: (turno.endTime as unknown as Date).toISOString().split('T')[1].substring(0, 5),
-    timeOfShifts: turno.timeOfShifts,
+    timeOfShifts: `PT${turno.timeOfShifts}M`,
     place: turno.place,
     shiftBuilder: ShiftBuilder[turno.shiftBuilder],
   });

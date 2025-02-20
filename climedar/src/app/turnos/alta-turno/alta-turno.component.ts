@@ -176,8 +176,8 @@ export class AltaTurnoComponent implements OnInit {
   guardar() {
     console.log(this.range.value);
     console.log((this.range.value as CreateTurno));
-    const timeOfShifts = this.range.value.timeOfShifts as number ?? 0;
-    this.range.patchValue({timeOfShifts: Duration.fromObject({minutes: timeOfShifts}).toISO()});
+    // const timeOfShifts = this.range.value.timeOfShifts as number ?? 0;
+    // this.range.patchValue({timeOfShifts: Duration.fromObject({minutes: timeOfShifts}).toISO()});
     console.log(this.range.value.timeOfShifts);
     this.turnosService.createShift(this.range.value as CreateTurno).subscribe((turno) => {
       console.log(turno);
