@@ -101,7 +101,6 @@ export class DialogServicioComponent {
 
   onSubmit() {
     console.log('Form value:', this.formGroup.value);
-    console.log(this.data.id!.trim())
     if (!this.data.id || this.data.id.trim() === '') {
       console.log('Ejecutando creación, form value:', this.formGroup.value);
       const servicioMedico: MedicalService = {
