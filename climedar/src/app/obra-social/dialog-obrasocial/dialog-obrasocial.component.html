@@ -5,6 +5,9 @@
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>Nombre</mat-label>
       <input matInput placeholder="Nombre" formControlName="name" required>
+    @if (!formGroup.controls.name.valid && formGroup.controls.name.touched) {
+    <mat-error>Por favor, ingrese el nombre</mat-error>
+    }
     </mat-form-field>
   </form>
 </div>

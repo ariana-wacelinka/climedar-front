@@ -58,6 +58,7 @@ export class ListadoObrasSocialesComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
   medicalSecures = signal<ObraSocial[]>([]);
   displayedColumns: string[] = ["nombre", "edit"];
+  filterValue = signal<string>('');
 
   constructor(private dialog: MatDialog,
     public obraSocialService: ObraSocialService,
@@ -73,12 +74,22 @@ export class ListadoObrasSocialesComponent {
     });
   }
 
+  loadMedicalSecures() {
+    this.obraSocialService.getObrasSocialesFiltro(this.pageInfo().currentPage, this.filterValue().trim().toLowerCase()).subscribe(response => {
+      this.medicalSecures.set(response.medicalSecures);
+      this.pageInfo.set(response.pageInfo);
+    });
+  }
+
+  applyFilter(event: Event) {
+    this.filterValue.set((event.target as HTMLInputElement).value);
+    this.loadMedicalSecures();
+  }
+
   pageChange(page: number) {
     this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
 
-    this.obraSocialService.getAllMedicalSecures(page).pipe(
-      map(response => response)
-    ).subscribe(response => {
+    this.obraSocialService.getObrasSocialesFiltro(page, this.filterValue().trim().toLowerCase()).subscribe(response => {
       this.medicalSecures.set(response.medicalSecures);
       this.pageInfo.set(response.pageInfo);
     });

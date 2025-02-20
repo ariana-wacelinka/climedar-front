@@ -143,6 +143,8 @@ export class DialogPaqueteComponent {
   }
 
   pageChange(page: number) {
+    this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
+
     this.medicalService.getAllServiciosMedicosFiltro(page, this.especialidadId(), this.filterValue().trim().toLowerCase()).subscribe((response) => {
       this.servicios.set(response.services);
       this.pageInfo.set(response.pageInfo);

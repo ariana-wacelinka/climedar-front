@@ -9,7 +9,7 @@
         <mat-form-field class="full-width" appearance="outline">
           <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
           <mat-label>Ingrese una obra social</mat-label>
-          <input matInput placeholder="Ingrese una obra social" #input>
+          <input matInput placeholder="Ingrese una obra social" (keyup)="applyFilter($event)"  #input>
         </mat-form-field>
 
         <button mat-flat-button style="min-width: max-content !important;" (click)="createObraSocial()">Añadir obra

@@ -7,7 +7,7 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatButtonModule } from "@angular/material/button";
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { ObraSocialService } from '../service/obra-social.service';
@@ -23,7 +23,8 @@ import { ObraSocial } from '../models/obra-social.models';
     MatButtonModule,
     MatFormField,
     ReactiveFormsModule,
-    MatInput
+    MatInput,
+    MatError
   ],
   templateUrl: './dialog-obrasocial.component.html',
   styleUrl: './dialog-obrasocial.component.scss'

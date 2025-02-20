@@ -1,25 +1,28 @@
 .full-width {
   width: 100%;
   margin-top: 5px;
-  }
+}
 
 button {
   margin-top: 20px;
   border-radius: 5px;
-  }
+}
 
-h2{
+h2 {
   text-align: center;
   font-weight: bold !important;
   margin-top: 10px;
-  }
+}
 
 .warn {
   background-color: #811b1dc9 !important;
   margin-right: 10px;
-  }
+}
 
-  textarea {
-    resize: none;
-    }
-  
+textarea {
+  resize: none;
+}
+
+.mat-mdc-form-field-error {
+  margin-top: -2.5px;
+}

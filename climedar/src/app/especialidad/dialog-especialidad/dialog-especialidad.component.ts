@@ -8,7 +8,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {MatFormField, MatHint, MatLabel} from "@angular/material/form-field";
+import {MatError, MatFormField, MatHint, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 
@@ -23,7 +23,8 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
         MatInput,
         MatLabel,
         ReactiveFormsModule,
-        MatHint
+        MatHint,
+        MatError
     ],
   templateUrl: './dialog-especialidad.component.html',
   styleUrl: './dialog-especialidad.component.scss'

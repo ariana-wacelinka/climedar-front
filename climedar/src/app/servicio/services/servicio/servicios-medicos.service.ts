@@ -184,9 +184,9 @@ export class ServiciosMedicosService {
     );
   }
 
-  public getAllServiciosMedicosFiltro(page: number, specialityId: string, name: string = ''): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
+  public getAllServiciosMedicosFiltro(page: number, specialityId: string, name: string): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
     const query = gql`
-      query getAllMedicalServices($page: Int!, $name: String!, $specialityId: String!) {
+      query getAllMedicalServices($page: Int!, $name: String!, $specialityId: ID!) {
         getAllMedicalServices(
           pageRequest: { page: $page, size: 5 }
           specification: { name: $name, specialityId: $specialityId }

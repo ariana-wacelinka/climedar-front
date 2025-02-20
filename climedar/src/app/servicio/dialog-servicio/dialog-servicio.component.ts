@@ -43,7 +43,6 @@ export class DialogServicioComponent {
   servicio = signal<MedicalService | null>(null);
   medicalServiceId = signal<boolean>(false);
   especialidades = signal<Especialidad[]>([]);
-
   formGroup = new FormGroup({});
 
   constructor(
@@ -60,7 +59,6 @@ export class DialogServicioComponent {
       specialityId?: string
     }
   ) {
-
     this.formGroup.addControl('name', new FormControl('', Validators.required));
     this.formGroup.addControl('description', new FormControl('', Validators.required));
     this.formGroup.addControl('price', new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]));

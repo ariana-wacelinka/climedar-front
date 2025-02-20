@@ -51,6 +51,33 @@ export class ObraSocialService {
     );
   }
 
+  getObrasSocialesFiltro(page: number, name: string): Observable<{ medicalSecures: ObraSocial[]; pageInfo: PageInfo }> {
+    const query = gql`
+    query GetAllMedicalSecures($page: Int!, $name: String) {
+      getAllMedicalSecures(
+        pageRequest: { page: $page, size: 5 },
+        specification: { name: $name }
+      ) {
+        medicalSecures {
+          id
+          name
+        }
+        pageInfo {
+          currentPage
+          totalItems
+          totalPages
+        }
+      }
+    }
+  `;
+
+    return this.apollo.query<{ getAllMedicalSecures: {medicalSecures: ObraSocial[], pageInfo: PageInfo;}}>({
+      query,
+      variables: { page, name }
+    }).pipe(map(response => {return response.data!.getAllMedicalSecures;}));
+  }
+
+
   getAllMedicalSecures(page: number): Observable<{ medicalSecures: ObraSocial[], pageInfo: PageInfo }> {
     const query = gql`
       query GetAllMedicalSecures($page: Int!) {
