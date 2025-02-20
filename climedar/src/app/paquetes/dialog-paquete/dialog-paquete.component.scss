@@ -3,13 +3,12 @@
   margin-top: 5px;
 }
 
-#nombre {
-  margin-bottom: 20px;
+:host .mat-mdc-form-field-error {
+  margin-top: -2.5px;
 }
 
-* {
-  color: black;
-  font-size: 16px;
+#nombre {
+  margin-bottom: 20px;
 }
 
 .column {
@@ -87,12 +86,8 @@ button {
   flex: 1;
 }
 
-.full-width {
-  width: 100%;
-}
-
 .tab-content {
-  padding: 16px;
+  padding: 5px 16px 10px 16px;
 }
 
 .list-item {

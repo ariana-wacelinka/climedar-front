@@ -9,28 +9,27 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PackageService {
-  constructor(private httpClient: HttpClient,
-    private apollo: Apollo) { }
+  constructor(private apollo: Apollo) { }
 
-  createPackage(paquete: PackageRequest): Observable<PackageResponse> {
-    const mutation = gql`
-      mutation CreateMedicalPackage($name: String!, $servicesIds: [ID!]!) {
-        createMedicalPackage(input: {name: $name, servicesIds: $servicesIds}) {
-          id
-          name
+  createPackage(paquete: PackageRequest): Observable<any> {
+    const body = `
+      mutation CreateMedicalPackage($name: String!, $servicesIds: [ID!]!, $specialityId: ID!) {
+          createMedicalPackage(input: {name: $name, servicesIds: $servicesIds, specialityId: $specialityId}) {
+            id
+            name
+          }
         }
-      }
-    `;
-
-    return this.apollo.mutate<{ createMedicalPackage: PackageResponse }>({
-      mutation,
-      variables: {
+      `,
+      variables = {
         name: paquete.name,
-        servicesIds: paquete.servicesIds
-      }
-    }).pipe(
-      map(response => response.data!.createMedicalPackage)
-    );
+        servicesIds: paquete.servicesIds,
+        specialityId: paquete.specialityId
+      };
+    
+    return this.apollo.mutate({
+      mutation: gql`${body}`,
+      variables: variables
+    });
   }
 
   getAllPackages(page: number): Observable<{ pageInfo: PageInfo, packages: Package[] }> {

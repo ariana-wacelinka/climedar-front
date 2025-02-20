@@ -8,7 +8,7 @@ import {
   MatDialogTitle
 } from "@angular/material/dialog";
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
 import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
@@ -18,10 +18,13 @@ import { PageInfo } from '../../shared/models/extras.models';
 import { MedicalService } from '../../servicio/models/services.models';
 import { ServiciosMedicosService } from '../../servicio/services/servicio/servicios-medicos.service';
 import { Duration } from 'luxon';
-import { CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PackageService } from '../services/package.service';
-import { PackageRequest } from '../models/package.models';
+import { Package, PackageRequest } from '../models/package.models';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent, MatOption } from '@angular/material/autocomplete';
+import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
+import { Especialidad, EspecialidadService } from '../../especialidad';
 
 @Component({
   selector: 'app-dialog-paquete',
@@ -42,7 +45,11 @@ import { PackageRequest } from '../models/package.models';
     MatSelectionList,
     MatListModule,
     CurrencyPipe,
-    MatTabsModule
+    MatTabsModule,
+    MatAutocompleteModule,
+    MatOption,
+    MatError,
+    AsyncPipe
   ],
   styleUrls: ['./dialog-paquete.component.scss']
 })
@@ -52,30 +59,66 @@ export class DialogPaqueteComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
   displayedColumns: string[] = ["select", "name", "precio"];
   servicioControl = new FormControl<string>("");
+  filteredEspecialidadOptions: Observable<Especialidad[]> | undefined;
 
   paquete = new FormGroup({
     id: new FormControl<string>(""),
     name: new FormControl<string>("", Validators.required),
-    servicesIds: new FormControl<string[]>([])
+    servicesIds: new FormControl<string[]>([]),
+    specialityId: new FormControl<string>("", Validators.required)
   })
+
+  especialidad = new FormControl<Especialidad | null>(null);
 
   constructor(public dialogRef: MatDialogRef<DialogPaqueteComponent>,
     private packageService: PackageService,
     private medicalService: ServiciosMedicosService,
+    private especialidadService: EspecialidadService,
     @Inject(MAT_DIALOG_DATA) public data: {
       id?: number,
       name?: string,
       servicesIds?: string[]
+      specialityId?: string
     }) {
     if (data.id) {
       this.paquete.controls.id.patchValue(data.id?.toString());
       this.paquete.controls.name.patchValue(data.name!);
       this.paquete.controls.servicesIds.patchValue(data.servicesIds!);
+      this.paquete.controls.specialityId.patchValue(data.specialityId!);
     }
   }
 
   ngOnInit() {
     this.getServices();
+
+    this.filteredEspecialidadOptions = this.paquete.controls.specialityId.valueChanges.pipe(
+      startWith(''),
+      filter((value): value is string => typeof value === 'string'),
+      debounceTime(300),
+      switchMap(value => {
+        const title = value;
+        return this.especialidadService.getEspecialidadesByNombre(title).pipe(
+          map((especiliades: Especialidad[]) => {
+            return especiliades;
+          })
+        );
+      }),
+    );
+  }
+
+  displayEspecialidad(especialidad: Especialidad): string {
+    return especialidad ? especialidad.name! : '';
+  }
+
+  selectedEspeciality(event: MatAutocompleteSelectedEvent) {
+    this.paquete.controls.specialityId.setValue(event.option.value.id);
+    console.log(this.paquete.controls.specialityId.value);
+
+    this.medicalService.getAllServiciosMedicosByEspecialidadId(this.pageInfo().currentPage, event.option.value.id).subscribe((data) => {
+      console.log(data);
+      this.servicios.set(data.services);
+      this.pageInfo.set(data.pageInfo);
+    });
   }
 
   getServices(): void {
@@ -90,14 +133,21 @@ export class DialogPaqueteComponent {
   }
 
   currentPage(): WritableSignal<number> {
-    return signal<number>(this.pageInfo().currentPage + 1);
+    return signal<number>(this.pageInfo().currentPage);
   }
 
   pageChange(page: number) {
-    this.medicalService.getAllServiciosMedicos(page).subscribe((response) => {
-      this.servicios.set(response.services);
-      this.pageInfo.set(response.pageInfo);
-    });
+    if (this.paquete.controls.specialityId.value) {
+      this.medicalService.getAllServiciosMedicosByEspecialidadId(page, this.paquete.controls.specialityId.value).subscribe((response) => {
+        this.servicios.set(response.services);
+        this.pageInfo.set(response.pageInfo);
+      });
+    } else {
+      this.medicalService.getAllServiciosMedicos(page).subscribe((response) => {
+        this.servicios.set(response.services);
+        this.pageInfo.set(response.pageInfo);
+      });
+    }
   }
 
   selectionChange(event: boolean, id: string) {
@@ -126,10 +176,12 @@ export class DialogPaqueteComponent {
   onSubmit() {
     if (this.data.id == null) {
       if (this.paquete.valid) {
-        const paquete = {
+        const paquete: PackageRequest = {
           name: this.paquete.value.name!,
-          servicesIds: this.paquete.value.servicesIds!
+          servicesIds: this.paquete.value.servicesIds!,
+          specialityId: this.paquete.value.specialityId!
         };
+        console.log(paquete);
 
         this.packageService.createPackage(paquete).subscribe((response) => {
           alert('Paquete creado' + response);
@@ -142,7 +194,8 @@ export class DialogPaqueteComponent {
         const paquete: PackageRequest = {
           id: this.paquete.value.id!,
           name: this.paquete.value.name!,
-          servicesIds: this.paquete.value.servicesIds!
+          servicesIds: this.paquete.value.servicesIds!,
+          specialityId: this.paquete.value.specialityId!
         };
 
         this.packageService.updatePackage(paquete).subscribe((response) => {

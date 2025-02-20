@@ -209,5 +209,43 @@ export class ServiciosMedicosService {
     );
   }
 
+  getAllServiciosMedicosByEspecialidadId(page: number, specialityId: string): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
 
+    const body = {
+      query: `
+        query MyQuery {
+          getAllMedicalServices(
+            pageRequest: {page: ${page}, size: 5}
+            specification: {specialityId: ${specialityId}}
+          ) {
+            services {
+              id
+              name
+              price
+              estimatedDuration
+            }
+            pageInfo {
+              currentPage
+              totalItems
+              totalPages
+            }
+          }
+        }
+      `
+    };
+
+    return this.http.post<{ data: { getAllMedicalServices: { pageInfo: PageInfo, services: MedicalServiceResponse[] } } }>(
+      'http://localhost:443/apollo-federation',
+      body,
+      { headers }
+    ).pipe(
+      map(response => ({
+        pageInfo: response.data.getAllMedicalServices.pageInfo,
+        services: response.data.getAllMedicalServices.services
+      }))
+    );
+  }
 }
