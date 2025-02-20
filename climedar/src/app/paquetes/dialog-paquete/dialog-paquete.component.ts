@@ -188,6 +188,7 @@ export class DialogPaqueteComponent {
         this.packageService.createPackage(paquete).subscribe((response) => {
           console.log('Paquete creado' + response);
           this.onClose();
+          window.location.reload();
         });
       }
     } else {

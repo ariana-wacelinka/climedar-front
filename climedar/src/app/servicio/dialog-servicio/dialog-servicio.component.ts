@@ -43,7 +43,15 @@ export class DialogServicioComponent {
   servicio = signal<MedicalService | null>(null);
   medicalServiceId = signal<boolean>(false);
   especialidades = signal<Especialidad[]>([]);
-  formGroup = new FormGroup({});
+  formGroup = new FormGroup({
+    id: new FormControl(''),
+    name: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required),
+    price: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
+    estimatedDuration: new FormControl('', Validators.required),
+    serviceType: new FormControl('', [Validators.required]),
+    specialityId: new FormControl('', [Validators.required])
+  });
 
   constructor(
     public dialogRef: MatDialogRef<DialogServicioComponent>,
@@ -59,14 +67,10 @@ export class DialogServicioComponent {
       specialityId?: string
     }
   ) {
-    this.formGroup.addControl('name', new FormControl('', Validators.required));
-    this.formGroup.addControl('description', new FormControl('', Validators.required));
-    this.formGroup.addControl('price', new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]));
-    this.formGroup.addControl('estimatedDuration', new FormControl('', Validators.required));
-
+    console.log('Data:', this.data);
     if (this.data && this.data.id) {
       this.medicalServiceId.set(true);
-      
+
       let estimatedDuration = '';
       if (this.data.estimatedDuration && this.data.estimatedDuration.includes("PT")) {
         const match = this.data.estimatedDuration.match(/PT(\d+H)?(\d+M)?/);
@@ -76,6 +80,7 @@ export class DialogServicioComponent {
       }
 
       this.formGroup.patchValue({
+        id: this.data.id,
         name: this.data.name,
         description: this.data.description,
         price: this.data.price,
@@ -83,15 +88,6 @@ export class DialogServicioComponent {
         serviceType: this.data.serviceType,
         specialityId: this.data.specialityId
       });
-
-      const id = new FormControl(this.data.id, [Validators.required]);
-      this.formGroup.addControl('id', id);
-    } else {
-      const serviceType = new FormControl('', [Validators.required]);
-      this.formGroup.addControl('serviceType', serviceType);
-
-      const specialityId = new FormControl('', [Validators.required]);
-      this.formGroup.addControl('specialityId', specialityId);
     }
 
     this.specialityService.getAllEspecialidades(1).subscribe(response => {
@@ -104,35 +100,52 @@ export class DialogServicioComponent {
   }
 
   onSubmit() {
-    if (this.formGroup.valid) {
-      const servicioData: MedicalService = {
-        ...this.formGroup.value,
-        estimatedDuration: this.formatTime((this.formGroup.value as MedicalService).estimatedDuration!)
+    console.log('Form value:', this.formGroup.value);
+    console.log(this.data.id!.trim())
+    if (!this.data.id || this.data.id.trim() === '') {
+      console.log('Ejecutando creación, form value:', this.formGroup.value);
+      const servicioMedico: MedicalService = {
+        id: '',
+        name: this.formGroup.value.name!,
+        description: this.formGroup.value.description!,
+        price: this.formGroup.value.price!,
+        estimatedDuration: this.formatTime(this.formGroup.value.estimatedDuration!),
+        serviceType: this.formGroup.value.serviceType!,
+        specialityId: this.formGroup.value.specialityId!
       };
 
-      if (this.medicalServiceId()) {
-        console.log('Editando servicio', servicioData);
-        this.serviciosMedicosService.updateMedicalService(servicioData).subscribe(response => {
-          alert('Servicio editado: ' + response);
-          window.location.reload();
+      if (this.formGroup.valid) {
+
+        this.serviciosMedicosService.createMedicalService(servicioMedico).subscribe(response => {
+          console.log(response);
           this.onClose();
-        }, error => {
-          console.error('Error al editar servicio', error);
-          alert('Error al editar servicio');
-        });
-      } else {
-        console.log('Creando servicio', servicioData);
-        this.serviciosMedicosService.createMedicalService(servicioData).subscribe(response => {
-          alert('Servicio creado: ' + response);
           window.location.reload();
-          this.onClose();
         }, error => {
           console.error('Error al crear servicio', error);
           alert('Error al crear servicio');
         });
       }
     } else {
-      console.error('Formulario inválido');
+      const servicioMedico: MedicalService = {
+        id: this.formGroup.value.id!,
+        name: this.formGroup.value.name!,
+        description: this.formGroup.value.description!,
+        price: this.formGroup.value.price!,
+        estimatedDuration: this.formatTime(this.formGroup.value.estimatedDuration!),
+        serviceType: this.formGroup.value.serviceType!,
+        specialityId: this.formGroup.value.specialityId!
+      };
+
+      if (this.formGroup.valid) {
+        this.serviciosMedicosService.updateMedicalService(servicioMedico).subscribe(response => {
+          console.log(response);
+          this.onClose();
+          window.location.reload();
+        }, error => {
+          console.error('Error al editar servicio', error);
+          alert('Error al editar servicio');
+        });
+      }
     }
   }
 

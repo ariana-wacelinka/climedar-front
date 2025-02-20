@@ -21,7 +21,7 @@ import { DialogServicioComponent } from '../dialog-servicio/dialog-servicio.comp
 import { infoServicioComponent } from '../info-servicio/info-servicio.component';
 import { ServiciosMedicosService } from '../services/servicio/servicios-medicos.service';
 import { PageInfo } from '../../shared/models/extras.models';
-import { MedicalService } from '../models/services.models';
+import { MedicalService, MedicalServiceResponse } from '../models/services.models';
 import { map } from 'rxjs';
 
 @Component({
@@ -60,7 +60,7 @@ import { map } from 'rxjs';
 export class ListadoServiciosComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
   displayedColumns: string[] = ["nombre", "precio", "duracionEstimada", "edit"];
-  servicios = signal<MedicalService[]>([]);
+  servicios = signal<MedicalServiceResponse[]>([]);
   filterValue = signal<string>('');
 
   constructor(private dialog: MatDialog,
@@ -108,7 +108,7 @@ export class ListadoServiciosComponent {
     window.location.reload();
   }
 
-  editServicio(servicio: MedicalService) {
+  editServicio(servicio: MedicalService, specialityId: string) {
     this.dialog.open(DialogServicioComponent, {
       width: '670px',
       minWidth: '350px',
@@ -120,7 +120,7 @@ export class ListadoServiciosComponent {
         price: servicio.price,
         estimatedDuration: servicio.estimatedDuration,
         serviceType: servicio.serviceType,
-        specialityId: servicio.specialityId
+        specialityId: specialityId
       }
     });
   }

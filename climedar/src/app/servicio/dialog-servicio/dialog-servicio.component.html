@@ -9,12 +9,18 @@
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>Nombre</mat-label>
       <input matInput placeholder="Nombre" formControlName="name" required>
+      @if (!formGroup.controls.name.valid && formGroup.controls.name.touched) {
+      <mat-error>Por favor, seleccione el nombre</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>Descripción</mat-label>
       <textarea matInput placeholder="Descripción" formControlName="description" required></textarea>
       <mat-hint align="end">{{ (formGroup.get('description')?.value || '').length }} / 150</mat-hint>
+      @if (!formGroup.controls.description.valid && formGroup.controls.description.touched) {
+      <mat-error>Por favor, seleccione la descripción</mat-error>
+      }
     </mat-form-field>
 
     @if (this.data.id == null) {
@@ -27,6 +33,9 @@
           <mat-option [value]="serviceType.key">{{serviceType.value}}</mat-option>
           }
         </mat-select>
+        @if (!formGroup.controls.serviceType.valid && formGroup.controls.serviceType.touched) {
+        <mat-error>Por favor, seleccione el tipo de servicio</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field class="full-width" appearance="outline">
@@ -36,6 +45,9 @@
           <mat-option [value]="speciality.id?.toString()">{{speciality.name}}</mat-option>
           }
         </mat-select>
+        @if (!formGroup.controls.specialityId.valid && formGroup.controls.specialityId.touched) {
+        <mat-error>Por favor, seleccione la especialidad</mat-error>
+        }
       </mat-form-field>
 
     </div>
@@ -47,11 +59,17 @@
         <mat-label>Duración estimada</mat-label>
         <input matInput formControlName="estimatedDuration" placeholder="HH:MM" type="time">
         <mat-hint align="start">HH:MM</mat-hint>
+        @if (!formGroup.controls.estimatedDuration.valid && formGroup.controls.estimatedDuration.touched) {
+        <mat-error>Por favor, seleccione la duración estimada</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field class="full-width" appearance="outline">
         <input matInput type="number" formControlName="price" placeholder="0">
         <span matTextPrefix>$&nbsp; </span>
+        @if (!formGroup.controls.price.valid && formGroup.controls.price.touched) {
+        <mat-error>Por favor, ingrese el precio</mat-error>
+        }
       </mat-form-field>
 
     </div>

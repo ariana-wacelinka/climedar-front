@@ -48,7 +48,7 @@
                 </mat-icon></button>
               <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="servicioInfo(servicio)">Ver más</button>
-                <button (click)="editServicio(servicio)" mat-menu-item>Modificar</button>
+                <button (click)="editServicio(servicio, servicio.speciality.id)" mat-menu-item>Modificar</button>
                 <button (click)="deleteServicio(servicio.id)" mat-menu-item>Eliminar</button>
               </mat-menu>
             </td>
