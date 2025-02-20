@@ -10,9 +10,7 @@
         <mat-form-field class="full-width" appearance="outline">
           <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
           <mat-label>Ingrese un paquete</mat-label>
-          <input matInput
-                 placeholder="Ingrese un paquete"
-                 #input>
+          <input matInput placeholder="Ingrese un paquete" (keyup)="applyFilter($event)" #input>
         </mat-form-field>
 
 
@@ -38,9 +36,9 @@
             <th mat-header-cell *matHeaderCellDef></th>
 
             <td id="edit" mat-cell *matCellDef="let paquete" style="text-align: right;">
-              <button id="menu"
-                      [matMenuTriggerFor]="menu"><mat-icon style="color: black; font-size: 22px; margin-top: 5px">more_vert
-              </mat-icon></button>
+              <button id="menu" [matMenuTriggerFor]="menu"><mat-icon
+                  style="color: black; font-size: 22px; margin-top: 5px">more_vert
+                </mat-icon></button>
               <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="paqueteInfo(paquete)">Ver más</button>
                 <button (click)="editPaquete(paquete)" mat-menu-item>Modificar</button>
@@ -53,7 +51,9 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
           <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4"><div class="nada">No se han encontrado paquetes</div></td>
+            <td class="mat-cell" colspan="4">
+              <div class="nada">No se han encontrado paquetes</div>
+            </td>
           </tr>
         </table>
       </div>

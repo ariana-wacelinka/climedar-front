@@ -135,4 +135,41 @@ export class PackageService {
       map(response => response.data!.getMedicalPackageById)
     );
   }
+
+  getPackagesByName(page: number, name:string): Observable<{ pageInfo: PageInfo, packages: Package[] }> {
+    const query = gql`
+      query GetAllMedicalPackages($page: Int!, $name: String!) {
+        getAllMedicalPackages(input: {page: $page, size: 5, order: {field: "name", direction: ASC}}, name: $name) {
+          packages {
+            code
+            estimatedDuration
+            id
+            name
+            price
+            services {
+              id
+              name
+              price
+              estimatedDuration
+            }
+          }
+          pageInfo {
+            currentPage
+            totalItems
+            totalPages
+          }
+        }
+      }
+    `;
+
+    return this.apollo.query<{ getAllMedicalPackages: { pageInfo: PageInfo, packages: Package[] } }>({
+      query,
+      variables: {
+        page: page,
+        name: name
+      }
+    }).pipe(
+      map(response => response.data!.getAllMedicalPackages)
+    );
+  }
 }

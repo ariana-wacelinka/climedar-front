@@ -61,6 +61,7 @@ export class ListadoPaquetesComponent {
   packages = signal<PackageResponse[]>([]);
   displayedColumns: string[] = ["name", "price", "edit"];
   dataSource = new MatTableDataSource();
+  filterValue = signal<string>('');
 
   constructor(private dialog: MatDialog,
     private packageService: PackageService) {
@@ -100,11 +101,19 @@ export class ListadoPaquetesComponent {
   pageChange(page: number) {
     this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
 
-    this.packageService.getAllPackages(page).subscribe(response => {
-      this.packages.set(response.packages);
-      this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = this.packages()
-    });
+    if (this.filterValue().trim() === '') {
+      this.packageService.getAllPackages(page).subscribe(response => {
+        this.packages.set(response.packages);
+        this.pageInfo.set(response.pageInfo);
+        this.dataSource.data = this.packages()
+      });
+    } else {
+      this.packageService.getPackagesByName(page, this.filterValue().trim().toLowerCase()).subscribe(response => {
+        this.packages.set(response.packages);
+        this.pageInfo.set(response.pageInfo);
+        this.dataSource.data = this.packages()
+      });
+    }
   }
 
   paqueteInfo(paquete: PackageResponse) {
@@ -121,5 +130,15 @@ export class ListadoPaquetesComponent {
       console.log(response)
     });
     window.location.reload();
+  }
+
+  applyFilter(event: Event) {
+    this.filterValue.set((event.target as HTMLInputElement).value);
+
+    this.packageService.getPackagesByName(this.pageInfo().currentPage, this.filterValue().trim().toLowerCase()).subscribe(response => {
+      this.packages.set(response.packages);
+      this.pageInfo.set(response.pageInfo);
+      this.dataSource.data = response.packages;
+    });
   }
 }
