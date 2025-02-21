@@ -29,6 +29,7 @@ export class ServiciosMedicosService {
   }
 
   public createMedicalService(medicalService: MedicalService): Observable<MedicalService> {
+    console.log(medicalService);
     const mutation = gql`
       mutation createMedicalService(
         $description: String!,

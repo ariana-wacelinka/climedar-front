@@ -15,7 +15,7 @@ import { MedicalService } from '../models/services.models';
 import { MatSelectModule } from '@angular/material/select';
 import { Especialidad, EspecialidadService } from '../../especialidad';
 import { ServiceType } from '../../shared/models/extras.models';
-import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
@@ -45,12 +45,12 @@ export class DialogServicioComponent {
     key,
     value
   }));
+
+  especialidad = new FormControl<Especialidad | null>(null);
   servicio = signal<MedicalService | null>(null);
   filteredEspecialidadOptions: Observable<Especialidad[]> | undefined;
   medicalServiceId = signal<boolean>(false);
   especialidades = signal<Especialidad[]>([]);
-  especialidad = new FormControl<Especialidad | null>(null);
-  especialidadId = signal<string>('');
   formGroup = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('', Validators.required),
@@ -124,7 +124,8 @@ export class DialogServicioComponent {
   }
 
   selectedEspeciality(event: MatAutocompleteSelectedEvent) {
-    this.formGroup.controls.specialityId.setValue(event.option.value);
+    this.formGroup.controls.specialityId.setValue(event.option.value.id);
+    console.log('Especialidad seleccionada:', event.option.value.id);
   }
   
   onClose() {

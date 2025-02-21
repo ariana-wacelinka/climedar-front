@@ -40,7 +40,7 @@
 
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Especialidad</mat-label>
-        <input type="text" matInput [formControl]="formGroup.controls.specialityId" [matAutocomplete]="autoEsp">
+        <input type="text" matInput [formControl]="especialidad" [matAutocomplete]="autoEsp">
         <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad"
           (optionSelected)="selectedEspeciality($event)">
           @for (option of filteredEspecialidadOptions | async; track option?.code) {
