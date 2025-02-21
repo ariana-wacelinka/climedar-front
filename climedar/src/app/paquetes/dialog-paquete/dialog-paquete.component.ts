@@ -80,7 +80,7 @@ export class DialogPaqueteComponent {
     @Inject(MAT_DIALOG_DATA) public data: {
       id?: number,
       name?: string,
-      servicesIds?: string[]
+      servicesIds?: string[],
       specialityId?: string
     }) {
     if (data.id) {
@@ -116,7 +116,7 @@ export class DialogPaqueteComponent {
   selectedEspeciality(event: MatAutocompleteSelectedEvent) {
     this.paquete.controls.specialityId.setValue(event.option.value.id);
     this.especialidadId.set(this.paquete.controls.specialityId.value!);
-    this.loadEspecialidades();    
+    this.loadEspecialidades();
   }
 
   loadEspecialidades() {
@@ -127,11 +127,20 @@ export class DialogPaqueteComponent {
     });
   }
 
-  getServices(): void {
-    this.medicalService.getAllServiciosMedicos(this.pageInfo().currentPage).subscribe((data) => {
-      this.servicios.set(data.services);
-      this.pageInfo.set(data.pageInfo);
-    });
+  getServices() {
+    if (this.data.id == null) {
+      this.medicalService.getAllServiciosMedicos(this.pageInfo().currentPage).subscribe((data) => {
+        this.servicios.set(data.services);
+        this.pageInfo.set(data.pageInfo);
+      });
+    } else {
+      console.log(this.data.specialityId);
+      this.medicalService.getAllServiciosMedicosByEspecialidad(this.pageInfo().currentPage, this.data.specialityId!).subscribe((data) => {
+        this.servicios.set(data.services);
+        this.pageInfo.set(data.pageInfo);
+        console.log(data);
+      });
+    }
   }
 
   formatDurationTime(duration: string): string {
@@ -145,10 +154,17 @@ export class DialogPaqueteComponent {
   pageChange(page: number) {
     this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
 
-    this.medicalService.getAllServiciosMedicosFiltro(page, this.especialidadId(), this.filterValue().trim().toLowerCase()).subscribe((response) => {
-      this.servicios.set(response.services);
-      this.pageInfo.set(response.pageInfo);
-    });
+    if (this.data.id == null) {
+      this.medicalService.getAllServiciosMedicosFiltro(page, this.especialidadId(), this.filterValue().trim().toLowerCase()).subscribe((response) => {
+        this.servicios.set(response.services);
+        this.pageInfo.set(response.pageInfo);
+      });
+    } else {
+      this.medicalService.getAllServiciosMedicosFiltro(page, this.data.specialityId!, this.filterValue().trim().toLowerCase()).subscribe((data) => {
+        this.servicios.set(data.services);
+        this.pageInfo.set(data.pageInfo);
+      });
+    }
   }
 
   selectionChange(event: boolean, id: string) {
@@ -197,7 +213,6 @@ export class DialogPaqueteComponent {
           id: this.paquete.value.id!,
           name: this.paquete.value.name!,
           servicesIds: this.paquete.value.servicesIds!,
-          specialityId: this.paquete.value.specialityId!
         };
 
         this.packageService.updatePackage(paquete).subscribe((response) => {
@@ -208,7 +223,7 @@ export class DialogPaqueteComponent {
       }
     }
   }
-  
+
   onClose() {
     this.dialogRef.close();
   }

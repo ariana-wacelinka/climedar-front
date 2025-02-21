@@ -10,11 +10,12 @@
       }
     </mat-form-field>
 
-    <mat-form-field class="full-width" appearance="outline">
+    @if (this.data.id == null) {
+      <mat-form-field class="full-width" appearance="outline">
       <mat-label>Especialidad</mat-label>
       <input type="text" [formControl]="especialidad" matInput [matAutocomplete]="autoEsp">
-      <mat-autocomplete #autoEsp="matAutocomplete"
-        [displayWith]="displayEspecialidad" (optionSelected)="selectedEspeciality($event)">
+      <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad"
+        (optionSelected)="selectedEspeciality($event)">
         @for (option of filteredEspecialidadOptions | async; track option?.code) {
         <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
         }
@@ -23,6 +24,7 @@
       <mat-error>Por favor, seleccione la especialidad</mat-error>
       }
     </mat-form-field>
+    }    
 
     <mat-card class="card-tab" appearance="outlined">
       <mat-tab-group class="full-width">
@@ -30,7 +32,7 @@
           <div class="tab-content">
             <mat-form-field class="full-width" appearance="outline">
               <mat-label>Ingrese el nombre del servicio</mat-label>
-              <input type="text" matInput [formControl]="servicioControl" (keyup)="applyFilterService($event)" #input/>
+              <input type="text" matInput [formControl]="servicioControl" (keyup)="applyFilterService($event)" #input />
               <div matSuffix style="margin-right: 10px">
                 <mat-icon>search</mat-icon>
               </div>

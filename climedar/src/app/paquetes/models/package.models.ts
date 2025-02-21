@@ -3,7 +3,6 @@ import { MedicalService } from "../../servicio/models/services.models";
 export interface Package {
     id?: string,
     name?: string,
-    specialityId?: string,
 }
 
 export interface PackageResponse extends Package {
@@ -11,8 +10,12 @@ export interface PackageResponse extends Package {
     price?: number,
     estimatedDuration?: string,
     code?: string,
+    speciality?: {
+        id?: string,
+    }
 }
 
 export interface PackageRequest extends Package { 
     servicesIds?: string[],
+    specialityId?: string,
 }

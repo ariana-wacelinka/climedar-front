@@ -248,4 +248,37 @@ export class ServiciosMedicosService {
       map(response => response.data!.getAllMedicalServices)
     );
   }
+
+  public getAllServiciosMedicosByEspecialidad(page: number, specialityId: string): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
+    const query = gql`
+      query getAllMedicalServices($page: Int!, $specialityId: ID!) {
+        getAllMedicalServices(
+          pageRequest: { page: $page, size: 5, order: {field: "name", direction: ASC}},
+          specification: { specialityId: $specialityId }
+        ) {
+          services {
+            id
+            name
+            price
+            estimatedDuration
+          }
+          pageInfo {
+            currentPage
+            totalItems
+            totalPages
+          }
+        }
+      }
+    `;
+    return this.apollo.query<{ getAllMedicalServices: { pageInfo: PageInfo, services: MedicalServiceResponse[] } }>({
+      query,
+      variables: {
+        page: page,
+        name: name,
+        specialityId: specialityId
+      }
+    }).pipe(
+      map(response => response.data!.getAllMedicalServices)
+    );
+  }
 }

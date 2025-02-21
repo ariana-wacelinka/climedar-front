@@ -71,6 +71,7 @@ export class ListadoPaquetesComponent {
   }
 
   editPaquete(paquete: PackageResponse) {
+    console.log(paquete);
     this.dialog.open(DialogPaqueteComponent, {
       width: '670px',
       minWidth: '350px',
@@ -79,6 +80,7 @@ export class ListadoPaquetesComponent {
         id: paquete.id,
         name: paquete.name,
         servicesIds: paquete.services!.map(service => service.id!),
+        specialityId: paquete.speciality!.id!
       }
     });
   }
