@@ -127,6 +127,9 @@ export class PackageService {
             price
             estimatedDuration
           }
+          speciality {
+            id
+          }
         }
       }
     `;
