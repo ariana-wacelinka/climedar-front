@@ -46,11 +46,13 @@ export class DialogServicioComponent {
     value
   }));
 
-  especialidad = new FormControl<Especialidad | null>(null);
   servicio = signal<MedicalService | null>(null);
   filteredEspecialidadOptions: Observable<Especialidad[]> | undefined;
   medicalServiceId = signal<boolean>(false);
+
   especialidades = signal<Especialidad[]>([]);
+  especialidad = new FormControl<Especialidad | null>(null);
+  
   formGroup = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('', Validators.required),

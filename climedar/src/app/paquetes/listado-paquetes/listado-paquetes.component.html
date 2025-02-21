@@ -23,12 +23,12 @@
         <table mat-table [dataSource]="packages()" matSort>
 
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <th mat-header-cell class="nombre" *matHeaderCellDef> Nombre </th>
             <td mat-cell class="nombre" *matCellDef="let paquete"> {{paquete.name}} </td>
           </ng-container>
 
           <ng-container matColumnDef="price">
-            <th mat-header-cell *matHeaderCellDef> Precio </th>
+            <th mat-header-cell class="precio" *matHeaderCellDef> Precio </th>
             <td mat-cell class="precio" *matCellDef="let paquete">$ {{paquete.price}} </td>
           </ng-container>
 

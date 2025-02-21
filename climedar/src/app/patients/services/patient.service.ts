@@ -15,7 +15,7 @@ export class PatientService {
     const body = `
       query {
         getAllPatients(
-          pageRequest: { page: ${page}, size: 10}
+          pageRequest: { page: ${page}, size: 15}
         ) {
             patients {
               id
@@ -184,11 +184,11 @@ export class PatientService {
     });
   }
 
-  getPacientes(page:number, query: string): Observable<{ pageInfo: PageInfo, patients: Paciente[] }>{
+  getPacientes(page: number, query: string): Observable<{ pageInfo: PageInfo, patients: Paciente[] }> {
     const QUERY = gql`
         query GetAllPatients($dni: String, $fullName: String) {
             getAllPatients(
-                pageRequest: { page: ${page}, size: 10 , order: {field: "name", direction: ASC}},
+                pageRequest: { page: ${page}, size: 15 , order: {field: "name", direction: ASC}},
                 specification: {
                     dni: $dni,
                     fullName: $fullName

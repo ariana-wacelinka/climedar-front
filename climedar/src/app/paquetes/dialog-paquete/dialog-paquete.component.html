@@ -12,18 +12,19 @@
 
     @if (this.data.id == null) {
       <mat-form-field class="full-width" appearance="outline">
-      <mat-label>Especialidad</mat-label>
-      <input type="text" [formControl]="especialidad" matInput [matAutocomplete]="autoEsp">
-      <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad"
-        (optionSelected)="selectedEspeciality($event)">
-        @for (option of filteredEspecialidadOptions | async; track option?.code) {
-        <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
+        <mat-label>Especialidad</mat-label>
+        <input type="text" matInput [formControl]="especialidad" [matAutocomplete]="autoEsp">
+        <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad"
+          (optionSelected)="selectedEspeciality($event)">
+          @for (option of filteredEspecialidadOptions | async; track option?.code) {
+          <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
+          }
+        </mat-autocomplete>
+        @if (!paquete.controls.specialityId.valid &&
+        paquete.controls.specialityId.touched) {
+        <mat-error>Por favor, seleccione la especialidad</mat-error>
         }
-      </mat-autocomplete>
-      @if (!paquete.controls.specialityId.valid && paquete.controls.specialityId.touched) {
-      <mat-error>Por favor, seleccione la especialidad</mat-error>
-      }
-    </mat-form-field>
+      </mat-form-field>
     }    
 
     <mat-card class="card-tab" appearance="outlined">

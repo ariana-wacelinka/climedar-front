@@ -63,15 +63,15 @@ export class DialogPaqueteComponent {
 
   especialidadId = signal<string>('');
   filterValue = signal<string>('');
+  especialidades = signal<Especialidad[]>([]);
+  especialidad = new FormControl<Especialidad | null>(null);
 
   paquete = new FormGroup({
     id: new FormControl<string>(""),
     name: new FormControl<string>("", Validators.required),
     servicesIds: new FormControl<string[]>([]),
     specialityId: new FormControl<string>("", Validators.required)
-  })
-
-  especialidad = new FormControl<Especialidad | null>(null);
+  });
 
   constructor(public dialogRef: MatDialogRef<DialogPaqueteComponent>,
     private packageService: PackageService,
@@ -94,7 +94,7 @@ export class DialogPaqueteComponent {
   ngOnInit() {
     this.getServices();
 
-    this.filteredEspecialidadOptions = this.paquete.controls.specialityId.valueChanges.pipe(
+    this.filteredEspecialidadOptions = this.especialidad.valueChanges.pipe(
       startWith(''),
       filter((value): value is string => typeof value === 'string'),
       debounceTime(300),
