@@ -15,6 +15,9 @@ import { MedicalService } from '../models/services.models';
 import { MatSelectModule } from '@angular/material/select';
 import { Especialidad, EspecialidadService } from '../../especialidad';
 import { ServiceType } from '../../shared/models/extras.models';
+import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-dialog-servicio',
@@ -31,6 +34,8 @@ import { ServiceType } from '../../shared/models/extras.models';
     ReactiveFormsModule,
     MatPrefix,
     MatSelectModule,
+    MatAutocompleteModule,
+    AsyncPipe
   ],
   templateUrl: './dialog-servicio.component.html',
   styleUrl: './dialog-servicio.component.scss'
@@ -41,8 +46,11 @@ export class DialogServicioComponent {
     value
   }));
   servicio = signal<MedicalService | null>(null);
+  filteredEspecialidadOptions: Observable<Especialidad[]> | undefined;
   medicalServiceId = signal<boolean>(false);
   especialidades = signal<Especialidad[]>([]);
+  especialidad = new FormControl<Especialidad | null>(null);
+  especialidadId = signal<string>('');
   formGroup = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('', Validators.required),
@@ -95,6 +103,30 @@ export class DialogServicioComponent {
     });
   }
 
+  ngOnInit() {
+    this.filteredEspecialidadOptions = this.formGroup.controls.specialityId.valueChanges.pipe(
+      startWith(''),
+      filter((value): value is string => typeof value === 'string'),
+      debounceTime(300),
+      switchMap(value => {
+        const title = value;
+        return this.specialityService.getEspecialidadesByNombre(title).pipe(
+          map((especiliades: Especialidad[]) => {
+            return especiliades;
+          })
+        );
+      }),
+    );
+  }
+
+  displayEspecialidad(especialidad: Especialidad | undefined): string {
+    return especialidad ? especialidad.name! : '';
+  }
+
+  selectedEspeciality(event: MatAutocompleteSelectedEvent) {
+    this.formGroup.controls.specialityId.setValue(event.option.value);
+  }
+  
   onClose() {
     this.dialogRef.close();
   }

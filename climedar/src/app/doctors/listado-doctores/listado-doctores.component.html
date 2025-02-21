@@ -70,7 +70,7 @@
         @if (doctors().length === 0) {
         <div style="height: 34px;"></div>
         } @else {
-        <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="10" (pageChange)="pageChange($event)"
+        <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="15" (pageChange)="pageChange($event)"
             [currentPage]="currentPage()"></app-paginator>
         }
     </ng-container>

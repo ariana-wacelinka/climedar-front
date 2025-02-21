@@ -40,12 +40,15 @@
 
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Especialidad</mat-label>
-        <mat-select formControlName="specialityId" placeholder="Seleccione una especialidad" required>
-          @for (speciality of especialidades(); track speciality) {
-          <mat-option [value]="speciality.id?.toString()">{{speciality.name}}</mat-option>
+        <input type="text" matInput [formControl]="formGroup.controls.specialityId" [matAutocomplete]="autoEsp">
+        <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad"
+          (optionSelected)="selectedEspeciality($event)">
+          @for (option of filteredEspecialidadOptions | async; track option?.code) {
+          <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
           }
-        </mat-select>
-        @if (!formGroup.controls.specialityId.valid && formGroup.controls.specialityId.touched) {
+        </mat-autocomplete>
+        @if (!formGroup.controls.specialityId.valid &&
+        formGroup.controls.specialityId.touched) {
         <mat-error>Por favor, seleccione la especialidad</mat-error>
         }
       </mat-form-field>

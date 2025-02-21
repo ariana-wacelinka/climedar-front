@@ -10,9 +10,7 @@ import { PageInfo } from '../../shared/models/extras.models';
   providedIn: 'root'
 })
 export class ObraSocialService {
-  constructor(private apollo: Apollo,
-    private http: HttpClient
-  ) { }
+  constructor(private apollo: Apollo) { }
 
   getMedicalSecures(): Observable<MedcialSecure[]> {
     return this.apollo.query({
@@ -55,7 +53,7 @@ export class ObraSocialService {
     const query = gql`
     query GetAllMedicalSecures($page: Int!, $name: String) {
       getAllMedicalSecures(
-        pageRequest: { page: $page, size: 5 },
+        pageRequest: { page: $page, size: 5 , order: {field: "name", direction: ASC}},
         specification: { name: $name }
       ) {
         medicalSecures {
@@ -81,7 +79,7 @@ export class ObraSocialService {
   getAllMedicalSecures(page: number): Observable<{ medicalSecures: ObraSocial[], pageInfo: PageInfo }> {
     const query = gql`
       query GetAllMedicalSecures($page: Int!) {
-        getAllMedicalSecures(pageRequest: {page: $page, size: 5}) {
+        getAllMedicalSecures(pageRequest: {page: $page, size: 5, order: {field: "name", direction: ASC}}) {
           medicalSecures {
             name
             id

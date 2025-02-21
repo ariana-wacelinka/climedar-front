@@ -85,7 +85,7 @@ export class DoctorService {
   getAllDoctors(page: number): Observable<{ doctors: Doctor[], pageInfo: PageInfo }> {
     const query = gql`
       query {
-        getAllDoctors(pageRequest: {page: ${page}, size: 10, order: {field: "name", direction: ASC}}) {
+        getAllDoctors(pageRequest: {page: ${page}, size: 15, order: {field: "name", direction: ASC}}) {
           doctors {
             dni
             email
@@ -194,7 +194,7 @@ export class DoctorService {
     const QUERY = gql`
           query GetAllDoctors($dni: String, $fullName: String) {
               getAllDoctors(
-                  pageRequest: { page: ${page}, size: 10, order: {field: "name", direction: ASC}},
+                  pageRequest: { page: ${page}, size: 15, order: {field: "name", direction: ASC}},
                   specification: {
                       dni: $dni,
                       fullName: $fullName

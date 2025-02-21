@@ -17,12 +17,18 @@
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>Código</mat-label>
       <input matInput placeholder="Código" formControlName="code" required>
+      @if (!formGroup.controls.code.valid && formGroup.controls.code.touched) {
+      <mat-error>Por favor, ingrese el código</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>Descripción</mat-label>
       <textarea matInput placeholder="Descripción" formControlName="description" required></textarea>
       <mat-hint align="end">{{formGroup.get('description')?.value?.length || 0}} / 150</mat-hint>
+      @if (!formGroup.controls.description.valid && formGroup.controls.description.touched) {
+      <mat-error>Por favor, ingrese la descripción</mat-error>
+      }
     </mat-form-field>
   </form>
 </div>
