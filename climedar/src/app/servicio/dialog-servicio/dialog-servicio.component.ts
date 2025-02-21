@@ -104,7 +104,7 @@ export class DialogServicioComponent {
   }
 
   ngOnInit() {
-    this.filteredEspecialidadOptions = this.formGroup.controls.specialityId.valueChanges.pipe(
+    this.filteredEspecialidadOptions = this.especialidad.valueChanges.pipe(
       startWith(''),
       filter((value): value is string => typeof value === 'string'),
       debounceTime(300),
