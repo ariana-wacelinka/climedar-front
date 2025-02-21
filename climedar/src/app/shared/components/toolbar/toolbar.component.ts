@@ -73,6 +73,14 @@ export class ToolbarComponent {
     this.router.navigate(['obra-social/listado']);
   }
 
+  alta_turnos() {
+    this.router.navigate(['turno/nuevo']);
+  }
+
+  facturacion() {
+    this.router.navigate(['facturacion']);
+  }
+
   login() {
     this.router.navigate(['login']);
   }
