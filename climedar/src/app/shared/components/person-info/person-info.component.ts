@@ -1,40 +1,32 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CenteredCardComponent } from "../centered-card/centered-card.component";
 import { Paciente } from '../../../patients/models/paciente.models';
 import { Doctor } from '../../../doctors/models/doctor.models';
-import { Consultation } from '../../../consultation/models/consultation.model';
+import { ConsultationResponse } from '../../../consultation/models/consultation.model';
 import { ConsultationService } from '../../../consultation/services/consultation.service';
 import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { PaginatorComponent } from '../paginator/paginator.component';
+import { PageInfo } from '../../models/extras.models';
 
 @Component({
   selector: 'app-person-info',
   imports: [
-      CenteredCardComponent,
-      MatButtonModule,
-      MatTableModule,
-      MatFormFieldModule,
-      MatIconModule,
-      MatInputModule,
-      MatMenuModule,
-      MatSortModule,
-      MatPaginatorModule
+    CenteredCardComponent,
+    MatTableModule,
+    PaginatorComponent
   ],
   templateUrl: './person-info.component.html',
   styleUrl: './person-info.component.scss'
 })
 export class PersonInfoComponent {
+  pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
+
   paciente = signal<Paciente | null>(null);
   doctor = signal<Doctor | null>(null);
   person = signal<Paciente | Doctor | null>(null);
-  consultas = signal<Consultation[]>([]);
+
+  consultas = signal<ConsultationResponse[]>([]);
   displayedColumns: string[] = ["date", "timeStart", "person"];
 
   constructor(private router: Router,
@@ -52,14 +44,40 @@ export class PersonInfoComponent {
   }
 
   ngOnInit() {
+    this.getConsultas(1);
+    this.consultationService.getAllConsultations(1).subscribe(consultas => {
+      console.log(consultas);
+    });
+  }
+
+  getConsultas(page: number) {
     if (this.doctor()?.speciality) {
-      this.consultationService.getConsultasByDoctorId(1, this.doctor()?.id || "").subscribe(consultas => {
-        this.consultas.set(consultas);
-      });
+      this.getConsultasParaDoctor(page);
     } else {
-      this.consultationService.getConsultasByPatientId(1, this.paciente()?.id || "").subscribe(consultas => {
-        this.consultas.set(consultas);
-      });
+      this.getConsultasParaPaciente(page);
     }
+  }
+
+  getConsultasParaDoctor(page: number) {
+    this.consultationService.getConsultasByDoctorId(page, this.doctor()?.id || "").subscribe(consultas => {
+      this.consultas.set(consultas.consultas);
+      this.pageInfo.set(consultas.pageInfo);
+    });
+  }
+
+  getConsultasParaPaciente(page: number) {
+    this.consultationService.getConsultasByPatientId(page, this.paciente()?.id || "").subscribe(consultas => {
+      this.consultas.set(consultas.consultas);
+      this.pageInfo.set(consultas.pageInfo);
+    });
+  }
+
+  pageChange(page: number) {
+    this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
+    this.getConsultas(page);
+  }
+
+  currentPage(): WritableSignal<number> {
+    return signal<number>(this.pageInfo().currentPage);
   }
 }

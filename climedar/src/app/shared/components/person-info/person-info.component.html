@@ -33,7 +33,7 @@
                         </div>
                         <div class="combo">
                             <div class="label">Salario:</div>
-                            <div class="info-persona">{{ doctor()?.salary }}</div>
+                            <div class="info-persona">${{ doctor()?.salary }}</div>
                         </div>
                         } @else {
                         <div class="combo">
@@ -66,42 +66,51 @@
             </div>
             <div class="data">
                 <h2 class="titulo">Historial de consultas</h2>
-                <div class="mat-elevation-z8">
-                    <table mat-table [dataSource]="consultas()" matSort>
+                <div class="contenedor_tabla">
+                    <div class="mat-elevation-z8">
+                        <table class="tabla" mat-table [dataSource]="consultas()" matSort>
 
-                        <ng-container matColumnDef="date">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-                            <td mat-cell class="date" *matCellDef="let consultation"> {{consultation.date}} </td>
-                        </ng-container>
+                            <ng-container matColumnDef="date">
+                                <th mat-header-cell class="date" *matHeaderCellDef mat-sort-header> Fecha </th>
+                                <td mat-cell class="date" *matCellDef="let consulta"> {{consulta.date}} </td>
+                            </ng-container>
 
-                        <ng-container matColumnDef="time">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora de comienzo </th>
-                            <td mat-cell class="time" *matCellDef="let consultation"> {{consultation.timeStart}} </td>
-                        </ng-container>
+                            <ng-container matColumnDef="timeStart">
+                                <th mat-header-cell class="time" *matHeaderCellDef mat-sort-header> Hora de comienzo
+                                </th>
+                                <td mat-cell class="time" *matCellDef="let consulta"> {{consulta.timeStart}} </td>
+                            </ng-container>
 
-                        @if (doctor()?.speciality) {
-                        <ng-container matColumnDef="person">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Paciente </th>
-                            <td mat-cell class="person" *matCellDef="let consultation"> {{consultation.patient.name}}
-                            </td>
-                        </ng-container>
-                        } @else {
-                        <ng-container matColumnDef="person">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Médico </th>
-                            <td mat-cell class="person" *matCellDef="let consultation"> {{consultation.doctor.name}}
-                            </td>
-                        </ng-container>
-                        }
+                            @if (doctor()?.speciality) {
+                            <ng-container matColumnDef="person">
+                                <th mat-header-cell class="person" *matHeaderCellDef mat-sort-header> Paciente </th>
+                                <td mat-cell class="person" *matCellDef="let consulta"> {{consulta.patient.name}}
+                                </td>
+                            </ng-container>
+                            } @else {
+                            <ng-container matColumnDef="person">
+                                <th mat-header-cell class="person" *matHeaderCellDef mat-sort-header> Médico </th>
+                                <td mat-cell class="person" *matCellDef="let consulta"> {{consulta.doctor.name}}
+                                </td>
+                            </ng-container>
+                            }
 
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-                        <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell" colspan="4">
-                                <div class="nada">No se han encontrado especialidades</div>
-                            </td>
-                        </tr>
-                    </table>
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="4">
+                                    <div class="nada">No se han encontrado especialidades</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    @if (consultas().length === 0) {
+                    <div style="height: 34px;"></div>
+                    } @else {
+                    <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+                        [currentPage]="currentPage()"></app-paginator>
+                    }
                 </div>
             </div>
         </div>

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Consultation, CreateConsultation } from '../models/consultation.model';
+import { Consultation, ConsultationResponse, CreateConsultation } from '../models/consultation.model';
 import { map, Observable } from 'rxjs';
+import { PageInfo } from '../../shared/models/extras.models';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +50,7 @@ export class ConsultationService {
     }));
   }
 
-  getConsultasByDoctorId(page: number, doctorId: string): Observable<Consultation[]> {
+  getConsultasByDoctorId(page: number, doctorId: string): Observable<{ consultas: ConsultationResponse[], pageInfo: PageInfo }> {
     const query = gql`
       query GetAllConsultations {
         getAllConsultations(
@@ -71,13 +72,15 @@ export class ConsultationService {
           }
         }
       }`
-    return this.apollo.query({
+    return this.apollo.query<{ getAllConsultations: { consultas: ConsultationResponse[], pageInfo: PageInfo } }>({
       query,
       variables: { doctorId }
-    }).pipe(map((result: any) => result.data.getAllConsultations.consultations));
+    }).pipe(
+      map(response => response.data.getAllConsultations)
+    );
   }
 
-  getConsultasByPatientId(page: number, patientId: string): Observable<Consultation[]> {
+  getConsultasByPatientId(page: number, patientId: string): Observable<{ consultas: ConsultationResponse[], pageInfo: PageInfo }> {
     const query = gql`
       query GetAllConsultations {
         getAllConsultations(
@@ -99,9 +102,38 @@ export class ConsultationService {
           }
         }
       }`
-    return this.apollo.query({
+    return this.apollo.query<{ getAllConsultations: { consultas: ConsultationResponse[], pageInfo: PageInfo } }>({
       query,
       variables: { patientId }
-    }).pipe(map((result: any) => result.data.getAllConsultations.consultations));
+    }).pipe(
+      map(response => response.data.getAllConsultations)
+    );
+  }
+
+  getAllConsultations(page: number): Observable<{ consultas: ConsultationResponse[], pageInfo: PageInfo }> {
+    const query = gql`
+      query GetAllConsultations {
+        getAllConsultations(
+          pageRequest: {page: ${page}, size: 5}
+        ) {
+          consultations {
+            id
+            patient {
+              id
+            }
+            startTime
+          }
+          pageInfo {
+            totalPages
+            totalItems
+            currentPage
+          }
+        }
+      }`
+    return this.apollo.query<{ getAllConsultations: { consultas: ConsultationResponse[], pageInfo: PageInfo } }>({
+      query
+    }).pipe(
+      map(response => response.data.getAllConsultations)
+    );
   }
 }
