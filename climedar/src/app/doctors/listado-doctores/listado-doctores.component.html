@@ -10,7 +10,7 @@
                 <mat-form-field class="full-width" appearance="outline">
                     <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
                     <mat-label>Ingrese un médico</mat-label>
-                    <input matInput placeholder="Ingrese un médico" #input>
+                    <input matInput placeholder="Ingrese un médico" (keyup)="applyFilter($event)" #input>
                 </mat-form-field>
 
 
@@ -20,7 +20,7 @@
 
 
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" matSort>
+                <table mat-table [dataSource]="doctors()" matSort>
 
                     <ng-container matColumnDef="surname">
                         <th mat-header-cell *matHeaderCellDef> Apellido </th>
@@ -67,8 +67,12 @@
     </ng-container>
 
     <ng-container main-actions>
+        @if (doctors().length === 0) {
+        <div style="height: 34px;"></div>
+        } @else {
         <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="10" (pageChange)="pageChange($event)"
             [currentPage]="currentPage()"></app-paginator>
+        }
     </ng-container>
 
 </app-centered-card>

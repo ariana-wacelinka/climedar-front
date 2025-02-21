@@ -183,4 +183,56 @@ export class PatientService {
       mutation: gql`${body}`
     });
   }
+
+  getPacientes(page:number, query: string): Observable<{ pageInfo: PageInfo, patients: Paciente[] }>{
+    const QUERY = gql`
+        query GetAllPatients($dni: String, $fullName: String) {
+            getAllPatients(
+                pageRequest: { page: ${page}, size: 10 , order: {field: "name", direction: ASC}},
+                specification: {
+                    dni: $dni,
+                    fullName: $fullName
+                }
+            ) {
+                pageInfo {
+                  currentPage
+                  totalItems
+                  totalPages
+                }
+                patients {
+                  address {
+                    apartment
+                    floor
+                    number
+                    street
+                  }
+                  birthdate
+                  dni
+                  email
+                  gender
+                  id
+                  medicalSecure {
+                    id
+                    name
+                  }
+                  name
+                  phone
+                  surname
+                }
+            }
+        }
+    `;
+
+    const variables = /^\d+$/.test(query)
+      ? { dni: query, fullName: "" }
+      : { dni: "", fullName: query };
+
+    return this.apollo.query<{ getAllPatients: { patients: Paciente[], pageInfo: PageInfo } }>({
+      query: QUERY,
+      variables: variables
+    }).pipe(
+      map(response => response.data.getAllPatients)
+    );
+  }
+
 }

@@ -84,7 +84,6 @@ export class AltaPatientsComponent {
         (response) => {
           console.log('Paciente creado', response);
           this.router.navigate(['/paciente/listado']);
-          window.location.reload();
         },
         (error) => {
           console.error('Error al crear paciente', error);

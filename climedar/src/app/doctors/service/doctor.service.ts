@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Doctor } from '../models/doctor.models';
 import { map, Observable } from 'rxjs';
 import { Apollo, gql } from 'apollo-angular';
+import { PageInfo } from '../../shared/models/extras.models';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class DoctorService {
     console.log('name: ', name);
     const query = gql`
       query {
-        getAllDoctors(pageRequest: {page: 1, size: 10}, specification: {fullName: "${name}", specialityId: "${specialityid}" }) {
+        getAllDoctors(pageRequest: {page: 1, size: 10, order: {field: "name", direction: ASC}}, specification: {fullName: "${name}", specialityId: "${specialityid}" }) {
           doctors {
             birthdate
             dni
@@ -81,10 +82,10 @@ export class DoctorService {
     });
   }
 
-  getAllDoctors(page: number): Observable<{ doctors: Doctor[], pageInfo: any }> {
+  getAllDoctors(page: number): Observable<{ doctors: Doctor[], pageInfo: PageInfo }> {
     const query = gql`
       query {
-        getAllDoctors(pageRequest: {page: ${page}, size: 10}) {
+        getAllDoctors(pageRequest: {page: ${page}, size: 10, order: {field: "name", direction: ASC}}) {
           doctors {
             dni
             email
@@ -99,7 +100,7 @@ export class DoctorService {
           }
         }
       }`;
-    return this.apollo.watchQuery<{ getAllDoctors: { doctors: Doctor[], pageInfo: any } }>({ query: query }).valueChanges.pipe(
+    return this.apollo.watchQuery<{ getAllDoctors: { doctors: Doctor[], pageInfo: PageInfo } }>({ query: query }).valueChanges.pipe(
       map(result => result.data.getAllDoctors)
     );
   }
@@ -187,5 +188,41 @@ export class DoctorService {
     return this.apollo.mutate({
       mutation: gql`${body}`
     });
+  }
+
+  getDoctorsFiltro(page: number, query: string): Observable<{ pageInfo: PageInfo, doctors: Doctor[] }> {
+    const QUERY = gql`
+          query GetAllDoctors($dni: String, $fullName: String) {
+              getAllDoctors(
+                  pageRequest: { page: ${page}, size: 10, order: {field: "name", direction: ASC}},
+                  specification: {
+                      dni: $dni,
+                      fullName: $fullName
+                  }
+              ) {
+                  doctors {
+                    dni
+                    email
+                    id
+                    name
+                    surname
+                  }
+                  pageInfo {
+                    totalPages
+                    totalItems
+                    currentPage
+                  }
+                }
+              }`
+    const variables = /^\d+$/.test(query)
+      ? { dni: query, fullName: "" }
+      : { dni: "", fullName: query };
+
+    return this.apollo.query<{ getAllDoctors: { doctors: Doctor[], pageInfo: PageInfo } }>({
+      query: QUERY,
+      variables: variables
+    }).pipe(
+      map(response => response.data.getAllDoctors)
+    );
   }
 }

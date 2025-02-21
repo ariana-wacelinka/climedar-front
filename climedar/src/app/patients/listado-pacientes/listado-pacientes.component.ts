@@ -32,6 +32,7 @@ export class ListadoPacientesComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
   displayedColumns: string[] = ["name", "surname", "dni", "edit"];
   pacientes = signal<Paciente[]>([]);
+  filterValue = signal<string>('');
 
   constructor(private router: Router,
     private pacienteService: PatientService
@@ -41,12 +42,17 @@ export class ListadoPacientesComponent {
     this.pacienteService.getAllPatients(1).subscribe(response => {
       this.pacientes.set(response.patients);
       this.pageInfo.set(response.pageInfo);
+      console.log(response);
     });
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    
+    this.filterValue.set((event.target as HTMLInputElement).value.trim().toLowerCase());
+
+    this.pacienteService.getPacientes(this.pageInfo().currentPage, this.filterValue()).subscribe((response) => {
+      this.pacientes.set(response.patients);
+      this.pageInfo.set(response.pageInfo);
+    });
   }
 
   createPaciente() {
@@ -67,7 +73,6 @@ export class ListadoPacientesComponent {
   pacienteInfo(paciente: Paciente) {
     this.pacienteService.getPatientById(paciente.id).subscribe
       (response => {
-        const pacienteInfo = response
         this.router.navigate(['/paciente/info'],
           { state: { pacienteInfo: response } }
         );
@@ -81,7 +86,7 @@ export class ListadoPacientesComponent {
   pageChange(page: number) {
     this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
 
-    this.pacienteService.getAllPatients(page).subscribe(response => {
+    this.pacienteService.getPacientes(page, this.filterValue()).subscribe(response => {
       this.pacientes.set(response.patients);
       this.pageInfo.set(response.pageInfo);
     });

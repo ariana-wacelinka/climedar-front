@@ -10,7 +10,7 @@
                 <mat-form-field class="full-width" appearance="outline">
                     <mat-icon matPrefix style="font-size: 24px; color: black">search</mat-icon>
                     <mat-label>Ingrese un paciente</mat-label>
-                    <input matInput placeholder="Ingrese un paciente" #input>
+                    <input matInput placeholder="Ingrese un paciente" (keyup)="applyFilter($event)" #input>
                 </mat-form-field>
 
 
@@ -23,17 +23,17 @@
                 <table mat-table [dataSource]="pacientes()" matSort>
 
                     <ng-container matColumnDef="surname">
-                        <th mat-header-cell *matHeaderCellDef> Apellido </th>
+                        <th mat-header-cell class="surname" *matHeaderCellDef> Apellido </th>
                         <td mat-cell class="surname" *matCellDef="let paciente">{{paciente.surname}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                        <th mat-header-cell class="nombre" *matHeaderCellDef> Nombre </th>
                         <td mat-cell class="nombre" *matCellDef="let paciente">{{paciente.name}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="dni">
-                        <th mat-header-cell *matHeaderCellDef> DNI </th>
+                        <th mat-header-cell class="dni" *matHeaderCellDef> DNI </th>
                         <td mat-cell class="dni" *matCellDef="let paciente">{{paciente.dni}}</td>
                     </ng-container>
 
@@ -70,7 +70,7 @@
         @if (pacientes().length === 0) {
         <div style="height: 34px;"></div>
         } @else {
-        <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+        <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="10" (pageChange)="pageChange($event)"
             [currentPage]="currentPage()"></app-paginator>
         }
     </ng-container>

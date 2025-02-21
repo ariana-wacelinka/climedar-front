@@ -31,8 +31,8 @@ import { PageInfo } from '../../shared/models/extras.models';
 export class ListadoDoctoresComponent {
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
   displayedColumns: string[] = ["name", "surname", "dni", "edit"];
-  dataSource = new MatTableDataSource<Doctor>();
   doctors = signal<Doctor[]>([]);
+  filterValue = signal<string>('');
 
   constructor(private router: Router,
     private doctorService: DoctorService
@@ -42,7 +42,6 @@ export class ListadoDoctoresComponent {
     this.doctorService.getAllDoctors(1).subscribe(response => {
       this.doctors.set(response.doctors);
       this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = this.doctors()
     });
   }
 
@@ -71,6 +70,14 @@ export class ListadoDoctoresComponent {
     });
   }
 
+  applyFilter(event: Event) {
+    this.filterValue.set((event.target as HTMLInputElement).value.trim().toLowerCase());
+    this.doctorService.getDoctorsFiltro(this.pageInfo().currentPage, this.filterValue()).subscribe((response) => {
+      this.doctors.set(response.doctors);
+      this.pageInfo.set(response.pageInfo);
+    });
+  }
+
   currentPage(): WritableSignal<number> {
     return signal<number>(this.pageInfo().currentPage);
   }
@@ -78,10 +85,9 @@ export class ListadoDoctoresComponent {
   pageChange(page: number) {
     this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
 
-    this.doctorService.getAllDoctors(page).subscribe(response => {
+    this.doctorService.getDoctorsFiltro(page, this.filterValue()).subscribe(response => {
       this.doctors.set(response.doctors);
       this.pageInfo.set(response.pageInfo);
-      this.dataSource.data = this.doctors()
     });
   }
 }
