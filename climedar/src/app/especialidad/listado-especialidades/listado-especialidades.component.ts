@@ -1,6 +1,6 @@
-import {Component, signal, ViewChild, WritableSignal} from '@angular/core';
-import {CenteredCardComponent} from "../../shared/components";
-import {MatButton} from "@angular/material/button";
+import { Component, signal, ViewChild, WritableSignal } from '@angular/core';
+import { CenteredCardComponent } from "../../shared/components";
+import { MatButton } from "@angular/material/button";
 import {
   MatCell,
   MatCellDef,
@@ -8,17 +8,17 @@ import {
   MatHeaderCell, MatHeaderCellDef,
   MatHeaderRow,
   MatHeaderRowDef, MatNoDataRow,
-  MatRow, MatRowDef, MatTable, MatTableDataSource
+  MatRow, MatRowDef, MatTable
 } from "@angular/material/table";
-import {MatFormField, MatFormFieldModule, MatLabel} from "@angular/material/form-field";
-import {Especialidad, EspecialidadService} from '../../especialidad';
-import {MatIcon, MatIconModule} from "@angular/material/icon";
-import {MatInput, MatInputModule} from "@angular/material/input";
-import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {MatSort, MatSortHeader} from "@angular/material/sort";
-import {PaginatorComponent} from "../../shared/components/paginator/paginator.component";
-import {MatDialog} from '@angular/material/dialog';
-import {DialogEspecialidadComponent} from '../dialog-especialidad/dialog-especialidad.component';
+import { MatFormField, MatFormFieldModule, MatLabel } from "@angular/material/form-field";
+import { Especialidad, EspecialidadService } from '../../especialidad';
+import { MatIcon, MatIconModule } from "@angular/material/icon";
+import { MatInput, MatInputModule } from "@angular/material/input";
+import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
+import { MatSort, MatSortHeader } from "@angular/material/sort";
+import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
+import { MatDialog } from '@angular/material/dialog';
+import { DialogEspecialidadComponent } from '../dialog-especialidad/dialog-especialidad.component';
 import { InfoEspecialidadComponent } from '../info-especialidad/info-especialidad.component';
 import { PageInfo } from '../../shared/models/extras.models';
 import { map } from 'rxjs';
@@ -62,7 +62,7 @@ export class ListadoEspecialidadesComponent {
   displayedColumns: string[] = ["nombre", "edit"];
   filterValue = signal<string>('');
 
-  constructor(private dialog: MatDialog, private especialidadService: EspecialidadService) {};
+  constructor(private dialog: MatDialog, private especialidadService: EspecialidadService) { };
 
   ngOnInit() {
     this.loadEspecialidades();
@@ -82,7 +82,7 @@ export class ListadoEspecialidadesComponent {
   currentPage(): WritableSignal<number> {
     return signal<number>(this.pageInfo().currentPage);
   }
-  
+
   loadEspecialidades() {
     this.especialidadService.getEspecailidadesFiltered(this.pageInfo().currentPage, this.filterValue().trim().toLowerCase()).subscribe(response => {
       this.especialidades.set(response.especialidades);
@@ -100,7 +100,7 @@ export class ListadoEspecialidadesComponent {
     const dialogRef = this.dialog.open(InfoEspecialidadComponent, {
       maxWidth: '330px',
       height: 'auto',
-      data: {id: especialidad.id, name: especialidad.name, code: especialidad.code, description: especialidad.description}
+      data: { id: especialidad.id, name: especialidad.name, code: especialidad.code, description: especialidad.description }
     });
   }
 
@@ -109,13 +109,13 @@ export class ListadoEspecialidadesComponent {
       width: '670px',
       minWidth: '350px',
       maxWidth: '90vw',
-      data: {id: especialidad.id, name: especialidad.name, code: especialidad.code, description: especialidad.description}
+      data: { id: especialidad.id, name: especialidad.name, code: especialidad.code, description: especialidad.description }
     });
   }
 
-  createEspecialidad(){
+  createEspecialidad() {
     this.dialog.open(DialogEspecialidadComponent, {
-      width:'670px',
+      width: '670px',
       minWidth: '350px',
       maxWidth: '90vw',
       data: {}
@@ -124,12 +124,12 @@ export class ListadoEspecialidadesComponent {
 
   eliminarEspecialidad(id: string) {
     this.especialidadService.deleteEspecialidad(id)
-    .subscribe(success => {
-      if (success) {
-        window.location.reload();
-      } else {
-        console.log('Error al eliminar la especialidad');
-      }
-    });
+      .subscribe(success => {
+        if (success) {
+          window.location.reload();
+        } else {
+          console.log('Error al eliminar la especialidad');
+        }
+      });
   }
 }

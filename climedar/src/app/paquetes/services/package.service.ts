@@ -1,5 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { PageInfo } from '../../shared/models/extras.models';
 import { Package, PackageRequest, PackageResponse } from '../models/package.models';

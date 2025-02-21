@@ -3,7 +3,6 @@ import { Apollo, gql } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { MedcialSecure } from '../models/medicalSecure.model';
 import { ObraSocial } from '../models/obra-social.models';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PageInfo } from '../../shared/models/extras.models';
 
 @Injectable({

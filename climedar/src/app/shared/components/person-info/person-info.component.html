@@ -4,23 +4,104 @@
 
     <ng-container main-content>
         <div class="content">
-            <div class="row">
-                <div class="column">
-                    <div><b>Nombre y apellido:</b> {{ person()?.name }} {{ person()?.surname }}</div>
-                    <div><b>DNI:</b> {{ person()?.dni }}</div>
-                    <div><b>Fecha de nacimiento:</b> {{ person()?.birthdate?.toLocaleLowerCase() }}</div>
-                    <div><b>Género:</b> @if (person()?.gender === 'FEMALE'){ Femenino} @else { Masculino}</div>
-                    @if (doctor()?.speciality) {
-                        <div><b>Especialidad:</b> {{ doctor()?.speciality?.name }}</div>
-                        <div><b>Salario:</b> {{ doctor()?.salary }}</div>
-                    } @else {
-                        <div><b>Obra social:</b> {{ paciente()?.medicalSecure?.name }}</div>
-                    }
+            @if (doctor()?.speciality) {
+            <h1>Información del médico</h1>
+            } @else {
+            <h1>Información del paciente</h1>
+            }
+            <div class="data">
+                <h2 class="titulo">Datos personales</h2>
+                <div class="row">
+                    <div class="column">
+                        <div class="combo">
+                            <div class="label">Date:</div>
+                            <div class="info-persona">{{ person()?.name }}</div>
+                        </div>
+                        <div class="combo">
+                            <div class="label">DNI:</div>
+                            <div class="info-persona">{{ person()?.dni }}</div>
+                        </div>
+                        <div class="combo">
+                            <div class="label">Date de nacimiento:</div>
+                            <div class="info-persona">{{ person()?.birthdate?.toLocaleLowerCase() }}</div>
+                        </div>
+
+                        @if (doctor()?.speciality) {
+                        <div class="combo">
+                            <div class="label">Especialidad:</div>
+                            <div class="info-persona">{{ doctor()?.speciality?.name }}</div>
+                        </div>
+                        <div class="combo">
+                            <div class="label">Salario:</div>
+                            <div class="info-persona">{{ doctor()?.salary }}</div>
+                        </div>
+                        } @else {
+                        <div class="combo">
+                            <div class="label">Obra social:</div>
+                            <div class="info-persona">{{ paciente()?.medicalSecure?.name }}</div>
+                        </div>
+                        }
+                    </div>
+                    <div class="column">
+                        <div class="combo">
+                            <div class="label">Apellido:</div>
+                            <div class="info-persona">{{ person()?.surname }}</div>
+                        </div>
+                        <div class="combo">
+                            <div class="label">Correo electrónico:</div>
+                            <div>{{ person()?.email }}</div>
+                        </div>
+                        <div class="combo">
+                            <div class="label">Teléfono:</div>
+                            <div>{{ person()?.phone }}</div>
+                        </div>
+                        <div class="combo">
+                            <div class="label">Dirección:</div>
+                            <div>Calle {{ person()?.address?.street }} Nº{{ person()?.address?.number }}
+                                {{person()?.address?.floor }}{{ person()?.address?.apartment }}</div>
+                        </div>
+                    </div>
+                    <div></div>
                 </div>
-                <div class="column">
-                    <div><b>Correo electrónico:</b> {{ person()?.email }}</div>
-                    <div><b>Teléfono:</b> {{ person()?.phone }}</div>
-                    <div><b>Dirección:</b> Calle {{ person()?.address?.street }} Nº{{ person()?.address?.number }} {{ person()?.address?.floor }}{{ person()?.address?.apartment }}</div>
+            </div>
+            <div class="data">
+                <h2 class="titulo">Historial de consultas</h2>
+                <div class="mat-elevation-z8">
+                    <table mat-table [dataSource]="consultas()" matSort>
+
+                        <ng-container matColumnDef="date">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                            <td mat-cell class="date" *matCellDef="let consultation"> {{consultation.date}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="time">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora de comienzo </th>
+                            <td mat-cell class="time" *matCellDef="let consultation"> {{consultation.timeStart}} </td>
+                        </ng-container>
+
+                        @if (doctor()?.speciality) {
+                        <ng-container matColumnDef="person">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Paciente </th>
+                            <td mat-cell class="person" *matCellDef="let consultation"> {{consultation.patient.name}}
+                            </td>
+                        </ng-container>
+                        } @else {
+                        <ng-container matColumnDef="person">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Médico </th>
+                            <td mat-cell class="person" *matCellDef="let consultation"> {{consultation.doctor.name}}
+                            </td>
+                        </ng-container>
+                        }
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">
+                                <div class="nada">No se han encontrado especialidades</div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>

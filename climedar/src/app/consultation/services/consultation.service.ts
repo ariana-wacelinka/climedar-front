@@ -45,6 +45,63 @@ export class ConsultationService {
       query: gql(GET_CONSULTATION_PRICE_QUERY),
     }).pipe(map((result: any) => {
       console.log(result);
-      return result.data.getConsultationPrice}));
+      return result.data.getConsultationPrice
+    }));
+  }
+
+  getConsultasByDoctorId(page: number, doctorId: string): Observable<Consultation[]> {
+    const query = gql`
+      query GetAllConsultations {
+        getAllConsultations(
+          pageRequest: {page: ${page}, size: 5, order: {field: "date", direction: ASC}}
+          specification: {doctorId: ""}
+        ) {
+          consultations {
+            date
+            id
+            patient {
+              id
+            }
+            startTime
+          }
+          pageInfo {
+            totalPages
+            totalItems
+            currentPage
+          }
+        }
+      }`
+    return this.apollo.query({
+      query,
+      variables: { doctorId }
+    }).pipe(map((result: any) => result.data.getAllConsultations.consultations));
+  }
+
+  getConsultasByPatientId(page: number, patientId: string): Observable<Consultation[]> {
+    const query = gql`
+      query GetAllConsultations {
+        getAllConsultations(
+          pageRequest: {page: ${page}, size: 5, order: {field: "date", direction: ASC}}
+          specification: {patientId: ""}
+        ) {
+          consultations {
+            date
+            id
+            doctor {
+              id
+            }
+            startTime
+          }
+          pageInfo {
+            totalPages
+            totalItems
+            currentPage
+          }
+        }
+      }`
+    return this.apollo.query({
+      query,
+      variables: { patientId }
+    }).pipe(map((result: any) => result.data.getAllConsultations.consultations));
   }
 }

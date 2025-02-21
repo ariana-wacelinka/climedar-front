@@ -1,4 +1,3 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Especialidad } from '../models';
 import { map, Observable } from 'rxjs';
@@ -9,7 +8,7 @@ import { Apollo, gql } from 'apollo-angular';
   providedIn: 'root'
 })
 export class EspecialidadService {
-  constructor(private http: HttpClient, private apollo: Apollo) { }
+  constructor(private apollo: Apollo) { }
 
   public updateEspecialidad(especialidad: Especialidad): Observable<Especialidad> {
     const mutation = `
