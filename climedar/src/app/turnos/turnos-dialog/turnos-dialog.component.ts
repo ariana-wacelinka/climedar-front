@@ -243,8 +243,8 @@ export class TurnosDialogComponent implements OnInit {
   cancelShift(turno: Turno) {
     this.turnosService.cancelShift(turno.id!).subscribe((response) => {
       console.log('cancelShift', response.state);
-      this.turnos().filter(t => t.id == turno.id).map(t => t.state = response.state);
-      const turnoElement = document.getElementById(turno.id!.toString());
+      let edited = this.turnos().map(t => t.id === turno.id ? { ...t, state: response.state } : t);
+      this.turnos.set(edited);
       this.cdr.detectChanges();
       this.cdr.markForCheck();
     });

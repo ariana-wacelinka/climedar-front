@@ -82,7 +82,7 @@ export class TurnosService {
 
   cancelShift(shiftId: string): Observable<Turno> {
     const CANCEL_SHIFT = gql`
-      mutation cancelShift($shiftId: String!) {
+      mutation cancelShift($shiftId: ID!) {
         cancelShift(id: $shiftId) {
           state
         }
@@ -146,7 +146,7 @@ export class TurnosService {
   }
 
   createShift(turno: CreateTurno): Observable<number> {
-    
+
 console.log("shiftBuilder: ", ShiftBuilder[turno.shiftBuilder] === ShiftBuilder.RECURRING ? "RECURRING" : "REGULAR");
     let CREATE_SHIFT;
     if(ShiftBuilder[turno.shiftBuilder] === ShiftBuilder.RECURRING) {
@@ -211,7 +211,7 @@ console.log("shiftBuilder: ", ShiftBuilder[turno.shiftBuilder] === ShiftBuilder.
     place: turno.place,
     shiftBuilder: ShiftBuilder[turno.shiftBuilder],
   });
-  
+
     return this.apollo.mutate<{ createShift: number }>({
       mutation: gql`${CREATE_SHIFT}`
     }).pipe(
