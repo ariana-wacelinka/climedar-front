@@ -68,29 +68,32 @@
                 <h2 class="titulo">Historial de consultas</h2>
                 <div class="contenedor_tabla">
                     <div class="mat-elevation-z8">
-                        <table class="tabla" mat-table [dataSource]="consultas()" matSort>
+                        <table class="tabla" mat-table [dataSource]="consultas()">
 
                             <ng-container matColumnDef="date">
-                                <th mat-header-cell class="date" *matHeaderCellDef mat-sort-header> Fecha </th>
-                                <td mat-cell class="date" *matCellDef="let consulta"> {{consulta.date}} </td>
+                                <th mat-header-cell class="date" *matHeaderCellDef>Fecha</th>
+                                <td mat-cell class="date" *matCellDef="let consultation"> {{consultation.date}} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="timeStart">
-                                <th mat-header-cell class="time" *matHeaderCellDef mat-sort-header> Hora de comienzo
-                                </th>
-                                <td mat-cell class="time" *matCellDef="let consulta"> {{consulta.timeStart}} </td>
+                                <th mat-header-cell class="time" *matHeaderCellDef>Hora</th>
+                                <td mat-cell class="time" *matCellDef="let consultation">
+                                    {{consultation.startTime.split(':')[0]}}:{{consultation.startTime.split(':')[1]}}
+                                </td>
                             </ng-container>
 
                             @if (doctor()?.speciality) {
                             <ng-container matColumnDef="person">
-                                <th mat-header-cell class="person" *matHeaderCellDef mat-sort-header> Paciente </th>
-                                <td mat-cell class="person" *matCellDef="let consulta"> {{consulta.patient.name}}
+                                <th mat-header-cell class="person" *matHeaderCellDef>Paciente</th>
+                                <td mat-cell class="person" *matCellDef="let consultation">
+                                    {{consultation.patient.name}} {{consultation.patient.surname}}
                                 </td>
                             </ng-container>
                             } @else {
                             <ng-container matColumnDef="person">
-                                <th mat-header-cell class="person" *matHeaderCellDef mat-sort-header> Médico </th>
-                                <td mat-cell class="person" *matCellDef="let consulta"> {{consulta.doctor.name}}
+                                <th mat-header-cell class="person" *matHeaderCellDef> Médico </th>
+                                <td mat-cell class="person" *matCellDef="let consultation">
+                                    {{consultation.doctor.name}} {{consultation.doctor.surname}}
                                 </td>
                             </ng-container>
                             }
@@ -104,13 +107,15 @@
                                 </td>
                             </tr>
                         </table>
+                        <div class="paginator">
+                            @if (consultas().length === 0) {
+                            <div style="height: 34px;"></div>
+                            } @else {
+                            <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5"
+                                (pageChange)="pageChange($event)" [currentPage]="currentPage()"></app-paginator>
+                            }
+                        </div>
                     </div>
-                    @if (consultas().length === 0) {
-                    <div style="height: 34px;"></div>
-                    } @else {
-                    <app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
-                        [currentPage]="currentPage()"></app-paginator>
-                    }
                 </div>
             </div>
         </div>

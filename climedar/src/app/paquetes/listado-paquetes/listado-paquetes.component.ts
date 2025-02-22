@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
 import { MatButton } from '@angular/material/button';
 import {
@@ -8,7 +8,7 @@ import {
   MatHeaderCell, MatHeaderCellDef,
   MatHeaderRow,
   MatHeaderRowDef, MatNoDataRow,
-  MatRow, MatRowDef, MatTable, MatTableDataSource
+  MatRow, MatRowDef, MatTable
 } from '@angular/material/table';
 import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -17,14 +17,11 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogServicioComponent } from '../../servicio/dialog-servicio/dialog-servicio.component';
-import { infoServicioComponent } from '../../servicio/info-servicio/info-servicio.component';
 import { InfoPaqueteComponent } from '../info-paquete/info-paquete.component';
 import { DialogPaqueteComponent } from '../dialog-paquete/dialog-paquete.component';
 import { PageInfo } from '../../shared/models/extras.models';
 import { Package, PackageResponse } from '../models/package.models';
 import { PackageService } from '../services/package.service';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-listado-paquetes',
@@ -46,7 +43,6 @@ import { map } from 'rxjs';
     MatPrefix,
     MatRow,
     MatRowDef,
-    MatSort,
     MatTable,
     PaginatorComponent,
     MatNoDataRow,

@@ -50,50 +50,23 @@ export class ConsultationService {
     }));
   }
 
-  getConsultasByDoctorId(page: number, doctorId: string): Observable<{ consultas: ConsultationResponse[], pageInfo: PageInfo }> {
+  getConsultasByDoctorId(page: number, doctorId: string): Observable<{ consultations: ConsultationResponse[], pageInfo: PageInfo }> {
     const query = gql`
       query GetAllConsultations {
         getAllConsultations(
-          pageRequest: {page: ${page}, size: 5, order: {field: "date", direction: ASC}}
-          specification: {doctorId: ""}
+          pageRequest: {page: ${page}, size: 5}
+          specification: {doctorId: "${doctorId}"}
         ) {
           consultations {
-            date
             id
             patient {
               id
             }
             startTime
-          }
-          pageInfo {
-            totalPages
-            totalItems
-            currentPage
-          }
-        }
-      }`
-    return this.apollo.query<{ getAllConsultations: { consultas: ConsultationResponse[], pageInfo: PageInfo } }>({
-      query,
-      variables: { doctorId }
-    }).pipe(
-      map(response => response.data.getAllConsultations)
-    );
-  }
-
-  getConsultasByPatientId(page: number, patientId: string): Observable<{ consultas: ConsultationResponse[], pageInfo: PageInfo }> {
-    const query = gql`
-      query GetAllConsultations {
-        getAllConsultations(
-          pageRequest: {page: ${page}, size: 5, order: {field: "date", direction: ASC}}
-          specification: {patientId: ""}
-        ) {
-          consultations {
             date
-            id
             doctor {
               id
             }
-            startTime
           }
           pageInfo {
             totalPages
@@ -102,15 +75,46 @@ export class ConsultationService {
           }
         }
       }`
-    return this.apollo.query<{ getAllConsultations: { consultas: ConsultationResponse[], pageInfo: PageInfo } }>({
-      query,
-      variables: { patientId }
+    return this.apollo.query<{ getAllConsultations: { consultations: ConsultationResponse[], pageInfo: PageInfo } }>({
+      query
     }).pipe(
       map(response => response.data.getAllConsultations)
     );
   }
 
-  getAllConsultations(page: number): Observable<{ consultas: ConsultationResponse[], pageInfo: PageInfo }> {
+  getConsultasByPatientId(page: number, patientId: string): Observable<{ consultations: ConsultationResponse[], pageInfo: PageInfo }> {
+    const query = gql`
+      query GetAllConsultations {
+        getAllConsultations(
+          pageRequest: {page: ${page}, size: 5}
+          specification: {patientId: "${patientId}"}
+        ) {
+          consultations {
+            id
+            patient {
+              id
+            }
+            startTime
+            date
+            doctor {
+              id
+            }
+          }
+          pageInfo {
+            totalPages
+            totalItems
+            currentPage
+          }
+        }
+      }`
+    return this.apollo.query<{ getAllConsultations: { consultations: ConsultationResponse[], pageInfo: PageInfo } }>({
+      query
+    }).pipe(
+      map(response => response.data.getAllConsultations)
+    );
+  }
+
+  getAllConsultations(page: number): Observable<{ consultations: ConsultationResponse[], pageInfo: PageInfo }> {
     const query = gql`
       query GetAllConsultations {
         getAllConsultations(
@@ -122,6 +126,10 @@ export class ConsultationService {
               id
             }
             startTime
+            date
+            doctor {
+              id
+            }
           }
           pageInfo {
             totalPages
@@ -130,7 +138,7 @@ export class ConsultationService {
           }
         }
       }`
-    return this.apollo.query<{ getAllConsultations: { consultas: ConsultationResponse[], pageInfo: PageInfo } }>({
+    return this.apollo.query<{ getAllConsultations: { consultations: ConsultationResponse[], pageInfo: PageInfo } }>({
       query
     }).pipe(
       map(response => response.data.getAllConsultations)

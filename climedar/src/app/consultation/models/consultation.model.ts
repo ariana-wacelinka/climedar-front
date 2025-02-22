@@ -18,8 +18,12 @@ export interface ConsultationResponse{
     date: string;
     doctor?: {
         id: string;
+        name?: string;
+        surname?: string;
     };
     patient?: {
         id: string;
+        name?: string;
+        surname?: string;
     }
 }
