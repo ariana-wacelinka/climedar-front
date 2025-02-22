@@ -10,6 +10,9 @@ import { PaginatorComponent } from '../paginator/paginator.component';
 import { PageInfo } from '../../models/extras.models';
 import { DoctorService } from '../../../doctors/service/doctor.service';
 import { PatientService } from '../../../patients/services/patient.service';
+import { PaymentService } from '../../services/payment/payment.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConsultationInfoComponent } from '../../../consultation/consultation-info/consultation-info.component';
 
 @Component({
   selector: 'app-person-info',
@@ -29,12 +32,14 @@ export class PersonInfoComponent {
   person = signal<Paciente | Doctor | null>(null);
 
   consultas = signal<ConsultationResponse[]>([]);
-  displayedColumns: string[] = ["date", "timeStart", "person"];
+  displayedColumns: string[] = ["date", "timeStart", "person", "estado"];
 
   constructor(private router: Router,
     private consultationService: ConsultationService,
     private doctorService: DoctorService,
-    private patientService: PatientService) {
+    private patientService: PatientService,
+    private paymentService: PaymentService,
+    private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
     console.log(navigation?.extras.state);
     if (navigation?.extras.state?.['pacienteInfo']) {
@@ -115,5 +120,11 @@ export class PersonInfoComponent {
 
   currentPage(): WritableSignal<number> {
     return signal<number>(this.pageInfo().currentPage);
+  }
+
+  openConsultation(consultation: ConsultationResponse) {
+    this.dialog.open(ConsultationInfoComponent, {
+      data: { consultation: consultation }
+    });
   }
 }

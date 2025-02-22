@@ -98,8 +98,15 @@
                             </ng-container>
                             }
 
+                            <ng-container matColumnDef="estado">
+                                <th mat-header-cell class="estado" *matHeaderCellDef> Estado </th>
+                                <td mat-cell class="estado" *matCellDef="let consultation">
+                                    <div style="font-weight: 400; font-style: italic;">PAGADO</div>
+                                </td>
+                            </ng-container>
+
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            <tr (click)="openConsultation(row)" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
                             <tr class="mat-row" *matNoDataRow>
                                 <td class="mat-cell" colspan="4">
