@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
+import { MatTabsModule } from '@angular/material/tabs';
+import { EstadisticasComponent } from "./estadisticas/estadisticas.component";
 
 @Component({
   selector: 'app-facturacion',
-  imports: [],
+  imports: [CenteredCardComponent, MatTabsModule, EstadisticasComponent],
   templateUrl: './facturacion.component.html',
   styleUrl: './facturacion.component.scss'
 })

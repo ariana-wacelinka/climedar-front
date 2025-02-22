@@ -1,0 +1,82 @@
+<div class="pie-chart">
+    <ngx-charts-pie-chart
+    [view]="view"
+    [customColors]="colorScheme"
+    [results]="single"
+    [gradient]="gradient"
+    [legend]="showLegend"
+    [legendPosition]="legendPosition"
+    [legendTitle]="'Ganancias'"
+    (select)="onSelect($event)">
+  </ngx-charts-pie-chart>
+  <div class="form">
+    <mat-button-toggle-group class="buttons" (formControl)="pieChartRevenueControl.controls.originName">
+        <mat-button-toggle value="SPECIALITY" [checked]="true">Especialidad</mat-button-toggle>
+        <mat-button-toggle value="MEDICAL_SERVICE">Servicio</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <mat-form-field appearance="outline">
+        <mat-select placeholder="Periodo" [formControl]="pieChartRevenueControl.controls.revenueType">
+          <mat-option value="DAILY">Diario</mat-option>
+            <mat-option value="MONTHLY">Mensual</mat-option>
+            <mat-option value="RANGE">Rango de fechas</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      @if(pieChartRevenueControl.controls.revenueType.value === 'DAILY') {
+        <mat-form-field appearance="outline">
+            <mat-label>Choose a date</mat-label>
+            <input matInput [matDatepicker]="uniquePicker" [formControl]="pieChartRevenueControl.controls.date" />
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="uniquePicker"></mat-datepicker-toggle>
+            <mat-datepicker #uniquePicker></mat-datepicker>
+          </mat-form-field>
+      }
+      @if (pieChartRevenueControl.controls.revenueType.value === 'RANGE') {
+        <mat-form-field appearance="outline">
+            <mat-label>Selecciona un rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="rangepicker">
+              <input
+                matStartDate
+                [formControl]="pieChartRevenueControl.controls.fromDate"
+                placeholder="Start date"
+              />
+              <input
+                matEndDate
+                [formControl]="pieChartRevenueControl.controls.toDate"
+                placeholder="End date"
+              />
+            </mat-date-range-input>
+            <mat-hint>MM/DD/AAAA – MM/DD/AAAA</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="rangepicker"
+            ></mat-datepicker-toggle>
+            <mat-date-range-picker #rangepicker></mat-date-range-picker>
+            </mat-form-field>
+      }
+      @if (pieChartRevenueControl.controls.revenueType.value === 'MONTHLY') {
+        <mat-form-field appearance="outline">
+            <mat-label>Meses</mat-label>
+            <mat-date-range-input [rangePicker]="monthpicker">
+              <input
+                matStartDate
+                [formControl]="pieChartRevenueControl.controls.fromDate"
+                placeholder="Start date"
+              />
+              <input
+                matEndDate
+                [formControl]="pieChartRevenueControl.controls.toDate"
+                placeholder="End date"
+              />
+            </mat-date-range-input>
+            <mat-hint>MM/DD/AAAA – MM/DD/AAAA</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="monthpicker"
+            ></mat-datepicker-toggle>
+            <mat-date-range-picker #monthpicker></mat-date-range-picker>
+            </mat-form-field>
+      }
+  </div>
+</div>

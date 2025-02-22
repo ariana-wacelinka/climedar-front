@@ -21,17 +21,18 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "@apollo/client": "^3.0.0",
     "@auth0/auth0-angular": "2.2.3",
+    "@swimlane/ngx-charts": "^22.0.0-alpha.0",
     "apollo-angular": "8.0.2",
     "auth0-js": "^9.28.0",
+    "graphql": "^16",
     "jwt-decode": "^4.0.0",
     "luxon": "^3.5.0",
     "ngx-mask": "^19.0.6",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0",
-    "@apollo/client": "^3.0.0",
-    "graphql": "^16"
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.0.7",
