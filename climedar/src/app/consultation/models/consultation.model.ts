@@ -15,7 +15,8 @@ export interface Consultation {
 export interface ConsultationResponse{
     id: string;
     startTime: string;
-    date: string;
+    date: Date;
+    paid: boolean;
     finalPrice: number;
     doctor?: {
         id: string;
