@@ -67,24 +67,6 @@ export class PersonInfoComponent {
     this.consultationService.getConsultasByDoctorId(page, this.doctor()?.id || "").subscribe(consultas => {
       this.consultas.set(consultas.consultations);
       this.pageInfo.set(consultas.pageInfo);
-
-      const currentConsultas = this.consultas();
-      for (let i = 0; i < currentConsultas.length; i++) {
-        const patientId = currentConsultas[i].patient!.id;
-        this.patientService.getPatientById(patientId).subscribe(paciente => {
-          const origConsultas = this.consultas();
-          const origPatient = currentConsultas[i].patient!;
-          const updatedPatient = {
-            id: origPatient.id,
-            name: paciente.name,
-            surname: paciente.surname
-          };
-          const updatedConsultas = origConsultas.map((consulta, index) =>
-            index === i ? { ...consulta, patient: updatedPatient } : consulta
-          );
-          this.consultas.set(updatedConsultas);
-        });
-      }
     });
   }
 
@@ -92,24 +74,6 @@ export class PersonInfoComponent {
     this.consultationService.getConsultasByPatientId(page, this.paciente()?.id || "").subscribe(consultas => {
       this.consultas.set(consultas.consultations);
       this.pageInfo.set(consultas.pageInfo);
-
-      const currentConsultas = this.consultas();
-      for (let i = 0; i < currentConsultas.length; i++) {
-        const doctorId = currentConsultas[i].doctor!.id;
-        this.doctorService.getDoctorById(doctorId).subscribe(doctor => {
-          const origConsultas = this.consultas();
-          const origDoctor = currentConsultas[i].doctor!;
-          const updatedDoctor = {
-            id: origDoctor.id,
-            name: doctor.name,
-            surname: doctor.surname
-          };
-          const updatedConsultas = origConsultas.map((consulta, index) =>
-            index === i ? { ...consulta, doctor: updatedDoctor } : consulta
-          );
-          this.consultas.set(updatedConsultas);
-        });
-      }
     });
   }
 
@@ -124,6 +88,9 @@ export class PersonInfoComponent {
 
   openConsultation(consultation: ConsultationResponse) {
     this.dialog.open(ConsultationInfoComponent, {
+      width: '670px',
+      minWidth: '350px',
+      maxWidth: '90vw',
       data: { consultation: consultation }
     });
   }

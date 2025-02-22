@@ -61,11 +61,15 @@ export class ConsultationService {
             id
             patient {
               id
+              name
+              surname
             }
             startTime
             date
             doctor {
               id
+              name
+              surname
             }
             finalPrice
           }
@@ -94,12 +98,16 @@ export class ConsultationService {
             id
             patient {
               id
+              name
+              surname
             }
             startTime
             finalPrice
             date
             doctor {
               id
+              name
+              surname
             }
           }
           pageInfo {

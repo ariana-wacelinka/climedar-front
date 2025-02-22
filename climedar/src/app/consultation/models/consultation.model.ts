@@ -19,12 +19,12 @@ export interface ConsultationResponse{
     finalPrice: number;
     doctor?: {
         id: string;
-        name?: string;
-        surname?: string;
+        name: string;
+        surname: string;
     };
-    patient?: {
+    patient: {
         id: string;
-        name?: string;
-        surname?: string;
+        name: string;
+        surname: string;
     }
 }

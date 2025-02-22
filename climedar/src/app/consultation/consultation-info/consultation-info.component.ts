@@ -4,10 +4,13 @@ import { PaymentDialogComponent } from '../../shared/components/payment-dialog/p
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PaymentService } from '../../shared/services/payment/payment.service';
 import { ConsultationService } from '../services/consultation.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-consultation-info',
-  imports: [],
+  imports: [
+    MatIconModule
+  ],
   templateUrl: './consultation-info.component.html',
   styleUrl: './consultation-info.component.scss'
 })
