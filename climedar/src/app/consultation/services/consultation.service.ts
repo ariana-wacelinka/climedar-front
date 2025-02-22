@@ -67,6 +67,7 @@ export class ConsultationService {
             doctor {
               id
             }
+            finalPrice
           }
           pageInfo {
             totalPages
@@ -95,6 +96,7 @@ export class ConsultationService {
               id
             }
             startTime
+            finalPrice
             date
             doctor {
               id
@@ -127,6 +129,7 @@ export class ConsultationService {
             }
             startTime
             date
+            finalPrice
             doctor {
               id
             }

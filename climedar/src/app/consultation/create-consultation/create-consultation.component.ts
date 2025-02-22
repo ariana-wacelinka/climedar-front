@@ -189,9 +189,9 @@ export class CreateConsultationComponent implements OnInit {
       debounceTime(300),
       switchMap(value => {
         const title = value;
-        return this.pacienteService.getPatients(title).pipe(
-          map((paciente: Paciente[]) => {
-            return paciente;
+        return this.pacienteService.getPacientes(1, title).pipe(
+          map(response => {
+            return response.patients;
           })
         );
       }),

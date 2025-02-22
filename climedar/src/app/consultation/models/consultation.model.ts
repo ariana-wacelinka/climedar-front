@@ -16,6 +16,7 @@ export interface ConsultationResponse{
     id: string;
     startTime: string;
     date: string;
+    finalPrice: number;
     doctor?: {
         id: string;
         name?: string;
