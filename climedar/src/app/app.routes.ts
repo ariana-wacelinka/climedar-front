@@ -20,6 +20,7 @@ export const routes: Routes = [
   { path: '', component: CalendarComponent },
   { path: 'home', component: CenteredCardComponent },
   { path: 'consulta/nueva', component: CreateConsultationComponent },
+  { path: 'consulta/editar', component: CreateConsultationComponent },
   { path: 'consulta/nueva/:turnoId', component: CreateConsultationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'medico/nuevo', component: AltaDoctorComponent },
@@ -36,6 +37,6 @@ export const routes: Routes = [
   { path: 'paginator', component: PaginatorComponent },
   { path: 'medico/info', component: PersonInfoComponent },
   { path: 'paciente/info', component: PersonInfoComponent },
-  { path: 'facturacion', component: FacturacionComponent},
+  { path: 'facturacion', component: FacturacionComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

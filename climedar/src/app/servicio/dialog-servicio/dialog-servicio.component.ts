@@ -163,7 +163,7 @@ export class DialogServicioComponent {
 
         this.serviciosMedicosService.createMedicalService(servicioMedico).subscribe(response => {
           console.log(response);
-          this.onClose();
+          this.dialogRef.close();
           window.location.reload();
         }, error => {
           console.error('Error al crear servicio', error);
@@ -184,7 +184,7 @@ export class DialogServicioComponent {
       if (this.formGroup.valid) {
         this.serviciosMedicosService.updateMedicalService(servicioMedico).subscribe(response => {
           console.log(response);
-          this.onClose();
+          this.dialogRef.close();
           window.location.reload();
         }, error => {
           console.error('Error al editar servicio', error);

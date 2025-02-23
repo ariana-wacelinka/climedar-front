@@ -76,13 +76,13 @@ export class DialogObrasocialComponent {
       if (!this.data.id) {
         this.obraSocialService.createObraSocial(obraSocialSent).subscribe(
           () => {
-            this.onClose();
+            this.dialogRef.close();
             window.location.reload();
           });
       } else {
         this.obraSocialService.updateObraSocial(obraSocialSent).subscribe(
           () => {
-            this.onClose();
+            this.dialogRef.close();
             window.location.reload();
           });
       }

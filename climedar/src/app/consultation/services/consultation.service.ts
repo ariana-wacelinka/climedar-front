@@ -97,16 +97,18 @@ export class ConsultationService {
           pageRequest: {page: ${page}, size: 5}
           specification: {patientId: "${patientId}"}
         ) {
-          consultations {
+          isPaid
             id
+            description
+            finalPrice
+            startTime
+            endTime
+            date
             patient {
               id
               name
               surname
             }
-            startTime
-            finalPrice
-            date
             doctor {
               id
               name
@@ -134,15 +136,22 @@ export class ConsultationService {
           pageRequest: {page: ${page}, size: 5}
         ) {
           consultations {
+            isPaid
             id
+            description
+            finalPrice
+            startTime
+            endTime
+            date
             patient {
               id
+              name
+              surname
             }
-            startTime
-            date
-            finalPrice
             doctor {
               id
+              name
+              surname
             }
           }
           pageInfo {

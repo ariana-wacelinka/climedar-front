@@ -68,6 +68,9 @@ export class ConsultationInfoComponent {
   }
 
   modificarConsulta() {
-    this.router.navigate(['/consultation']);
+    this.dialogRef.close();
+    this.router.navigate(['/consulta/editar'],
+      { state: { consultaData: this.consultation() } }
+    );
   }
 }

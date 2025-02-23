@@ -1,3 +1,6 @@
+import { Doctor } from "../../doctors/models/doctor.models";
+import { Paciente } from "../../patients/models/paciente.models";
+
 export interface CreateConsultation {
     description: string;
     medicalServicesId: String[];
@@ -20,14 +23,7 @@ export interface ConsultationResponse {
     date: Date;
     isPaid: boolean;
     finalPrice: number;
-    doctor?: {
-        id: string;
-        name: string;
-        surname: string;
-    };
-    patient: {
-        id: string;
-        name: string;
-        surname: string;
-    }
+    doctor?: Doctor;
+    patient?: Paciente;
+    shiftId?: String;
 }

@@ -206,7 +206,7 @@ export class DialogPaqueteComponent {
 
         this.packageService.createPackage(paquete).subscribe((response) => {
           console.log('Paquete creado' + response);
-          this.onClose();
+          this.dialogRef.close();
           window.location.reload();
         });
       }
@@ -220,7 +220,7 @@ export class DialogPaqueteComponent {
 
         this.packageService.updatePackage(paquete).subscribe((response) => {
           alert('Paquete editado: ' + response);
-          this.onClose();
+          this.dialogRef.close();
           window.location.reload();
         });
       }

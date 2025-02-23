@@ -15,7 +15,7 @@
             <div class="contenedor_icon"><mat-icon>schedule</mat-icon></div>
             <div class="info">
                 <div class="label">Hora de inicio</div>
-                <div class="value">{{consultation().startTime.split(':')[0]}}:{{consultation().startTime.split(':')[1]}}
+                <div class="value">{{consultation().startTime!.split(':')[0]}}:{{consultation().startTime!.split(':')[1]}}
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
             </div>
         </div>
     </div>
-    @if(!consultation().paid){
+    @if(!consultation().isPaid){
     <button mat-flat-button (click)="pagarConsultation()">Realizar pago</button>
     }
     <div class="divider"></div>
@@ -54,10 +54,10 @@
             <div class="contenedor_icon"><mat-icon>person</mat-icon></div>
             <div class="info">
                 <div class="label">Paciente</div>
-                <div class="value">{{consultation().patient.name}} {{consultation().patient.surname}}</div>
+                <div class="value">{{consultation().patient?.name}} {{consultation().patient?.surname}}</div>
             </div>
         </div>
     </div>
     <div class="divider"></div>
-    <button mat-flat-button (click)="pagarConsultation()">Modificar consulta</button>
+    <button mat-flat-button (click)="modificarConsulta()">Modificar consulta</button>
 </div>

@@ -109,9 +109,11 @@ export class CreateConsultationComponent implements OnInit {
   constructor(private paymentService: PaymentService, private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService, private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
     const id = navigation?.extras?.state?.['turnoId'] || null;
+    console.log('turnoId', id);
     var consultation = navigation?.extras?.state?.['consultaData'] || null;
+    console.log('consultaData', consultation);
     var turno = navigation?.extras?.state?.['turno'] || null;
-    if (id) {
+    if (id !== null) {
       this.turnoId.set(id);
       this.consultationFG.controls.shiftId.setValue(id);
     } else {
