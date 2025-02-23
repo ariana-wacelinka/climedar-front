@@ -1,22 +1,21 @@
 import { Component, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
-import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 import { Especialidad, EspecialidadService } from '../../../../especialidad';
-import { debounceTime, filter, map, Observable, startWith, switchMap, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { AsyncPipe } from '@angular/common';
 import { PaymentService } from '../../../../shared/services/payment/payment.service';
 
 @Component({
   selector: 'app-barchart',
-  imports: [NgxChartsModule, MatInputModule, MatFormFieldModule, ReactiveFormsModule, FormsModule, MatDatepickerModule, MatButtonToggleModule, MatSelectModule, MatAutocompleteModule, AsyncPipe],
+  imports: [NgxChartsModule, MatInputModule, MatFormFieldModule, ReactiveFormsModule, FormsModule, MatDatepickerModule, MatButtonToggleModule, MatSelectModule, MatAutocompleteModule],
   providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'es-AR'},
         provideMomentDateAdapter(),

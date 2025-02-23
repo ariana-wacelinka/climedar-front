@@ -24,7 +24,7 @@ export class PaymentService {
     return this.http.post(this.paymentUrl, body, { responseType: 'blob' });
   }
 
-  getRevenues(fromDate: String = '', toDate: String = '', revenueType: string = '', originName: string = '', date: String = '', serviceType: string  = '', specialityName: string  = ''): Observable<{ name: string, value: number }[]> {
+  getRevenues(fromDate: String = '', toDate: String = '', revenueType: string = '', originName: string = '', date: String = '', serviceType: string = '', specialityName: string = ''): Observable<{ name: string, value: number }[]> {
     const REVENUES = `
           query MyQuery {
           getAllRevenuesPieChart(
@@ -71,7 +71,7 @@ export class PaymentService {
     );
   }
 
-  getAllPayments(page: number, startDate: string, endDate: string): Observable<{payments: Payment[], pageInfo: PageInfo} > {
+  getAllPayments(page: number, startDate: string, endDate: string): Observable<{ payments: Payment[], pageInfo: PageInfo }> {
     const query = gql`
         query MyQuery {
           getAllPayments(
