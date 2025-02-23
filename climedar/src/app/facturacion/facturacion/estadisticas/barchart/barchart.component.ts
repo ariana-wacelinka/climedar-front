@@ -51,8 +51,6 @@ export class BarchartComponent implements OnInit, OnChanges {
   showYAxisLabel = true;
   yAxisLabel = 'Population';
 
-  colorScheme = "#5AA454";
-
   constructor(private especialidadService: EspecialidadService, private paymentService: PaymentService) {
   }
 
