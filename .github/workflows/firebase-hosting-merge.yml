@@ -11,31 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Bun
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          echo "BUN_INSTALL=$HOME/.bun" >> $GITHUB_ENV
-          echo "PATH=$HOME/.bun/bin:$PATH" >> $GITHUB_ENV
-
-          - name: Verify Bun Installation
-          run: $HOME/.bun/bin/bun -v  # Verifica usando la ruta completa
-  
-      - name: Install Dependencies
-        working-directory: climedar
-        run: $HOME/.bun/bin/bun install
-
-      - name: Prebuild Angular with Firebase Variables
-        working-directory: climedar
-        run: $HOME/.bun/bin/bun run prebuild
-
-      - name: Build Angular App
-        working-directory: climedar
-        run: $HOME/.bun/bin/bun run build
-
-      - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      - run: npm i && npm run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: ${{ secrets.FIREBASE_TOKEN }}
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CLIMEDAR_C7287 }}
           channelId: live
           projectId: climedar-c7287
