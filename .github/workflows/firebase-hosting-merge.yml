@@ -18,7 +18,7 @@ jobs:
           echo "PATH=$HOME/.bun/bin:$PATH" >> $GITHUB_ENV
 
       - name: Verify Bun Installation
-        run: $HOME/.bun/bin/bun -v  # Verifica usando la ruta completa
+        run: $HOME/.bun/bin/bun -v
 
       - name: Install Dependencies
         run: |
@@ -27,13 +27,12 @@ jobs:
 
       - name: Install Firebase CLI
         run: |
-          cd climedar
           $HOME/.bun/bin/bun add -g firebase-tools
 
       - name: Login to Firebase
         run: |
           cd climedar
-          firebase login:ci --no-localhost --token ${{ secrets.FIREBASE_TOKEN }}
+          $HOME/.bun/bin/firebase login:ci --token "${{ secrets.FIREBASE_TOKEN }}"
 
       - name: Prebuild Angular with Firebase Variables
         run: |
