@@ -14,8 +14,11 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { ApolloLink, InMemoryCache } from '@apollo/client/core';
+import { AuthService } from '@auth0/auth0-angular';
 
 registerLocaleData(localeEs, 'es');
+
+const auth = AuthService
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -37,19 +40,19 @@ export const appConfig: ApplicationConfig = {
       const httpLink = inject(HttpLink);
 
       // TODO: DESCOMENTAR CUANDO TENGAMOS QUE ENVIAR EL TOKEN EN CADA REQUEST
-      // // Middleware para agregar el token automáticamente a cada request
-      // const authLink = new ApolloLink((operation, forward) => {
-      //   const token = localStorage.getItem('token'); // Obtiene el token de localStorage
+      // Middleware para agregar el token automáticamente a cada request
+      const authLink = new ApolloLink((operation, forward) => {
+        const token = localStorage.getItem('access_token'); // Obtiene el token de localStorage
 
-      //   operation.setContext({
-      //     headers: {
-      //       Authorization: token ? `Bearer ${token}` : '', // Agrega el token al header
-      //       'Custom-Header': 'valor-personalizado' // Puedes agregar otros headers si es necesario
-      //     },
-      //   });
+        operation.setContext({
+          headers: {
+            Authorization: token ? `Bearer ${token}` : '', // Agrega el token al header
+            'Custom-Header': 'valor-personalizado' // Puedes agregar otros headers si es necesario
+          },
+        });
 
-      //   return forward(operation);
-      // });
+        return forward(operation);
+      });
 
       return {
         link: httpLink.create({
