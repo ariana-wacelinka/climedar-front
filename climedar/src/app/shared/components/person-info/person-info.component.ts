@@ -40,9 +40,6 @@ export class PersonInfoComponent {
 
   constructor(private router: Router,
     private consultationService: ConsultationService,
-    private doctorService: DoctorService,
-    private patientService: PatientService,
-    private paymentService: PaymentService,
     private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
     console.log(navigation?.extras.state);

@@ -12,11 +12,13 @@ export interface Consultation {
     finalPrice: number;
 }
 
-export interface ConsultationResponse{
+export interface ConsultationResponse {
     id: string;
-    startTime: string;
+    startTime?: string;
+    endTime?: string;
+    description?: string;
     date: Date;
-    paid: boolean;
+    isPaid: boolean;
     finalPrice: number;
     doctor?: {
         id: string;

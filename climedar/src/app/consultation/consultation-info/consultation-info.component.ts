@@ -9,6 +9,8 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
+import { ConsultationService } from '../services/consultation.service';
+import { Router } from '@angular/router';
 
 registerLocaleData(localeEsAr, 'es-AR');
 
@@ -31,6 +33,7 @@ export class ConsultationInfoComponent {
     private dialog: MatDialog,
     private paymentService: PaymentService,
     public dialogRef: MatDialogRef<ConsultationInfoComponent>,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: {
       consultation: ConsultationResponse,
     },
@@ -39,7 +42,6 @@ export class ConsultationInfoComponent {
   }
 
   pagarConsultation() {
-
     const dialogRef = this.dialog.open(PaymentDialogComponent, {
       data: { price: this.consultation().finalPrice }
     });
@@ -63,5 +65,9 @@ export class ConsultationInfoComponent {
         }
       );
     });
+  }
+
+  modificarConsulta() {
+    this.router.navigate(['/consultation']);
   }
 }

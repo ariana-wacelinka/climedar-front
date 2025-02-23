@@ -58,20 +58,23 @@ export class ConsultationService {
           specification: {doctorId: "${doctorId}"}
         ) {
           consultations {
+            isPaid
             id
+            description
+            finalPrice
+            startTime
+            endTime
+            date
             patient {
               id
               name
               surname
             }
-            startTime
-            date
             doctor {
               id
               name
               surname
             }
-            finalPrice
           }
           pageInfo {
             totalPages

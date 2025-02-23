@@ -92,8 +92,8 @@ export class PagosComponent {
   onSelectedDate(event: MatDatepickerInputEvent<Date>) {
     this.pageInfo.set({ totalItems: 0, currentPage: 1, totalPages: 0 });
 
-    var startDate = this.startDate != "" ? new Date(this.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).split(" ")[0] : "";
-    var endDate = this.endDate != "" ? new Date(this.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).split(" ")[0] : "";
+    var startDate = this.startDate != "" ? new Date(this.startDate).toISOString().split('T')[0] : "";
+    var endDate = this.endDate != "" ? new Date(this.endDate).toISOString().split('T')[0] : "";
     console.log("startDate", startDate);
     console.log("endDate", endDate);
 
