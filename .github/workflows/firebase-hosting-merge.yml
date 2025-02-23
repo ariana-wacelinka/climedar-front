@@ -17,6 +17,10 @@ jobs:
           echo "export BUN_INSTALL=\"$HOME/.bun\"" >> $GITHUB_ENV
           echo "export PATH=\"$HOME/.bun/bin:$PATH\"" >> $GITHUB_ENV
           source $GITHUB_ENV
+          export PATH="$HOME/.bun/bin:$PATH"  # Asegura que el PATH esté disponible
+
+      - name: Verify Bun Installation
+        run: bun -v
 
       - name: Install Dependencies
         run: bun install
