@@ -1,0 +1,79 @@
+<div class="content">
+    <div class="buscadores">
+        <div class="row"><mat-form-field appearance="outline">
+                <mat-label>Desde</mat-label>
+                <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate"
+                    (dateChange)="onSelectedDate($event)">
+                <mat-datepicker #startDatePicker />
+                <mat-datepicker-toggle [for]="startDatePicker" matSuffix />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Hasta</mat-label>
+                <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="endDate"
+                    (dateChange)="onSelectedDate($event)">
+                <mat-datepicker #endDatePicker />
+                <mat-datepicker-toggle [for]="endDatePicker" matSuffix />
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="payments()">
+
+            <ng-container matColumnDef="date">
+                <th mat-header-cell class="date" *matHeaderCellDef>Fecha</th>
+                <td mat-cell class="date" *matCellDef="let pago"> {{pago.paymentDate}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="paciente">
+                <th mat-header-cell class="paciente" *matHeaderCellDef>Paciente</th>
+                <td mat-cell class="paciente" *matCellDef="let pago">
+                    {{pago.consultation.patient.name}} {{pago.consultation.patient.surname}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="paymentMethod">
+                <th mat-header-cell class="paymentMethod" *matHeaderCellDef>Método de pago</th>
+                <td mat-cell class="paymentMethod" *matCellDef="let pago">
+                    {{pago.paymentMethod}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+                <th mat-header-cell class="precio" *matHeaderCellDef> Precio </th>
+                <td mat-cell class="precio" *matCellDef="let payment">$ {{payment.amount}} </td>
+            </ng-container>
+
+            <ng-container class="edit" matColumnDef="edit">
+                <th mat-header-cell *matHeaderCellDef></th>
+
+                <td id="edit" mat-cell *matCellDef="let payment" style="text-align: right;">
+                    <button id="menu" [matMenuTriggerFor]="menu"><mat-icon
+                            style="color: black; font-size: 22px; margin-top: 5px">more_vert
+                        </mat-icon></button>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="cancelarPago(payment)" mat-menu-item>Cancelar</button>
+                        <button (click)="cancelarPago(payment)" mat-menu-item>Descargar factura</button>
+                        <button (click)="cancelarPago(payment)" mat-menu-item>Descargar recibo</button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <tr class="no-mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="5">
+                    <div class="nada">No se han encontrado payments</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+@if (payments().length === 0) {
+<div style="height: 34px;"></div>
+} @else {
+<app-paginator [totalItems]="pageInfo().totalItems" [pageSize]="5" (pageChange)="pageChange($event)"
+    [currentPage]="currentPage()"></app-paginator>
+}

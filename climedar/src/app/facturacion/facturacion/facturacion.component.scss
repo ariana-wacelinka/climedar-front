@@ -6,3 +6,7 @@ h1 {
 .full-width {
     width: 100%;
 }
+
+::ng-deep .mat-mdc-tab-body-content {
+    overflow-x: hidden !important;
+}

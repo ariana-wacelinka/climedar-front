@@ -1,0 +1,56 @@
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 40px 20px 0 20px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+td,
+th {
+    width: 25%;
+    font-size: 18px;
+}
+
+.paciente {
+    min-width: 300px;
+}
+
+.nada {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #b9b9b923;
+    }
+}
+
+#menu {
+    border: 0;
+    border-radius: 50px;
+    background-color: #F9F9F9;
+    height: 36px;
+    width: 36px;
+
+    &:hover {
+        background-color: #F1F1F1;
+        cursor: pointer;
+    }
+}
+
+table {
+    width: 90%;
+}
+
+.content {
+    width: 870px;
+    min-height: 392px;
+}
