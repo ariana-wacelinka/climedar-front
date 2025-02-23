@@ -1,0 +1,68 @@
+<div class="pie-chart">
+  <div class="form">
+    
+      <mat-form-field appearance="outline">
+        <mat-select placeholder="Periodo" [formControl]="pieChartRevenueControl.controls.revenueType" (valueChange)="onSelectRevenueType($event)">
+          <mat-option value="DAILY">Diario</mat-option>
+            <mat-option value="MONTHLY">Mensual</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      @if(pieChartRevenueControl.controls.revenueType.value === 'DAILY') {
+        <mat-form-field appearance="outline">
+            <mat-label>Selecciona un rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="rangepicker">
+              <input
+                matStartDate
+                [formControl]="pieChartRevenueControl.controls.fromDate"
+                placeholder="Start date"
+              />
+              <input
+                matEndDate
+                [formControl]="pieChartRevenueControl.controls.toDate"
+                placeholder="End date"
+              />
+            </mat-date-range-input>
+            <mat-hint>MM/DD/AAAA – MM/DD/AAAA</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="rangepicker"
+            ></mat-datepicker-toggle>
+            <mat-date-range-picker #rangepicker startView="multi-year"></mat-date-range-picker>
+            </mat-form-field>
+      }
+      @if (pieChartRevenueControl.controls.revenueType.value === 'MONTHLY') {
+        <mat-form-field appearance="outline">
+            <mat-label>Meses</mat-label>
+            <mat-date-range-input [rangePicker]="monthpicker">
+              <input
+                matStartDate
+                [formControl]="pieChartRevenueControl.controls.fromDate"
+                placeholder="Start date"
+              />
+              <input
+                matEndDate
+                [formControl]="pieChartRevenueControl.controls.toDate"
+                placeholder="End date"
+              />
+            </mat-date-range-input>
+            <mat-hint>MM/DD/AAAA – MM/DD/AAAA</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="monthpicker"
+            ></mat-datepicker-toggle>
+            <mat-date-range-picker #monthpicker></mat-date-range-picker>
+            </mat-form-field>
+      }
+  </div>
+  <ngx-charts-bar-vertical
+    [view]="view"
+    [customColors]="colorScheme"
+    [results]="single()"
+    [gradient]="gradient"
+    [legend]="showLegend"
+    [legendPosition]="legendPosition"
+    [legendTitle]="'Ganancias'"
+    (select)="onSelect($event)">
+  </ngx-charts-bar-vertical>
+</div>
