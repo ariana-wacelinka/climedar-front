@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Obtén la ruta absoluta al directorio environments
-const envDir = path.join(__dirname, 'src/environments');
+const envDir = path.join(__dirname, 'src/app/environments');
 const envFile = path.join(envDir, 'environment.prod.ts');
 
 // Crea el directorio si no existe
