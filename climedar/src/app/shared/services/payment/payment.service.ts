@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../../environments';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
-
+  private paymentUrl = environment.paymentUrl;
   constructor(private http: HttpClient, private apollo: Apollo) { 
   }
 
@@ -16,7 +17,7 @@ export class PaymentService {
       consultationId: consultationId,
       paymentMethod: paymentMethod
     }
-    return this.http.post('http://localhost:8085/api/public/payments', body, { responseType: 'blob' });
+    return this.http.post(this.paymentUrl, body, { responseType: 'blob' });
   }
 
   getRevenues(fromDate: String = '', toDate: String = '', revenueType: string = '', originName: string = '', date: String = '', serviceType: string  = '', specialityName: string  = ''): Observable<{ name: string, value: number }[]> {

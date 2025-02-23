@@ -11,3 +11,21 @@ export interface Consultation {
     id: string;
     finalPrice: number;
 }
+
+export interface ConsultationResponse{
+    id: string;
+    startTime: string;
+    date: Date;
+    paid: boolean;
+    finalPrice: number;
+    doctor?: {
+        id: string;
+        name: string;
+        surname: string;
+    };
+    patient: {
+        id: string;
+        name: string;
+        surname: string;
+    }
+}

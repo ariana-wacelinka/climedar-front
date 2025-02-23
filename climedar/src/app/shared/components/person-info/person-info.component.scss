@@ -1,3 +1,10 @@
+.paginator {
+    display: flex;
+    justify-content: right;
+    width: 100%;
+    padding-bottom: 10px;
+}
+
 .content {
     width: 100%;
     min-height: 600px;
@@ -16,6 +23,11 @@
     flex-direction: column;
     gap: 5px;
     padding: 5px 30px;
+}
+
+.date,
+.time {
+    width: 250px;
 }
 
 .titulo {
@@ -37,6 +49,20 @@ h1 {
     margin: 20px;
 }
 
+.contenedor_tabla {
+    width: 100% !important;
+    justify-items: center;
+}
+
+table {
+    margin-bottom: 10px;
+}
+
+.tabla,
+.mat-elevation-z8 {
+    width: 92.5%;
+}
+
 .combo {
     margin: 7.5px 10px;
 }
@@ -44,4 +70,34 @@ h1 {
 .label {
     font-weight: 550 !important;
     margin-bottom: 5px !important;
+}
+
+td,
+th,
+.mat-mdc-header-cell {
+    font-size: 18px;
+    padding: 0;
+}
+
+.mat-mdc-header-row{
+    cursor: default !important;
+    background-color: #f9f9f9 !important;
+}
+
+tr:hover {
+    cursor: pointer;
+    background-color: #b9b9b923;
+}
+
+.nada {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #b9b9b923;
+    }
 }
