@@ -1,6 +1,16 @@
 const fs = require('fs');
+const path = require('path');
 
-// Obtén las variables de entorno de GitHub Actions
+// Obtén la ruta absoluta al directorio environments
+const envDir = path.join(__dirname, 'src/environments');
+const envFile = path.join(envDir, 'environment.prod.ts');
+
+// Crea el directorio si no existe
+if (!fs.existsSync(envDir)) {
+  fs.mkdirSync(envDir, { recursive: true });
+}
+
+// Genera el contenido del archivo de entorno
 const envConfig = `
 export const environment = {
   production: true,
@@ -16,5 +26,5 @@ export const environment = {
 `;
 
 // Escribe el archivo environment.prod.ts
-fs.writeFileSync('src/environments/environment.prod.ts', envConfig);
+fs.writeFileSync(envFile, envConfig);
 console.log('✅ environment.prod.ts generado con variables de entorno');
