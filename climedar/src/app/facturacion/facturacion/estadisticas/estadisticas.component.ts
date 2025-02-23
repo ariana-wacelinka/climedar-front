@@ -6,10 +6,11 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { PiechartComponent } from "./piechart/piechart.component";
+import { BarchartComponent } from "./barchart/barchart.component";
 
 @Component({
   selector: 'app-estadisticas',
-  imports: [PiechartComponent],
+  imports: [PiechartComponent, BarchartComponent],
   templateUrl: './estadisticas.component.html',
   styleUrl: './estadisticas.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

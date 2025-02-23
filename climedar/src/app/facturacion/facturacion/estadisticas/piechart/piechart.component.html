@@ -2,7 +2,7 @@
     <ngx-charts-pie-chart
     [view]="view"
     [customColors]="colorScheme"
-    [results]="single"
+    [results]="single()"
     [gradient]="gradient"
     [legend]="showLegend"
     [legendPosition]="legendPosition"
@@ -10,18 +10,41 @@
     (select)="onSelect($event)">
   </ngx-charts-pie-chart>
   <div class="form">
-    <mat-button-toggle-group class="buttons" (formControl)="pieChartRevenueControl.controls.originName">
+    <mat-button-toggle-group class="buttons" (change)="changeOrigin($event)">
         <mat-button-toggle value="SPECIALITY" [checked]="true">Especialidad</mat-button-toggle>
         <mat-button-toggle value="MEDICAL_SERVICE">Servicio</mat-button-toggle>
       </mat-button-toggle-group>
 
       <mat-form-field appearance="outline">
-        <mat-select placeholder="Periodo" [formControl]="pieChartRevenueControl.controls.revenueType">
+        <mat-select placeholder="Periodo" [formControl]="pieChartRevenueControl.controls.revenueType" (valueChange)="onSelectRevenueType($event)">
           <mat-option value="DAILY">Diario</mat-option>
             <mat-option value="MONTHLY">Mensual</mat-option>
             <mat-option value="RANGE">Rango de fechas</mat-option>
         </mat-select>
       </mat-form-field>
+
+      @if (pieChartRevenueControl.controls.originName.value === "SPECIALITY") {
+        <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Especialidad</mat-label>
+            <input type="text" matInput [formControl]="especialidadControl" [matAutocomplete]="autoEsp">
+            <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad" (optionSelected)="selectedEspeciality($event)">
+              @for (option of filteredEspecialidadOptions | async; track option?.code) {
+                <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+      } @else {
+        <mat-form-field appearance="outline">
+            <mat-label>Servicio</mat-label>
+            <mat-select [formControl]="pieChartRevenueControl.controls.serviceType" (valueChange)="onSelectRevenueType($event)">
+              <mat-option value="GENERAL">General</mat-option>
+                <mat-option value="SPECIALIST">Especialista</mat-option>
+                <mat-option value="SURGERY">Cirugia</mat-option>
+                <mat-option value="EXAMS">Examenes</mat-option>
+                <mat-option value="THERAPY">Terapia</mat-option>
+            </mat-select>
+          </mat-form-field>
+      }
 
       @if(pieChartRevenueControl.controls.revenueType.value === 'DAILY') {
         <mat-form-field appearance="outline">

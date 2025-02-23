@@ -24,6 +24,53 @@ export class PaymentService {
     return this.http.post(this.paymentUrl, body, { responseType: 'blob' });
   }
 
+  getRevenues(fromDate: String = '', toDate: String = '', revenueType: string = '', originName: string = '', date: String = '', serviceType: string  = '', specialityName: string  = ''): Observable<{ name: string, value: number }[]> {
+    const REVENUES = `
+          query MyQuery {
+          getAllRevenuesPieChart(
+              specification: {
+                  ${date && `date: "${date}",`}
+                  fromDate: "${fromDate}",
+                  toDate: "${toDate}",
+                  ${specialityName && `specialityName: "${specialityName}",`}
+                  ${serviceType && `serviceType: ${serviceType},`}
+                  revenueType: ${revenueType == "RANGE" ? "DAILY" : revenueType},
+                  originName: ${originName}
+              }
+          ) {
+              name
+              value
+          }
+      }
+    `
+    console.log(REVENUES);
+    return this.apollo.query<{ getAllRevenuesPieChart: { name: string, value: number }[] }>({
+      query: gql(REVENUES)
+    }).pipe(
+      map(response => response.data.getAllRevenuesPieChart)
+    );
+  }
+
+  getDatesRevenues(fromDate: String = '', toDate: String = '', revenueType: string = ''): Observable<{ date: string, value: number }[]> {
+    const QUERY = `
+    query {
+    getAllRevenuesLineChart(
+        fromDate: "${fromDate}"
+        toDate: "${toDate}"
+        revenueType: ${revenueType}
+    ) {
+        date
+        value
+    }
+}`
+
+    return this.apollo.query<{ getAllRevenuesLineChart: { date: string, value: number }[] }>({
+      query: gql(QUERY)
+    }).pipe(
+      map(response => response.data.getAllRevenuesLineChart)
+    );
+  }
+
   getAllPayments(page: number, startDate: string, endDate: string): Observable<{payments: Payment[], pageInfo: PageInfo} > {
     const query = gql`
         query MyQuery {
