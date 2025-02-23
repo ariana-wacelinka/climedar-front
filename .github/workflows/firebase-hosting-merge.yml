@@ -21,19 +21,29 @@ jobs:
         run: $HOME/.bun/bin/bun -v  # Verifica usando la ruta completa
 
       - name: Install Dependencies
-        run: $HOME/.bun/bin/bun install
+        run: |
+          cd climedar
+          $HOME/.bun/bin/bun install
 
       - name: Install Firebase CLI
-        run: $HOME/.bun/bin/bun add -g firebase-tools
+        run: |
+          cd climedar
+          $HOME/.bun/bin/bun add -g firebase-tools
 
       - name: Login to Firebase
-        run: firebase login:ci --no-localhost --token ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          cd climedar
+          firebase login:ci --no-localhost --token ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Prebuild Angular with Firebase Variables
-        run: $HOME/.bun/bin/bun run prebuild
+        run: |
+          cd climedar
+          $HOME/.bun/bin/bun run prebuild
 
       - name: Build Angular App
-        run: $HOME/.bun/bin/bun run build
+        run: |
+          cd climedar
+          $HOME/.bun/bin/bun run build
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
