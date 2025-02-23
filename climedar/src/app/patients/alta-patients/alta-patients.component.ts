@@ -9,6 +9,8 @@ import { DatosObraSocialComponent } from './datos-obra-social/datos-obra-social.
 import { Paciente } from '../models/paciente.models';
 import { PatientService } from '../services/patient.service';
 import { Router } from '@angular/router';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-alta-patients',
@@ -31,7 +33,8 @@ export class AltaPatientsComponent {
   public pacienteId = signal<string>('');
 
   constructor(private patientService: PatientService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.pacienteId.set(navigation?.extras.state?.['id']);
@@ -94,7 +97,15 @@ export class AltaPatientsComponent {
   }
 
   public cancelar() {
-    window.history.back();
+    if (this.patientForm.dirty) {
+      this.dialog.open(ConfirmationDialogComponent, { data: { message: '¿Estás seguro de que deseas cancelar? Los cambios se perderán.' } }).afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          window.history.back();
+        }
+      });
+    } else {
+      window.history.back();
+    }
   }
 
   onFormChanges(form: FormGroup) {

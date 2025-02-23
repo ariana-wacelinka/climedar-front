@@ -1,4 +1,4 @@
-import { CreateTurno, RecurringShift, ShiftBuilder } from './../models/turno.models';
+import { CreateTurno, ShiftBuilder } from './../models/turno.models';
 import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -20,14 +20,14 @@ import { CommonModule } from '@angular/common';
 import { DateAdapter, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDivider } from '@angular/material/divider';
 import { TurnosService } from '../services/turnos-service/turnos.service';
-import { MatTimepicker, MatTimepickerInput, MatTimepickerModule, MatTimepickerOption } from '@angular/material/timepicker';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
 import { Doctor } from '../../doctors/models/doctor.models';
 import { DoctorService } from '../../doctors/service/doctor.service';
-import { Especialidad } from '../../especialidad';
-import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { Duration } from 'luxon';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 const today = new Date();
 const month = today.getMonth();
@@ -95,7 +95,9 @@ export class AltaTurnoComponent implements OnInit {
   }, { validators: Validators.compose([this.timeRangeValidator.bind(this)]) });
 
 
-  constructor(private turnosService: TurnosService, private doctorService: DoctorService,) { }
+  constructor(private turnosService: TurnosService, private doctorService: DoctorService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     (this.range as FormGroup).removeControl('recurringShift');
@@ -198,7 +200,15 @@ export class AltaTurnoComponent implements OnInit {
   }
 
   cancelar() {
-    window.history.back()
+    if (this.range.dirty) {
+      this.dialog.open(ConfirmationDialogComponent, { data: { message: '¿Estás seguro de que deseas cancelar? Los cambios se perderán.' } }).afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          window.history.back();
+        }
+      });
+    } else {
+      window.history.back();
+    }
   }
 
   validateTimeRange() {

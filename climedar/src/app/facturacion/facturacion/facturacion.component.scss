@@ -10,3 +10,10 @@ h1 {
 ::ng-deep .mat-mdc-tab-body-content {
     overflow-x: hidden !important;
 }
+
+.arrow-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}

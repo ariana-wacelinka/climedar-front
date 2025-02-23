@@ -2,6 +2,7 @@ import { Component, Inject, signal, WritableSignal } from '@angular/core';
 import { MatButton } from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogActions,
   MatDialogContent,
   MatDialogRef,
@@ -25,6 +26,7 @@ import { Package, PackageRequest } from '../models/package.models';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent, MatOption } from '@angular/material/autocomplete';
 import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
 import { Especialidad, EspecialidadService } from '../../especialidad';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-dialog-paquete',
@@ -77,6 +79,7 @@ export class DialogPaqueteComponent {
     private packageService: PackageService,
     private medicalService: ServiciosMedicosService,
     private especialidadService: EspecialidadService,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: {
       id?: number,
       name?: string,
@@ -225,6 +228,14 @@ export class DialogPaqueteComponent {
   }
 
   onClose() {
-    this.dialogRef.close();
+    if (this.paquete.dirty) {
+      this.dialog.open(ConfirmationDialogComponent, { data: { message: '¿Estás seguro de que deseas cancelar? Los cambios se perderán.' } }).afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          this.dialogRef.close();
+        }
+      });
+    } else {
+      this.dialogRef.close();
+    }
   }
 }

@@ -10,8 +10,4 @@ import {MatButtonModule } from '@angular/material/button';
   templateUrl: './centered-card.component.html',
   styleUrl: './centered-card.component.scss'
 })
-export class CenteredCardComponent {
-  back(){
-    window.history.back();
-  }
-}
+export class CenteredCardComponent {}

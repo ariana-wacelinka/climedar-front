@@ -1,6 +1,6 @@
 import { Component, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
-import { MatButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import {
   MatCell,
   MatCellDef,
@@ -14,7 +14,6 @@ import { MatFormField, MatFormFieldModule, MatLabel, MatPrefix } from '@angular/
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogServicioComponent } from '../dialog-servicio/dialog-servicio.component';
@@ -28,7 +27,7 @@ import { map } from 'rxjs';
   selector: 'app-listado-servicios',
   imports: [
     CenteredCardComponent,
-    MatButton,
+    MatButtonModule,
     MatCell,
     MatCellDef,
     MatColumnDef,
@@ -44,7 +43,6 @@ import { map } from 'rxjs';
     MatPrefix,
     MatRow,
     MatRowDef,
-    MatSort,
     MatTable,
     PaginatorComponent,
     MatFormFieldModule,
@@ -147,5 +145,9 @@ export class ListadoServiciosComponent {
         specialityId: servicio.specialityId
       }
     });
+  }
+
+  volver() {
+    window.history.back();
   }
 }

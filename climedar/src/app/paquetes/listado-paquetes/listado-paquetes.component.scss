@@ -4,6 +4,13 @@
 
 //Importante para que el paginator esté abajo a la derecha
 
+.arrow-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+}
+
 .full-width {
   width: 100%;
 }

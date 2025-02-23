@@ -9,6 +9,8 @@ import { DatosProfesionalesComponent } from './datos-profesionales/datos-profesi
 import { DoctorService } from '../service/doctor.service';
 import { Doctor } from '../models/doctor.models';
 import { Router } from '@angular/router';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-alta-doctor',
@@ -31,7 +33,8 @@ export class AltaDoctorComponent {
   public doctorForm = new FormGroup({});
 
   constructor(private doctorService: DoctorService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.doctorId.set(navigation?.extras.state?.['id']);
@@ -92,7 +95,15 @@ export class AltaDoctorComponent {
   }
 
   public cancelar() {
-    window.history.back();
+    if (this.doctorForm.dirty) {
+      this.dialog.open(ConfirmationDialogComponent, { data: { message: '¿Estás seguro de que deseas cancelar? Los cambios se perderán.' } }).afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          window.history.back();
+        }
+      });
+    } else {
+      window.history.back();
+    }
   }
 
   onFormChanges(form: FormGroup) {

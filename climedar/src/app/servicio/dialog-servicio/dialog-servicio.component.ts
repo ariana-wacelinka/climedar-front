@@ -1,8 +1,9 @@
 import { Component, Inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { MatButton } from "@angular/material/button";
+import { MatButtonModule } from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogActions,
   MatDialogContent,
   MatDialogRef,
@@ -18,12 +19,13 @@ import { ServiceType } from '../../shared/models/extras.models';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-dialog-servicio',
   imports: [
     FormsModule,
-    MatButton,
+    MatButtonModule,
     MatDialogActions,
     MatDialogContent,
     MatDialogTitle,
@@ -52,7 +54,7 @@ export class DialogServicioComponent {
 
   especialidades = signal<Especialidad[]>([]);
   especialidad = new FormControl<Especialidad | null>(null);
-  
+
   formGroup = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('', Validators.required),
@@ -67,6 +69,7 @@ export class DialogServicioComponent {
     public dialogRef: MatDialogRef<DialogServicioComponent>,
     private serviciosMedicosService: ServiciosMedicosService,
     private specialityService: EspecialidadService,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: {
       id?: string,
       name?: string,
@@ -129,9 +132,17 @@ export class DialogServicioComponent {
     this.formGroup.controls.specialityId.setValue(event.option.value.id);
     console.log('Especialidad seleccionada:', event.option.value.id);
   }
-  
+
   onClose() {
-    this.dialogRef.close();
+    if (this.formGroup.dirty) {
+      this.dialog.open(ConfirmationDialogComponent, { data: { message: '¿Estás seguro de que deseas cancelar? Los cambios se perderán.' } }).afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          this.dialogRef.close();
+        }
+      });
+    } else {
+      this.dialogRef.close();
+    }
   }
 
   onSubmit() {

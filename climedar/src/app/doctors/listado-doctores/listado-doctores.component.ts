@@ -3,7 +3,7 @@ import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { CenteredCardComponent } from '../../shared/components';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -89,5 +89,9 @@ export class ListadoDoctoresComponent {
       this.doctors.set(response.doctors);
       this.pageInfo.set(response.pageInfo);
     });
+  }
+
+  volver() {
+    window.history.back();
   }
 }

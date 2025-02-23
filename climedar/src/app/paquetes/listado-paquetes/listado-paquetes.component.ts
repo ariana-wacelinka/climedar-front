@@ -1,6 +1,6 @@
 import { Component, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
-import { MatButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import {
   MatCell,
   MatCellDef,
@@ -14,20 +14,19 @@ import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field'
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { MatDialog } from '@angular/material/dialog';
 import { InfoPaqueteComponent } from '../info-paquete/info-paquete.component';
 import { DialogPaqueteComponent } from '../dialog-paquete/dialog-paquete.component';
 import { PageInfo } from '../../shared/models/extras.models';
-import { Package, PackageResponse } from '../models/package.models';
+import { PackageResponse } from '../models/package.models';
 import { PackageService } from '../services/package.service';
 
 @Component({
   selector: 'app-listado-paquetes',
   imports: [
     CenteredCardComponent,
-    MatButton,
+    MatButtonModule,
     MatCell,
     MatCellDef,
     MatColumnDef,
@@ -133,5 +132,9 @@ export class ListadoPaquetesComponent {
       this.packages.set(response.packages);
       this.pageInfo.set(response.pageInfo);
     });
+  }
+
+  volver() {
+    window.history.back();
   }
 }

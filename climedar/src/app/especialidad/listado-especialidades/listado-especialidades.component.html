@@ -1,5 +1,8 @@
 <app-centered-card>
   <ng-container main-header>
+    <button (click)="volver()" mat-icon-button class="arrow-back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
     <h2>Listado de especialidades</h2>
   </ng-container>
 
@@ -19,10 +22,10 @@
 
 
       <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="especialidades()" matSort>
+        <table mat-table [dataSource]="especialidades()">
 
           <ng-container matColumnDef="nombre">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
             <td mat-cell class="nombre" *matCellDef="let speciality"> {{speciality.name}} </td>
           </ng-container>
 

@@ -6,6 +6,13 @@
     row-gap: 10px;
   }
 
+    .arrow-back {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+    }
+
   .fechas {
     width: 100%;
     display: grid;

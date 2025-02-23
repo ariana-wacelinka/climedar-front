@@ -3,6 +3,13 @@ h1 {
     margin: 20px 0 0 0;
 }
 
+.arrow-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
 .actions {
     display: flex;
     justify-content: end;
@@ -17,4 +24,3 @@ button {
     background-color: #811b1dc9 !important;
     margin-right: 20px;
 }
-

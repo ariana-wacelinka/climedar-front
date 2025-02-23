@@ -1,5 +1,8 @@
 <app-centered-card>
   <ng-container main-header>
+    <button (click)="volver()" mat-icon-button class="arrow-back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
     <h2>Listado de servicios</h2>
   </ng-container>
 
@@ -20,7 +23,7 @@
 
 
       <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="servicios()" matSort>
+        <table mat-table [dataSource]="servicios()">
 
           <ng-container matColumnDef="nombre">
             <th mat-header-cell class="nombre" *matHeaderCellDef> Nombre </th>

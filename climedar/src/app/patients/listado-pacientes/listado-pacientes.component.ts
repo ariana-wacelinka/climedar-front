@@ -3,7 +3,7 @@ import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { Paciente } from '../models/paciente.models';
 import { PageInfo } from '../../shared/models/extras.models';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
@@ -90,5 +90,9 @@ export class ListadoPacientesComponent {
       this.pacientes.set(response.patients);
       this.pageInfo.set(response.pageInfo);
     });
+  }
+
+  volver() {
+    window.history.back();
   }
 }

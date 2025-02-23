@@ -1,5 +1,8 @@
 <app-centered-card>
     <ng-container main-header>
+        <button (click)="cancelar()" mat-icon-button class="arrow-back">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
         @if (this.isNumber(this.doctorId())) {
             <h1>Editar médico</h1>
         } @else {

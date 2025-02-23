@@ -4,6 +4,13 @@
   padding: 16px;
 }
 
+.arrow-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+}
+
 h1 {
   text-align: center;
   margin: 0;

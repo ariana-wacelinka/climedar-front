@@ -1,6 +1,7 @@
 import { Component, Inject, signal } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogActions,
   MatDialogContent,
   MatDialogRef,
@@ -12,6 +13,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatInput } from '@angular/material/input';
 import { ObraSocialService } from '../service/obra-social.service';
 import { ObraSocial } from '../models/obra-social.models';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-dialog-obrasocial',
@@ -37,9 +39,10 @@ export class DialogObrasocialComponent {
   });
 
   constructor(
-    public dialogRef: MatDialogRef<DialogObrasocialComponent>,
+    private dialogRef: MatDialogRef<DialogObrasocialComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id?: string, name?: string },
-    public obraSocialService: ObraSocialService
+    private obraSocialService: ObraSocialService,
+    private dialog: MatDialog
   ) {
     if (data.id && data.name) {
       console.log(data);
@@ -52,7 +55,15 @@ export class DialogObrasocialComponent {
   }
 
   onClose() {
-    this.dialogRef.close();
+    if (this.formGroup.dirty) {
+      this.dialog.open(ConfirmationDialogComponent, { data: { message: '¿Estás seguro de que deseas cancelar? Los cambios se perderán.' } }).afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          this.dialogRef.close();
+        }
+      });
+    } else {
+      this.dialogRef.close();
+    }
   }
 
   onSubmit() {

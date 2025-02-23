@@ -12,8 +12,7 @@ import {
 import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { DialogObrasocialComponent } from '../dialog-obrasocial/dialog-obrasocial.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
@@ -28,7 +27,6 @@ import { ObraSocial } from '../models/obra-social.models';
   imports: [
     CenteredCardComponent,
     MatTable,
-    MatSortModule,
     MatTableModule,
     MatColumnDef,
     MatHeaderCell,
@@ -38,12 +36,11 @@ import { ObraSocial } from '../models/obra-social.models';
     MatLabel,
     MatFormField,
     MatInput,
-    MatButton,
+    MatButtonModule,
     MatIcon,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatSort,
     MatHeaderCellDef,
     MatCellDef,
     MatHeaderRowDef,
@@ -127,5 +124,9 @@ export class ListadoObrasSocialesComponent {
       console.log('Deleted');
       window.location.reload();
     });
+  }
+
+  volver() {
+    window.history.back();
   }
 }

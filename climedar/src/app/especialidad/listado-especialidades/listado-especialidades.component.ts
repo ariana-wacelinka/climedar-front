@@ -1,6 +1,6 @@
-import { Component, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components";
-import { MatButton } from "@angular/material/button";
+import { MatButtonModule } from "@angular/material/button";
 import {
   MatCell,
   MatCellDef,
@@ -15,7 +15,6 @@ import { Especialidad, EspecialidadService } from '../../especialidad';
 import { MatIcon, MatIconModule } from "@angular/material/icon";
 import { MatInput, MatInputModule } from "@angular/material/input";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
-import { MatSort, MatSortHeader } from "@angular/material/sort";
 import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
 import { MatDialog } from '@angular/material/dialog';
 import { DialogEspecialidadComponent } from '../dialog-especialidad/dialog-especialidad.component';
@@ -27,7 +26,7 @@ import { map } from 'rxjs';
   selector: 'app-listado-especialidades',
   imports: [
     CenteredCardComponent,
-    MatButton,
+    MatButtonModule,
     MatCell,
     MatCellDef,
     MatColumnDef,
@@ -45,8 +44,6 @@ import { map } from 'rxjs';
     MatMenuItem,
     MatRow,
     MatRowDef,
-    MatSort,
-    MatSortHeader,
     MatTable,
     PaginatorComponent,
     MatMenuTrigger,
@@ -131,5 +128,9 @@ export class ListadoEspecialidadesComponent {
           console.log('Error al eliminar la especialidad');
         }
       });
+  }
+
+  volver() {
+    window.history.back();
   }
 }
