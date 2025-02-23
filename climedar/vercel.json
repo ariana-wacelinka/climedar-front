@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "climedar/angular.json",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "climedar/dist/climedar/browser"
+        }
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/climedar/dist/climedar/browser/index.html"
+      }
+    ]
+  }
+  

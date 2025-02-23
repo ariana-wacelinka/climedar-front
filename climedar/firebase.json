@@ -10,6 +10,10 @@
       {
         "source": "**",
         "destination": "/index.html"
+      },
+      {
+        "source": "/api/**",
+        "destination": "https://vps-4708087-x.dattaweb.com/apollo-federation"
       }
     ]
   }
