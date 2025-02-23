@@ -13,7 +13,7 @@ const writeFileUsingFs = (targetPath, environmentFileContent) => {
   });
 };
 
-const envDirectory = './src/environments';
+const envDirectory = './src/app/environments';
 // CREATES THE `environments` DIRECTORY IF IT DOESN'T EXIST
 if (!existsSync(envDirectory)) mkdirSync(envDirectory);
 // CREATES THE `environment.prod.ts` AND `environment.ts` FILE IF IT DOESN'T EXIST
