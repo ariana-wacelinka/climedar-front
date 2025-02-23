@@ -13,13 +13,17 @@ import { PatientService } from '../../../patients/services/patient.service';
 import { PaymentService } from '../../services/payment/payment.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConsultationInfoComponent } from '../../../consultation/consultation-info/consultation-info.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-person-info',
   imports: [
     CenteredCardComponent,
     MatTableModule,
-    PaginatorComponent
+    PaginatorComponent,
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './person-info.component.html',
   styleUrl: './person-info.component.scss'
@@ -93,5 +97,9 @@ export class PersonInfoComponent {
       maxWidth: '90vw',
       data: { consultation: consultation }
     });
+  }
+
+  volver() {
+    window.history.back();
   }
 }

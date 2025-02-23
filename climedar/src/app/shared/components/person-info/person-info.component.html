@@ -1,5 +1,8 @@
 <app-centered-card>
     <ng-container main-header>
+        <button (click)="volver()" mat-icon-button class="arrow-back">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
     </ng-container>
 
     <ng-container main-content>
@@ -106,11 +109,12 @@
                             </ng-container>
 
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr (click)="openConsultation(row)" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            <tr (click)="openConsultation(row)" mat-row
+                                *matRowDef="let row; columns: displayedColumns;"></tr>
 
                             <tr class="mat-row" *matNoDataRow>
                                 <td class="mat-cell" colspan="4">
-                                    <div class="nada">No se han encontrado especialidades</div>
+                                    <div class="nada">No se han encontrado consultas</div>
                                 </td>
                             </tr>
                         </table>

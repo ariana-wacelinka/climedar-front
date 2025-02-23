@@ -5,6 +5,13 @@
     padding-bottom: 10px;
 }
 
+.arrow-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
 .content {
     width: 100%;
     min-height: 600px;
