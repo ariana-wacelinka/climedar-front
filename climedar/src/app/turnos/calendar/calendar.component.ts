@@ -129,7 +129,8 @@ export class CalendarComponent implements OnInit {
     // Días vacíos al inicio
     const firstDayOfWeek = firstDay.getDay() || 7; // Ajustar inicio para lunes
     this.firstEmptyDays = Array(firstDayOfWeek - 1).fill(0);
-    this.lastEmptyDays = Array(7 - ((this.monthDays.length + this.firstEmptyDays.length) % 7)).fill(0);
+    this.lastEmptyDays = Array((7 - ((this.monthDays.length + this.firstEmptyDays.length) % 7))%7).fill(0);
+    console.log('lastEmptyDays', this.lastEmptyDays);
   }
   
 
