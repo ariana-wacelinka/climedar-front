@@ -14,28 +14,26 @@ jobs:
       - name: Install Bun
         run: |
           curl -fsSL https://bun.sh/install | bash
-          echo "export BUN_INSTALL=\"$HOME/.bun\"" >> $GITHUB_ENV
-          echo "export PATH=\"$HOME/.bun/bin:$PATH\"" >> $GITHUB_ENV
-          source $GITHUB_ENV
-          export PATH="$HOME/.bun/bin:$PATH"  # Asegura que el PATH esté disponible
+          echo "BUN_INSTALL=$HOME/.bun" >> $GITHUB_ENV
+          echo "PATH=$HOME/.bun/bin:$PATH" >> $GITHUB_ENV
 
       - name: Verify Bun Installation
-        run: bun -v
+        run: $HOME/.bun/bin/bun -v  # Verifica usando la ruta completa
 
       - name: Install Dependencies
-        run: bun install
+        run: $HOME/.bun/bin/bun install
 
       - name: Install Firebase CLI
-        run: bun add -g firebase-tools
+        run: $HOME/.bun/bin/bun add -g firebase-tools
 
       - name: Login to Firebase
         run: firebase login:ci --no-localhost --token ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Prebuild Angular with Firebase Variables
-        run: bun run prebuild
+        run: $HOME/.bun/bin/bun run prebuild
 
       - name: Build Angular App
-        run: bun run build
+        run: $HOME/.bun/bin/bun run build
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
