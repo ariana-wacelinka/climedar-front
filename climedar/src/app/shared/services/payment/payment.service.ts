@@ -104,17 +104,18 @@ export class PaymentService {
     );
   }
 
-  cancelPayment(payment: Payment): Observable<any> {
+  cancelPayment(payment: Payment): Observable<boolean> {
     const mutation = gql`
       mutation CancelPayment {
         cancelPayment(id: ${payment.id}) {
           success
-          message
         }
       }
     `;
-    return this.apollo.mutate({
+    return this.apollo.mutate<{ cancelPayment: { success: boolean } }>({
       mutation: mutation,
-    });
+    }).pipe(
+      map(response => response.data?.cancelPayment.success ?? false)
+    );
   }
 }

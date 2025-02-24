@@ -37,7 +37,7 @@ import 'moment/locale/es';
 })
 export class DatosPersonalesComponent implements OnInit {
 
-  @Output() datosPersonales = new EventEmitter<any>();
+  @Output() datosPersonales = new EventEmitter<FormGroup>();
 
   especialidades: {id: string, nombre: string}[] = [];
 

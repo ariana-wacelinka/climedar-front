@@ -78,8 +78,9 @@ export class AltaPatientsComponent {
         (response) => {
           console.log('Paciente actualizado', response);
           this.snackbar.open('Paciente actualizado exitosamente', 'Cerrar', { duration: 1000 });
-          this.router.navigate(['/paciente/listado']);
-          window.location.reload();
+          setTimeout(() => {
+            this.router.navigate(['/paciente/listado']);
+          }, 1050);
         },
         (error) => {
           this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al actualizar paciente' } });
@@ -94,7 +95,6 @@ export class AltaPatientsComponent {
           console.log('Paciente creado', response);
           setTimeout(() => {
             this.router.navigate(['/paciente/listado']);
-            window.location.reload();
           }, 1050);
         },
         (error) => {

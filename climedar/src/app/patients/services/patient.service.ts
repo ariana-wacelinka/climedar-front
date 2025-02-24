@@ -35,7 +35,7 @@ export class PatientService {
     );
   }
 
-  createPatient(patient: Paciente): Observable<any> {
+  createPatient(patient: Paciente): Observable<Paciente> {
     const body = `
         mutation {
         createPatient(
@@ -66,9 +66,11 @@ export class PatientService {
         }
       `;
     console.log('createPatient' + body);
-    return this.apollo.mutate({
+    return this.apollo.mutate<{ createPatient: Paciente }>({
       mutation: gql`${body}`
-    });
+    }).pipe(
+      map(result => result.data!.createPatient)
+    );
   }
 
   getPatients(dni: string = ""): Observable<Paciente[]> {
@@ -93,15 +95,17 @@ export class PatientService {
     );
   }
 
-  deletePatient(id: number): Observable<any> {
+  deletePatient(id: number): Observable<boolean> {
     const body = `
         mutation {
         deletePatient(id: ${id})
         }
       `;
-    return this.apollo.mutate({
+    return this.apollo.mutate<{ deletePatient: boolean }>({
       mutation: gql`${body}`
-    });
+    }).pipe(
+      map(result => result.data!.deletePatient)
+    );
   }
 
   getPatientById(id: string): Observable<Paciente> {
@@ -133,7 +137,7 @@ export class PatientService {
     );
   }
 
-  updatePatient(patient: Paciente): Observable<any> {
+  updatePatient(patient: Paciente): Observable<Paciente> {
     const body = `
         mutation {
           updatePatient(
@@ -179,9 +183,11 @@ export class PatientService {
         }
       `;
     console.log('modify patient' + body);
-    return this.apollo.mutate({
+    return this.apollo.mutate<{ updatePatient: Paciente }>({
       mutation: gql`${body}`
-    });
+    }).pipe(
+      map(result => result.data!.updatePatient)
+    );
   }
 
   getPacientes(page: number, query: string): Observable<{ pageInfo: PageInfo, patients: Paciente[] }> {

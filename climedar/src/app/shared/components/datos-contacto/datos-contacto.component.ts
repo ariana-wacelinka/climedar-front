@@ -31,7 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class DatosContactoComponent implements OnInit {
 
-  @Output() datosContacto = new EventEmitter<any>();
+  @Output() datosContacto = new EventEmitter<FormGroup>();
 
   especialidades: {id: string, nombre: string}[] = []
 

@@ -92,7 +92,7 @@ export class AltaDoctorComponent {
       );
     } else {
       console.log('doctor:' + JSON.stringify(this.doctorForm.value as Doctor).replace(/"([^"]+)":/g, '$1:'));
-      this.doctorService.createDoctor(this.doctorForm.value).subscribe(
+      this.doctorService.createDoctor(this.doctorForm.value as Doctor).subscribe(
         (response) => {
           console.log('Doctor creado', response);
           this.snackBar.open('Doctor creado correctamente', 'Cerrar', { duration: 1000 })
@@ -107,7 +107,6 @@ export class AltaDoctorComponent {
       );
       console.log(this.doctorForm.value);
     }
-
   }
 
   public cancelar() {

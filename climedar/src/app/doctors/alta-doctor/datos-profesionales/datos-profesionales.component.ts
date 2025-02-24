@@ -34,7 +34,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class DatosProfesionalesComponent implements OnInit {
 
-  @Output() datosProfesionales = new EventEmitter<any>();
+  @Output() datosProfesionales = new EventEmitter<FormGroup>();
 
   filteredEspecialidadOptions: Observable<Especialidad[]> | undefined;
 

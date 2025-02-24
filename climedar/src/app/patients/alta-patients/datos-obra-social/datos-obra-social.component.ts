@@ -34,7 +34,7 @@ import { DialogObrasocialComponent } from '../../../obra-social/dialog-obrasocia
 })
 export class DatosObraSocialComponent implements OnInit {
 
-  @Output() datosObraSocial = new EventEmitter<any>();
+  @Output() datosObraSocial = new EventEmitter<FormGroup>();
 
   obrasSociales: MedcialSecure[] = []
 
