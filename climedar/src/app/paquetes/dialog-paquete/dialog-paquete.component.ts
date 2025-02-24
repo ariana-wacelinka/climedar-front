@@ -1,4 +1,4 @@
-import { Component, Inject, signal, WritableSignal } from '@angular/core';
+import { Component, inject, Inject, signal, WritableSignal } from '@angular/core';
 import { MatButton } from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
@@ -27,6 +27,8 @@ import { MatAutocompleteModule, MatAutocompleteSelectedEvent, MatOption } from '
 import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
 import { Especialidad, EspecialidadService } from '../../especialidad';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-dialog-paquete',
@@ -74,6 +76,8 @@ export class DialogPaqueteComponent {
     servicesIds: new FormControl<string[]>([]),
     specialityId: new FormControl<string>("", Validators.required)
   });
+
+  snackbar = inject(MatSnackBar);
 
   constructor(public dialogRef: MatDialogRef<DialogPaqueteComponent>,
     private packageService: PackageService,
@@ -204,10 +208,17 @@ export class DialogPaqueteComponent {
         };
         console.log(paquete);
 
-        this.packageService.createPackage(paquete).subscribe((response) => {
-          console.log('Paquete creado' + response);
-          this.dialogRef.close();
-          window.location.reload();
+        this.packageService.createPackage(paquete).subscribe({
+          next: (response) => {
+            console.log('Paquete creado' + response);
+            this.snackbar.open('Paquete creado exitosamente', 'Cerrar', { duration: 2000 });
+            this.dialogRef.close();
+            window.location.reload();
+          },
+          error: (err) => {
+            this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear paquete' } });
+            console.error('Error al crear paquete', err);
+          }
         });
       }
     } else {
@@ -218,10 +229,17 @@ export class DialogPaqueteComponent {
           servicesIds: this.paquete.value.servicesIds!,
         };
 
-        this.packageService.updatePackage(paquete).subscribe((response) => {
-          alert('Paquete editado: ' + response);
-          this.dialogRef.close();
-          window.location.reload();
+        this.packageService.updatePackage(paquete).subscribe({
+          next: (response) => {
+            console.log('Paquete editado' + response);
+            this.snackbar.open('Paquete editado exitosamente', 'Cerrar', { duration: 2000 });
+            this.dialogRef.close();
+            window.location.reload();
+          },
+          error: (err) => {
+            this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al editar paquete' } });
+            console.error('Error al editar paquete', err);
+          }
         });
       }
     }

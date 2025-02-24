@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, DoCheck, signal } from '@angular/core';
+import { Component, DoCheck, inject, signal } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +11,8 @@ import { Doctor } from '../models/doctor.models';
 import { Router } from '@angular/router';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-alta-doctor',
@@ -31,6 +33,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class AltaDoctorComponent {
   public doctorId = signal<string>('');
   public doctorForm = new FormGroup({});
+  private snackBar = inject(MatSnackBar);
+  isLoading = false;
 
   constructor(private doctorService: DoctorService,
     private router: Router,
@@ -43,15 +47,19 @@ export class AltaDoctorComponent {
 
   ngOnInit() {
     if (this.isNumber(this.doctorId())) {
+      this.isLoading = true;
       const id = new FormControl(this.doctorId(), [Validators.required]);
       this.doctorForm.addControl('id', id);
       this.doctorService.getDoctorById(this.doctorId()).subscribe(
         (response) => {
           console.log('Doctor obtenido', response);
           this.doctorForm.patchValue(response);
+          this.isLoading = false;
         },
         (error) => {
-          console.error('Error al obtener doctor', error);
+          this.isLoading = false;
+          this.dialog.open(ErrorDialogComponent, { data: { message: 'Ha habido un error, intentelo mas tarde' } });
+          console.log('Error al obtener doctor', error);
         }
       );
     }
@@ -83,9 +91,11 @@ export class AltaDoctorComponent {
       this.doctorService.createDoctor(this.doctorForm.value).subscribe(
         (response) => {
           console.log('Doctor creado', response);
+          this.snackBar.open('Doctor creado correctamente', 'Cerrar', { duration: 2000 })
           this.router.navigate(['/medico/listado']);
         },
         (error) => {
+          this.dialog.open(ErrorDialogComponent, { data: { message: 'Ha habido un error al crear el doctor' } });
           console.error('Error al crear doctor', error);
         }
       );

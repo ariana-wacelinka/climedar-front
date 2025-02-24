@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { MatButton } from "@angular/material/button";
 import { Especialidad, EspecialidadService } from '../../especialidad';
 import {
@@ -13,6 +13,8 @@ import { MatError, MatFormField, MatHint, MatLabel } from "@angular/material/for
 import { MatInput } from "@angular/material/input";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-dialog-especialidad',
@@ -32,6 +34,7 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
   styleUrl: './dialog-especialidad.component.scss'
 })
 export class DialogEspecialidadComponent {
+  snackbar = inject(MatSnackBar);
 
   formGroup = new FormGroup({
     id: new FormControl(''),
@@ -92,10 +95,17 @@ export class DialogEspecialidadComponent {
           code: this.formGroup.value.code!
         };
 
-        this.especialidadService.createEspecialidad(especialidad).subscribe(() => {
-          console.log('Especialidad creada:', especialidad);
-          this.dialogRef.close();
-          window.location.reload();
+        this.especialidadService.createEspecialidad(especialidad).subscribe({
+          next: (especialidad: Especialidad) => {
+            console.log('Especialidad creada:', especialidad);
+            this.snackbar.open('Especialidad creada con éxito', 'Cerrar', { duration: 2000 });
+            this.dialogRef.close();
+            window.location.reload();
+          },
+          error: (err) => {
+            console.error('Error al crear la especialidad:', err);
+            this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear la especialidad' } });
+          }
         });
       }
     }

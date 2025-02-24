@@ -1,5 +1,5 @@
 import { TurnosService } from './../../turnos/services/turnos-service/turnos.service';
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,7 +21,7 @@ import { MatListModule } from '@angular/material/list';
 import { MedicalService } from '../../servicio/models/services.models';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { Doctor } from '../../doctors/models/doctor.models';
-import { Observable, startWith, filter, debounceTime, switchMap, map } from 'rxjs';
+import { Observable, startWith, filter, debounceTime, switchMap, map, timestamp } from 'rxjs';
 import { DoctorService } from '../../doctors/service/doctor.service';
 import { Paciente } from '../../patients/models/paciente.models';
 import { ServiciosMedicosService } from '../../servicio/services/servicio/servicios-medicos.service';
@@ -35,6 +35,8 @@ import { PackageResponse } from '../../paquetes/models/package.models';
 import { PaymentDialogComponent } from '../../shared/components/payment-dialog/payment-dialog.component';
 import { PaymentService } from '../../shared/services/payment/payment.service';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 @Component({
   selector: 'app-create-consultation',
   imports: [
@@ -68,6 +70,7 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
   styleUrl: './create-consultation.component.scss'
 })
 export class CreateConsultationComponent implements OnInit {
+  snackbar = inject(MatSnackBar);
   isSobreTurno = false;
   pago = false;
   consultationPrice = signal<number>(0);
@@ -254,6 +257,7 @@ export class CreateConsultationComponent implements OnInit {
           console.log('consultationFG', (this.consultationFG.value as CreateConsultation));
           this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
             (data: Consultation) => {
+              this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 2000 });
               console.log('data', data);
               if (data) {
                 console.log("se manda el pago: ", method);
@@ -269,14 +273,19 @@ export class CreateConsultationComponent implements OnInit {
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
+                    setTimeout(() => {
+                      this.router.navigate(['/home']);
+                    }, 2500);
                   },
                   (error) => {
                     console.log('error', error);
+                    this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al realizar el pago' } });
                   }
                 );
               }
             },
             (error) => {
+              this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear la consulta' } });
               console.log('error', error);
             }
           );
@@ -286,9 +295,14 @@ export class CreateConsultationComponent implements OnInit {
         this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
           (data) => {
             console.log('data', data);
+            this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 2000 });
+            setTimeout(() => {
+              this.router.navigate(['/home']);
+            }, 2500);
           },
           (error) => {
             console.log('error', error);
+            this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear la consulta' } });
           });
       }
     } else {

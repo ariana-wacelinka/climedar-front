@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components/centered-card/centered-card.component";
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +11,8 @@ import { PatientService } from '../services/patient.service';
 import { Router } from '@angular/router';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-alta-patients',
@@ -31,6 +33,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class AltaPatientsComponent {
   public patientForm: FormGroup = new FormGroup({});
   public pacienteId = signal<string>('');
+  snackbar = inject(MatSnackBar);
 
   constructor(private patientService: PatientService,
     private router: Router,
@@ -74,10 +77,12 @@ export class AltaPatientsComponent {
       this.patientService.updatePatient(this.patientForm.value as Paciente).subscribe(
         (response) => {
           console.log('Paciente actualizado', response);
+          this.snackbar.open('Paciente actualizado exitosamente', 'Cerrar', { duration: 2000 });
           this.router.navigate(['/paciente/listado']);
           window.location.reload();
         },
         (error) => {
+          this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al actualizar paciente' } });
           console.error('Error al actualizar paciente', error);
         }
       );
@@ -85,10 +90,13 @@ export class AltaPatientsComponent {
       console.log('Guardando paciente:' + (this.patientForm.value as Paciente).name);
       this.patientService.createPatient(this.patientForm.value as Paciente).subscribe(
         (response) => {
+          this.snackbar.open('Paciente creado exitosamente', 'Cerrar', { duration: 2000 });
           console.log('Paciente creado', response);
           this.router.navigate(['/paciente/listado']);
+          window.location.reload();
         },
         (error) => {
+          this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear paciente' } });
           console.error('Error al crear paciente', error);
         }
       );

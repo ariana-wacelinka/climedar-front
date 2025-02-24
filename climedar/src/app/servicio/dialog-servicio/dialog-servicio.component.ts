@@ -20,6 +20,7 @@ import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/ma
 import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-dialog-servicio',
@@ -166,8 +167,8 @@ export class DialogServicioComponent {
           this.dialogRef.close();
           window.location.reload();
         }, error => {
-          console.error('Error al crear servicio', error);
-          alert('Error al crear servicio');
+          this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear servicio' } });
+          console.log('Error al crear servicio', error);
         });
       }
     } else {
@@ -187,8 +188,8 @@ export class DialogServicioComponent {
           this.dialogRef.close();
           window.location.reload();
         }, error => {
-          console.error('Error al editar servicio', error);
-          alert('Error al editar servicio');
+          this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al editar servicio' } });
+          console.log('Error al editar servicio', error);
         });
       }
     }

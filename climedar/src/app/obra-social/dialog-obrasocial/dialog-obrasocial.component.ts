@@ -1,4 +1,4 @@
-import { Component, Inject, signal } from '@angular/core';
+import { Component, inject, Inject, signal } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -14,6 +14,8 @@ import { MatInput } from '@angular/material/input';
 import { ObraSocialService } from '../service/obra-social.service';
 import { ObraSocial } from '../models/obra-social.models';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-dialog-obrasocial',
@@ -37,6 +39,7 @@ export class DialogObrasocialComponent {
     id: new FormControl(''),
     name: new FormControl('', Validators.required)
   });
+  snackbar = inject(MatSnackBar);
 
   constructor(
     private dialogRef: MatDialogRef<DialogObrasocialComponent>,
@@ -74,17 +77,29 @@ export class DialogObrasocialComponent {
       };
 
       if (!this.data.id) {
-        this.obraSocialService.createObraSocial(obraSocialSent).subscribe(
-          () => {
+        this.obraSocialService.createObraSocial(obraSocialSent).subscribe({
+          next: () => {
             this.dialogRef.close();
+            this.snackbar.open('Obra Social creada correctamente', 'Cerrar', { duration: 2000 });
             window.location.reload();
-          });
+          },
+          error: (err) => {
+            this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear la obra social' } });
+            console.error('Error creating Obra Social:', err);
+          }
+        });
       } else {
-        this.obraSocialService.updateObraSocial(obraSocialSent).subscribe(
-          () => {
+        this.obraSocialService.updateObraSocial(obraSocialSent).subscribe({
+          next: () => {
             this.dialogRef.close();
+            this.snackbar.open('Obra Social actualizada correctamente', 'Cerrar', { duration: 2000 });
             window.location.reload();
-          });
+          },
+          error: (err) => {
+            this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al actualizar la obra social' } });
+            console.error('Error updating Obra Social:', err);
+          }
+        });
       }
     }
   }
