@@ -19,6 +19,8 @@ html,
 body {
   height: 100vh;
   overflow-y: hidden;
+  scrollbar-color: #ecececd2 #00000055;
+  scrollbar-width: thin;
 }
 
 body {
@@ -26,6 +28,7 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-image: linear-gradient(to left bottom, #1f438f, #235298, #2b60a1, #376ea8, #457caf, #5185b5, #5c8eba, #6897c0, #729ec6, #7ba5cc, #85acd2, #8eb3d8);
 }
+
 
 @media (min-height: 600px) {
   .cdk-global-scrollblock {

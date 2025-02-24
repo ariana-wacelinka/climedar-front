@@ -11,6 +11,7 @@ import { Doctor } from '../models/doctor.models';
 import { DoctorService } from '../service/doctor.service';
 import { Router } from '@angular/router';
 import { PageInfo } from '../../shared/models/extras.models';
+import { LoaderComponent } from "../../shared/components/loader/loader.component";
 
 @Component({
   selector: 'app-listado-doctores',
@@ -23,12 +24,14 @@ import { PageInfo } from '../../shared/models/extras.models';
     PaginatorComponent,
     MatButtonModule,
     MatLabel,
-    MatInputModule
+    MatInputModule,
+    LoaderComponent
   ],
   templateUrl: './listado-doctores.component.html',
   styleUrl: './listado-doctores.component.scss'
 })
 export class ListadoDoctoresComponent {
+  isLoading = true;
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
   displayedColumns: string[] = ["name", "surname", "dni", "edit"];
   doctors = signal<Doctor[]>([]);
@@ -42,6 +45,7 @@ export class ListadoDoctoresComponent {
     this.doctorService.getAllDoctors(1).subscribe(response => {
       this.doctors.set(response.doctors);
       this.pageInfo.set(response.pageInfo);
+      this.isLoading = false;
     });
   }
 

@@ -21,6 +21,7 @@ import { DialogEspecialidadComponent } from '../dialog-especialidad/dialog-espec
 import { InfoEspecialidadComponent } from '../info-especialidad/info-especialidad.component';
 import { PageInfo } from '../../shared/models/extras.models';
 import { map } from 'rxjs';
+import { LoaderComponent } from "../../shared/components/loader/loader.component";
 
 @Component({
   selector: 'app-listado-especialidades',
@@ -48,12 +49,14 @@ import { map } from 'rxjs';
     PaginatorComponent,
     MatMenuTrigger,
     MatHeaderCellDef,
-    MatNoDataRow
-  ],
+    MatNoDataRow,
+    LoaderComponent
+],
   templateUrl: './listado-especialidades.component.html',
   styleUrl: './listado-especialidades.component.scss'
 })
 export class ListadoEspecialidadesComponent {
+  isLoading = true;
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
   especialidades = signal<Especialidad[]>([]);
   displayedColumns: string[] = ["nombre", "edit"];
@@ -63,6 +66,7 @@ export class ListadoEspecialidadesComponent {
 
   ngOnInit() {
     this.loadEspecialidades();
+    this.isLoading = false;
   }
 
   pageChange(page: number) {

@@ -21,6 +21,7 @@ import { PageInfo } from '../../shared/models/extras.models';
 import { ObraSocialService } from '../service/obra-social.service';
 import { map } from 'rxjs';
 import { ObraSocial } from '../models/obra-social.models';
+import { LoaderComponent } from "../../shared/components/loader/loader.component";
 
 @Component({
   selector: 'app-obra-social',
@@ -47,7 +48,8 @@ import { ObraSocial } from '../models/obra-social.models';
     MatRowDef,
     PaginatorComponent,
     MatMenuModule,
-  ],
+    LoaderComponent
+],
   templateUrl: './listado-obras-sociales.component.html',
   styleUrl: './listado-obras-sociales.component.scss'
 })
@@ -56,6 +58,7 @@ export class ListadoObrasSocialesComponent {
   medicalSecures = signal<ObraSocial[]>([]);
   displayedColumns: string[] = ["nombre", "edit"];
   filterValue = signal<string>('');
+  isLoading = true;
 
   constructor(private dialog: MatDialog,
     public obraSocialService: ObraSocialService,
@@ -68,6 +71,7 @@ export class ListadoObrasSocialesComponent {
       console.log(response);
       this.medicalSecures.set(response.medicalSecures);
       this.pageInfo.set(response.pageInfo);
+      this.isLoading = false;
     });
   }
 

@@ -8,13 +8,11 @@ import { ConsultationService } from '../../../consultation/services/consultation
 import { MatTableModule } from '@angular/material/table';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { PageInfo } from '../../models/extras.models';
-import { DoctorService } from '../../../doctors/service/doctor.service';
-import { PatientService } from '../../../patients/services/patient.service';
-import { PaymentService } from '../../services/payment/payment.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConsultationInfoComponent } from '../../../consultation/consultation-info/consultation-info.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { LoaderComponent } from "../loader/loader.component";
 
 @Component({
   selector: 'app-person-info',
@@ -23,12 +21,14 @@ import { MatIconModule } from '@angular/material/icon';
     MatTableModule,
     PaginatorComponent,
     MatButtonModule,
-    MatIconModule
-  ],
+    MatIconModule,
+    LoaderComponent
+],
   templateUrl: './person-info.component.html',
   styleUrl: './person-info.component.scss'
 })
 export class PersonInfoComponent {
+  isLoading = true;
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 });
 
   paciente = signal<Paciente | null>(null);
@@ -50,6 +50,7 @@ export class PersonInfoComponent {
       this.person.set(navigation?.extras.state?.['doctorInfo']);
       this.doctor.set(navigation?.extras.state?.['doctorInfo']);
     }
+    this.isLoading = false;
   }
 
   ngOnInit() {

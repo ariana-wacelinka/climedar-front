@@ -21,6 +21,7 @@ import { DialogPaqueteComponent } from '../dialog-paquete/dialog-paquete.compone
 import { PageInfo } from '../../shared/models/extras.models';
 import { PackageResponse } from '../models/package.models';
 import { PackageService } from '../services/package.service';
+import { LoaderComponent } from "../../shared/components/loader/loader.component";
 
 @Component({
   selector: 'app-listado-paquetes',
@@ -46,12 +47,14 @@ import { PackageService } from '../services/package.service';
     PaginatorComponent,
     MatNoDataRow,
     MatMenuTrigger,
-    MatHeaderCellDef
-  ],
+    MatHeaderCellDef,
+    LoaderComponent
+],
   templateUrl: './listado-paquetes.component.html',
   styleUrl: './listado-paquetes.component.scss'
 })
 export class ListadoPaquetesComponent {
+  isLoading = true;
   pageInfo = signal<PageInfo>({ totalItems: 0, currentPage: 1, totalPages: 0 })
   packages = signal<PackageResponse[]>([]);
   displayedColumns: string[] = ["name", "price", "edit"];
@@ -62,6 +65,7 @@ export class ListadoPaquetesComponent {
     packageService.getAllPackages(this.pageInfo().currentPage).subscribe(response => {
       this.packages.set(response.packages);
       this.pageInfo.set(response.pageInfo);
+      this.isLoading = false;
     });
   }
 
