@@ -51,6 +51,8 @@ export const appConfig: ApplicationConfig = {
           },
         });
 
+        console.log('operation', operation);
+
         return forward(operation);
       });
 
