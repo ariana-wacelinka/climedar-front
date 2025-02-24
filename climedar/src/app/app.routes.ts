@@ -15,28 +15,30 @@ import { ListadoPacientesComponent } from './patients/listado-pacientes/listado-
 import { ListadoDoctoresComponent } from './doctors/listado-doctores/listado-doctores.component';
 import { PersonInfoComponent } from './shared/components/person-info/person-info.component';
 import { FacturacionComponent } from './facturacion/facturacion/facturacion.component';
+import {authGuard} from './auth/guard/auth.guard';
+import { authGuard } from './auth/guard/auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: CalendarComponent },
+  { path: '', component: CalendarComponent, canActivate: [authGuard] },
   { path: 'home', component: CenteredCardComponent },
-  { path: 'consulta/nueva', component: CreateConsultationComponent },
-  { path: 'consulta/editar', component: CreateConsultationComponent },
-  { path: 'consulta/nueva/:turnoId', component: CreateConsultationComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'medico/nuevo', component: AltaDoctorComponent },
-  { path: 'medico/editar', component: AltaDoctorComponent },
-  { path: 'paciente/nuevo', component: AltaPatientsComponent },
-  { path: 'paciente/editar', component: AltaPatientsComponent },
-  { path: 'turno/nuevo', component: AltaTurnoComponent },
-  { path: 'medico/listado', component: ListadoDoctoresComponent },
-  { path: 'obra-social/listado', component: ListadoObrasSocialesComponent },
-  { path: 'especialidad/listado', component: ListadoEspecialidadesComponent },
-  { path: 'servicio/listado', component: ListadoServiciosComponent },
-  { path: 'paquete/listado', component: ListadoPaquetesComponent },
-  { path: 'paciente/listado', component: ListadoPacientesComponent },
-  { path: 'paginator', component: PaginatorComponent },
-  { path: 'medico/info', component: PersonInfoComponent },
-  { path: 'paciente/info', component: PersonInfoComponent },
-  { path: 'facturacion', component: FacturacionComponent },
-  { path: '**', redirectTo: '', pathMatch: 'full' }
+  { path: 'consulta/nueva', component: CreateConsultationComponent , canActivate: [authGuard]},
+  { path: 'consulta/editar', component: CreateConsultationComponent , canActivate: [authGuard]},
+  { path: 'consulta/nueva/:turnoId', component: CreateConsultationComponent , canActivate: [authGuard]},
+  { path: 'login', component: LoginComponent},
+  { path: 'medico/nuevo', component: AltaDoctorComponent , canActivate: [authGuard]},
+  { path: 'medico/editar', component: AltaDoctorComponent , canActivate: [authGuard]},
+  { path: 'paciente/nuevo', component: AltaPatientsComponent , canActivate: [authGuard]},
+  { path: 'paciente/editar', component: AltaPatientsComponent , canActivate: [authGuard]},
+  { path: 'turno/nuevo', component: AltaTurnoComponent , canActivate: [authGuard]},
+  { path: 'medico/listado', component: ListadoDoctoresComponent , canActivate: [authGuard]},
+  { path: 'obra-social/listado', component: ListadoObrasSocialesComponent , canActivate: [authGuard]},
+  { path: 'especialidad/listado', component: ListadoEspecialidadesComponent , canActivate: [authGuard]},
+  { path: 'servicio/listado', component: ListadoServiciosComponent , canActivate: [authGuard]},
+  { path: 'paquete/listado', component: ListadoPaquetesComponent , canActivate: [authGuard]},
+  { path: 'paciente/listado', component: ListadoPacientesComponent , canActivate: [authGuard]},
+  { path: 'paginator', component: PaginatorComponent , canActivate: [authGuard]},
+  { path: 'medico/info', component: PersonInfoComponent , canActivate: [authGuard]},
+  { path: 'paciente/info', component: PersonInfoComponent , canActivate: [authGuard]},
+  { path: 'facturacion', component: FacturacionComponent, canActivate: [authGuard]},
+  { path: '**', redirectTo: 'login', pathMatch: 'full'}
 ];

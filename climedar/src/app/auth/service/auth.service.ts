@@ -1,39 +1,43 @@
-import {Injectable, signal} from "@angular/core";
-import {environment} from "../../environments";
+import { Injectable, signal } from "@angular/core";
+import { environment } from "../../environments";
 // @ts-ignore
 import * as auth0 from 'auth0-js';
-// import {UserService} from "./user.service";
-// import {Role, UserModel} from "../../models";
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { jwtDecode } from "jwt-decode";
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { firstValueFrom, lastValueFrom } from "rxjs";
-// import { ErrorDialogComponent } from "../../shared/error-dialog/error-dialog.component";
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from "@angular/router";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private auth0Client: auth0.WebAuth;
-  isAuthenticated = signal<boolean>(false);
-  userInfo = signal<any>(null);
+  // isAuthenticated = signal<boolean>(false);
+  // userInfo = signal<any>(null);
 
   constructor(
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private router: Router,
+    private http: HttpClient
   ) {
     this.auth0Client = new auth0.WebAuth({
       domain: environment.auth0.domain,
       clientID: environment.auth0.clientId,
       audience: environment.auth0.audience,
-      redirectUri: "https://climedar-front.vercel.app/login",
+      redirectUri: "http://localhost:4200/login",
       responseType: 'token id_token'
-    })
+    });
     this.loadSession();
+    if (this.isAuthenticated()) {
+      this.router.navigate(['/']);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
+  // Método de Login
   public login(email: string | undefined, password: string | undefined): void {
     this.auth0Client.login({
       email: email,
@@ -41,12 +45,10 @@ export class AuthService {
       realm: environment.auth0.database,
       audience: environment.auth0.audience
     }, (err: any, result: any) => {
-      if (err.code == "access_denied") {
+      if (err?.code === "access_denied") {
         console.log("Usuario o contraseña incorrectos");
-        // this.dialog.open(ErrorDialogComponent, {data: {message: "Usuario o contraseña incorrectos"}});
       } else if (err) {
         console.log("error");
-        // this.dialog.open(ErrorDialogComponent, {data: {message: "Ha ocurrido un error, intente nuevamente"}});
       }
       if (result) {
         console.log("result: ", result);
@@ -54,6 +56,7 @@ export class AuthService {
     });
   }
 
+  // Método para manejar la autenticación
   public async handleAuthentication(): Promise<void> {
     const queryParams = new URLSearchParams(window.location.hash.substring(1));
     const urlParams = new URLSearchParams(queryParams);
@@ -70,92 +73,100 @@ export class AuthService {
         console.log("entramos a handleauth");
         
         await this.setSession(accessToken, expiresIn, idToken);
-        console.log("Sesión iniciada con éxito.");
-        
+        this.router.navigate(['/']);
       } catch (error) {
         console.error(error);
       }
     }
   }
 
+  // Método para hacer logout
   public logout(): void {
-    console.log("Entra al logout")
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('expires_at');
-    localStorage.removeItem('idToken');
-
-    this.isAuthenticated.set(false);
-    console.log("me Deslogea");
-
+    console.log("Entra al logout");
+    this.clearSession();
+    // this.isAuthenticated.set(false);
     this.auth0Client.logout({
-      returnTo: 'https://climedar-front.vercel.app/login'
-    })
-
-  }
-
-  public forgotPassword(email: string): void {
-    this.auth0Client.changePassword({
-      connection: environment.auth0.database,
-      email: email
-    }, (err: any, resp: any) => {
-      if (err) {
-        // this.dialog.open(ErrorDialogComponent, { data: { message: "Ha ocurrido un error, intente nuevamente." } });
-      } else {
-        console.log("Password change email sent:", resp);
-        // this.dialog.open(SendEmailComponent, { data: { message: "Correo de restablecimiento de contraseña enviado." } });
-      }
+      returnTo: 'http://localhost:4200/login'
     });
   }
 
+  // Método para establecer la sesión
   private setSession(accessToken: any, expiresIn: any, idToken: any): Promise<void> {
     return new Promise(async (resolve) => {
       const expiresAt = (Date.now() + parseInt(expiresIn) * 1000).toString();
-      localStorage.setItem('access_token', accessToken);
-      localStorage.setItem('expires_at', expiresAt);
-      localStorage.setItem('idToken', idToken);
+      
+      // Almacena el token en una Cookie HTTPOnly
+      document.cookie = `access_token=${accessToken};expires=${new Date(parseInt(expiresAt)).toUTCString()};path=/;SameSite=Strict;Secure`;
+      document.cookie = `idToken=${idToken};expires=${new Date(parseInt(expiresAt)).toUTCString()};path=/;SameSite=Strict;Secure`;
 
-      console.log("Entra a setSession");
-
-      this.isAuthenticated.set(true);
-      this.setUserInfo(idToken);
-
-      console.log("se autentico?", this.isAuthenticated());
+      // this.isAuthenticated.set(true);
+      // this.setUserInfo(idToken);
       this.router.navigate(['/']);
-      //this.isClient.set(true);
     });
   }
 
-  public setUserInfo(idToken: any) {
-    console.log("Entra a setUserInfo: ", jwtDecode(idToken));
-    this.userInfo.set(jwtDecode(idToken)); //TODO: ver si vamos a utilizar la informacion del secretario (nombre, email, etc)
+  // Método para limpiar la sesión
+  private clearSession() {
+    // Limpia las cookies al desloguear
+    document.cookie = "access_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;";
+    document.cookie = "idToken=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;";
+    // this.isAuthenticated.set(false);
   }
 
+  // Método para configurar la información del usuario
+  // public setUserInfo(idToken: any) {
+  //   console.log("Entra a setUserInfo: ", jwtDecode(idToken));
+  //   // this.userInfo.set(jwtDecode(idToken));
+  // }
+
+  // Método para cargar la sesión
   private loadSession() {
-    const accessToken = localStorage.getItem('access_token');
-    const expiresAt = localStorage.getItem('expires_at');
-    const idToken = localStorage.getItem('idToken');
+    const idToken = this.getCookie('idToken');
+    const accessToken = this.getCookie('access_token');
 
-    if (accessToken && expiresAt && idToken) {
-      const expiresAtDate = new Date(parseInt(expiresAt!));
-      const currentDate = new Date();
-
-      if (currentDate < expiresAtDate) {
-        this.isAuthenticated.set(true);
-        this.setUserInfo(idToken);
-        console.log('Sesión restaurada con éxito.');
-      } else {
-        console.log('La sesión ha expirado, deslogueando...');
-        this.logout();
-      }
+    if (accessToken && idToken) {
+      // this.isAuthenticated.set(true);
+      // this.setUserInfo(idToken);
+      console.log('Sesión restaurada con éxito.');
     } else {
+      // this.isAuthenticated.set(false);
       console.log('No hay sesión activa almacenada.');
-      console.log('Deslogueando...');
+      // 🔴 Se quita el logout para evitar el bucle de recarga
     }
   }
 
+  // Método para obtener cookies
+  private getCookie(name: string): string | null {
+    const cookieArr = document.cookie.split(';');
+    for (let cookie of cookieArr) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName.trim() === name) {
+        return cookieValue;
+      }
+    }
+    return null;
+  }
+
+  // Método para obtener el token
   getToken() {
     console.log("Entra a getToken");
-    console.log(localStorage.getItem('access_token'));
-    return localStorage.getItem('access_token');
+    const token = this.getCookie('access_token');
+    console.log(token);
+    return token;
+  }
+
+  // Método para hacer solicitudes HTTP con el token en el header Authorization
+  getData(endpoint: string) {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': token ? `Bearer ${token}` : ''
+    });
+
+    return this.http.get(`${environment.apiUrl}/${endpoint}`, { headers });
+  }
+
+  isAuthenticated(): boolean {
+    const accessToken = this.getCookie('access_token');
+    return !!accessToken; // Retorna true si hay un token, false si no
   }
 }

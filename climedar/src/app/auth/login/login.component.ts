@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors} from '@angular/forms';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   imports: [
@@ -21,11 +22,14 @@ import { FormGroup, FormControl, FormsModule, ReactiveFormsModule, Validators, A
 })
 export class LoginComponent {
 
-  constructor(private authService: AuthService) { 
+  constructor(private authService: AuthService, private router: Router) { 
     const queryParams = new URLSearchParams(window.location.hash.substring(1));
     const urlParams = new URLSearchParams(queryParams);
     if (urlParams.has('access_token')) {
       this.authService.handleAuthentication();
+    }
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/']);
     }
   }
 
