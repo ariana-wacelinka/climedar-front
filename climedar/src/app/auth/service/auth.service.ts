@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ErrorDialogComponent } from "../../shared/components/error-dialog/error-dialog.component";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,7 @@ export class AuthService {
   }
 
   // Método de Login
-  public login(email: string | undefined, password: string | undefined): void {
+  public login(email: string | undefined, password: string | undefined): Observable<boolean> {
     this.auth0Client.login({
       email: email,
       password: password,
@@ -56,6 +57,7 @@ export class AuthService {
         console.log("result: ", result);
       }
     });
+    return new Observable<false>();
   }
 
   // Método para manejar la autenticación
