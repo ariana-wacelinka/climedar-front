@@ -91,7 +91,7 @@ export class AltaDoctorComponent {
       this.doctorService.createDoctor(this.doctorForm.value).subscribe(
         (response) => {
           console.log('Doctor creado', response);
-          this.snackBar.open('Doctor creado correctamente', 'Cerrar', { duration: 2000 })
+          this.snackBar.open('Doctor creado correctamente', 'Cerrar', { duration: 1000 })
           this.router.navigate(['/medico/listado']);
         },
         (error) => {

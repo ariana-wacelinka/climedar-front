@@ -6,8 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatTimepickerModule } from '@angular/material/timepicker';
-import { CenteredCardComponent } from '../../../shared/components';
-import { FormControl, FormsModule, NgModel, NgModelGroup, Validators } from '@angular/forms';
+import { FormControl, FormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MedicalServiceResponse } from '../../../servicio/models/services.models';
@@ -62,7 +61,6 @@ export class PagosComponent {
 
 
   constructor(private pacienteService: PatientService,
-    private servicioService: ServiciosMedicosService,
     private paymentService: PaymentService
   ) { }
 

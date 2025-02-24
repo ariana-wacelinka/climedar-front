@@ -63,7 +63,7 @@ export class ListadoDoctoresComponent {
     this.doctorService.deleteDoctor(id).subscribe(() => {
       console.log('Médico eliminado');
     });
-    window.location.reload();
+    this.applyFilter(new Event(''));
   }
 
   doctorInfo(doctor: Doctor) {

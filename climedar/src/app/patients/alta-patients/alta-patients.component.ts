@@ -77,7 +77,7 @@ export class AltaPatientsComponent {
       this.patientService.updatePatient(this.patientForm.value as Paciente).subscribe(
         (response) => {
           console.log('Paciente actualizado', response);
-          this.snackbar.open('Paciente actualizado exitosamente', 'Cerrar', { duration: 2000 });
+          this.snackbar.open('Paciente actualizado exitosamente', 'Cerrar', { duration: 1000 });
           this.router.navigate(['/paciente/listado']);
           window.location.reload();
         },
@@ -90,10 +90,12 @@ export class AltaPatientsComponent {
       console.log('Guardando paciente:' + (this.patientForm.value as Paciente).name);
       this.patientService.createPatient(this.patientForm.value as Paciente).subscribe(
         (response) => {
-          this.snackbar.open('Paciente creado exitosamente', 'Cerrar', { duration: 2000 });
+          this.snackbar.open('Paciente creado exitosamente', 'Cerrar', { duration: 1000 });
           console.log('Paciente creado', response);
-          this.router.navigate(['/paciente/listado']);
-          window.location.reload();
+          setTimeout(() => {
+            this.router.navigate(['/paciente/listado']);
+            window.location.reload();
+          }, 1050);
         },
         (error) => {
           this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear paciente' } });

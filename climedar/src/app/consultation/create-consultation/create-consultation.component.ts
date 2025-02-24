@@ -257,7 +257,7 @@ export class CreateConsultationComponent implements OnInit {
           console.log('consultationFG', (this.consultationFG.value as CreateConsultation));
           this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
             (data: Consultation) => {
-              this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 2000 });
+              this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 1000 });
               console.log('data', data);
               if (data) {
                 console.log("se manda el pago: ", method);
@@ -275,7 +275,7 @@ export class CreateConsultationComponent implements OnInit {
                     window.URL.revokeObjectURL(url);
                     setTimeout(() => {
                       this.router.navigate(['/home']);
-                    }, 2500);
+                    }, 1050);
                   },
                   (error) => {
                     console.log('error', error);
@@ -295,10 +295,10 @@ export class CreateConsultationComponent implements OnInit {
         this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
           (data) => {
             console.log('data', data);
-            this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 2000 });
+            this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 1000 });
             setTimeout(() => {
               this.router.navigate(['/home']);
-            }, 2500);
+            }, 1050);
           },
           (error) => {
             console.log('error', error);

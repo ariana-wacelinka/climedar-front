@@ -211,9 +211,8 @@ export class DialogPaqueteComponent {
         this.packageService.createPackage(paquete).subscribe({
           next: (response) => {
             console.log('Paquete creado' + response);
-            this.snackbar.open('Paquete creado exitosamente', 'Cerrar', { duration: 2000 });
+            this.snackbar.open('Paquete creado exitosamente', 'Cerrar', { duration: 1000 });
             this.dialogRef.close();
-            window.location.reload();
           },
           error: (err) => {
             this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear paquete' } });
@@ -232,9 +231,10 @@ export class DialogPaqueteComponent {
         this.packageService.updatePackage(paquete).subscribe({
           next: (response) => {
             console.log('Paquete editado' + response);
-            this.snackbar.open('Paquete editado exitosamente', 'Cerrar', { duration: 2000 });
-            this.dialogRef.close();
-            window.location.reload();
+            this.snackbar.open('Paquete editado exitosamente', 'Cerrar', { duration: 1000 });
+            setTimeout(() => {
+              this.dialogRef.close();
+            }, 1050);
           },
           error: (err) => {
             this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al editar paquete' } });

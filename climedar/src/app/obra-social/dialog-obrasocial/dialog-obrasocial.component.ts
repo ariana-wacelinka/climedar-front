@@ -45,7 +45,7 @@ export class DialogObrasocialComponent {
     private dialogRef: MatDialogRef<DialogObrasocialComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id?: string, name?: string },
     private obraSocialService: ObraSocialService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {
     if (data.id && data.name) {
       console.log(data);
@@ -79,9 +79,10 @@ export class DialogObrasocialComponent {
       if (!this.data.id) {
         this.obraSocialService.createObraSocial(obraSocialSent).subscribe({
           next: () => {
-            this.dialogRef.close();
-            this.snackbar.open('Obra Social creada correctamente', 'Cerrar', { duration: 2000 });
-            window.location.reload();
+            this.snackbar.open('Obra Social creada correctamente', 'Cerrar', { duration: 1000 });
+            setTimeout(() => {
+              this.dialogRef.close();
+            }, 1050);
           },
           error: (err) => {
             this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear la obra social' } });
@@ -91,9 +92,10 @@ export class DialogObrasocialComponent {
       } else {
         this.obraSocialService.updateObraSocial(obraSocialSent).subscribe({
           next: () => {
-            this.dialogRef.close();
-            this.snackbar.open('Obra Social actualizada correctamente', 'Cerrar', { duration: 2000 });
-            window.location.reload();
+            this.snackbar.open('Obra Social actualizada correctamente', 'Cerrar', { duration: 1000 });
+            setTimeout(() => {
+              this.dialogRef.close();
+            }, 1050);
           },
           error: (err) => {
             this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al actualizar la obra social' } });

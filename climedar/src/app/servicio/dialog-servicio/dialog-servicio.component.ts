@@ -1,4 +1,4 @@
-import { Component, Inject, signal } from '@angular/core';
+import { Component, inject, Inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import {
@@ -21,6 +21,7 @@ import { debounceTime, filter, map, Observable, startWith, switchMap } from 'rxj
 import { AsyncPipe } from '@angular/common';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dialog-servicio',
@@ -65,6 +66,8 @@ export class DialogServicioComponent {
     serviceType: new FormControl('', [Validators.required]),
     specialityId: new FormControl('', [Validators.required])
   });
+
+  snackbar = inject(MatSnackBar);
 
   constructor(
     public dialogRef: MatDialogRef<DialogServicioComponent>,
@@ -161,11 +164,10 @@ export class DialogServicioComponent {
       };
 
       if (this.formGroup.valid) {
-
         this.serviciosMedicosService.createMedicalService(servicioMedico).subscribe(response => {
           console.log(response);
+          this.snackbar.open('Servicio creado correctamente', 'Cerrar', { duration: 1000 });
           this.dialogRef.close();
-          window.location.reload();
         }, error => {
           this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear servicio' } });
           console.log('Error al crear servicio', error);
@@ -185,8 +187,8 @@ export class DialogServicioComponent {
       if (this.formGroup.valid) {
         this.serviciosMedicosService.updateMedicalService(servicioMedico).subscribe(response => {
           console.log(response);
+          this.snackbar.open('Servicio editado correctamente', 'Cerrar', { duration: 1000 });
           this.dialogRef.close();
-          window.location.reload();
         }, error => {
           this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al editar servicio' } });
           console.log('Error al editar servicio', error);

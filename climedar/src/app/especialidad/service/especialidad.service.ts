@@ -106,7 +106,7 @@ export class EspecialidadService {
     );
   }
 
-  public getEspecailidadesFiltered(page: number, name: string): Observable<{ pageInfo: PageInfo, especialidades: Especialidad[] }> {
+  public getEspecialidadesFiltered(page: number, name: string): Observable<{ pageInfo: PageInfo, especialidades: Especialidad[] }> {
     const query = gql`
       query GetSpecialitiesFiltered($page: Int!, $name: String!) {
         getAllSpecialities(

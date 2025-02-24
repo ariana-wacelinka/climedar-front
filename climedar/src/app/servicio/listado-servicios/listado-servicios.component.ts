@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -21,7 +21,8 @@ import { infoServicioComponent } from '../info-servicio/info-servicio.component'
 import { ServiciosMedicosService } from '../services/servicio/servicios-medicos.service';
 import { PageInfo } from '../../shared/models/extras.models';
 import { MedicalService, MedicalServiceResponse } from '../models/services.models';
-import { map } from 'rxjs';
+import { map, timeout } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listado-servicios',
@@ -60,6 +61,7 @@ export class ListadoServiciosComponent {
   displayedColumns: string[] = ["nombre", "precio", "duracionEstimada", "edit"];
   servicios = signal<MedicalServiceResponse[]>([]);
   filterValue = signal<string>('');
+  snackbar = inject(MatSnackBar);
 
   constructor(private dialog: MatDialog,
     private serviciosMedicosService: ServiciosMedicosService,
@@ -101,9 +103,9 @@ export class ListadoServiciosComponent {
 
   deleteServicio(id: string) {
     this.serviciosMedicosService.deleteMedicalService(id).subscribe(() => {
+      this.snackbar.open('Servicio eliminado correctamente', 'Cerrar', { duration: 2000 });
       this.loadServicios();
     });
-    window.location.reload();
   }
 
   editServicio(servicio: MedicalService, specialityId: string) {
@@ -120,6 +122,14 @@ export class ListadoServiciosComponent {
         serviceType: servicio.serviceType,
         specialityId: specialityId
       }
+    }).afterClosed().subscribe(() => {
+      setTimeout(() => {
+        this.serviciosMedicosService.getAllServicios(this.pageInfo().currentPage).subscribe(response => {
+          console.log(response.pageInfo);
+          this.servicios.set(response.services);
+          this.pageInfo.set(response.pageInfo);
+        });
+      }, 1500);
     });
   }
 
@@ -129,6 +139,14 @@ export class ListadoServiciosComponent {
       minWidth: '350px',
       maxWidth: '90vw',
       data: {}
+    }).afterClosed().subscribe(() => {
+      setTimeout(() => {
+        this.serviciosMedicosService.getAllServicios(this.pageInfo().currentPage).subscribe(response => {
+          console.log(response.pageInfo);
+          this.servicios.set(response.services);
+          this.pageInfo.set(response.pageInfo);
+        });
+      }, 1500);
     });
   }
 

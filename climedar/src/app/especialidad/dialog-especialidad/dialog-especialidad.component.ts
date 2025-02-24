@@ -80,12 +80,13 @@ export class DialogEspecialidadComponent {
           description: this.formGroup.value.description!,
           code: this.formGroup.value.code!
         };
-        console.log('Especialidad a modificar:', especialidad);
 
         this.especialidadService.updateEspecialidad(especialidad).subscribe(() => {
           console.log('Especialidad modificada:', especialidad);
-          this.dialogRef.close();
-          window.location.reload();
+          this.snackbar.open('Especialidad modificada con éxito', 'Cerrar', { duration: 1000 });
+          setTimeout(() => {
+            this.dialogRef.close();
+          }, 1050);
         });
       } else {
         const especialidad: Especialidad = {
@@ -98,9 +99,10 @@ export class DialogEspecialidadComponent {
         this.especialidadService.createEspecialidad(especialidad).subscribe({
           next: (especialidad: Especialidad) => {
             console.log('Especialidad creada:', especialidad);
-            this.snackbar.open('Especialidad creada con éxito', 'Cerrar', { duration: 2000 });
-            this.dialogRef.close();
-            window.location.reload();
+            this.snackbar.open('Especialidad creada con éxito', 'Cerrar', { duration: 1000 });
+            setTimeout(() => {
+              this.dialogRef.close();
+            }, 1050);
           },
           error: (err) => {
             console.error('Error al crear la especialidad:', err);

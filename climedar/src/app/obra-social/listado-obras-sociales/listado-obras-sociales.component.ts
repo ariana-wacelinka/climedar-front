@@ -101,17 +101,17 @@ export class ListadoObrasSocialesComponent {
   }
 
   editObraSocial(medicalSecure: ObraSocial) {
-    {
-      this.dialog.open(DialogObrasocialComponent, {
-        width: '670px',
-        minWidth: '350px',
-        maxWidth: '90vw',
-        data: {
-          id: medicalSecure.id,
-          name: medicalSecure.name
-        }
-      });
-    }
+    this.dialog.open(DialogObrasocialComponent, {
+      width: '670px',
+      minWidth: '350px',
+      maxWidth: '90vw',
+      data: {
+        id: medicalSecure.id,
+        name: medicalSecure.name
+      }
+    }).afterClosed().subscribe(() => {
+      this.loadMedicalSecures();
+    });
   }
 
   createObraSocial() {
@@ -120,13 +120,15 @@ export class ListadoObrasSocialesComponent {
       minWidth: '350px',
       maxWidth: '90vw',
       data: {}
+    }).afterClosed().subscribe(() => {
+      this.loadMedicalSecures();
     });
   }
 
   deleteObraSocial(id: number) {
     this.obraSocialService.deleteMedicalSecure(id).subscribe(() => {
       console.log('Deleted');
-      window.location.reload();
+      this.loadMedicalSecures();
     });
   }
 

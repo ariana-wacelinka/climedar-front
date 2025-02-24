@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -22,6 +22,7 @@ import { PageInfo } from '../../shared/models/extras.models';
 import { PackageResponse } from '../models/package.models';
 import { PackageService } from '../services/package.service';
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listado-paquetes',
@@ -49,7 +50,7 @@ import { LoaderComponent } from "../../shared/components/loader/loader.component
     MatMenuTrigger,
     MatHeaderCellDef,
     LoaderComponent
-],
+  ],
   templateUrl: './listado-paquetes.component.html',
   styleUrl: './listado-paquetes.component.scss'
 })
@@ -59,6 +60,7 @@ export class ListadoPaquetesComponent {
   packages = signal<PackageResponse[]>([]);
   displayedColumns: string[] = ["name", "price", "edit"];
   filterValue = signal<string>('');
+  snackbar = inject(MatSnackBar);
 
   constructor(private dialog: MatDialog,
     private packageService: PackageService) {
@@ -66,6 +68,14 @@ export class ListadoPaquetesComponent {
       this.packages.set(response.packages);
       this.pageInfo.set(response.pageInfo);
       this.isLoading = false;
+    });
+  }
+
+  private loadPaquetes() {
+    this.packageService.getAllPackages(this.pageInfo().currentPage).subscribe(response => {
+      console.log(response.pageInfo.totalItems);
+      this.packages.set(response.packages);
+      this.pageInfo.set(response.pageInfo);
     });
   }
 
@@ -81,6 +91,10 @@ export class ListadoPaquetesComponent {
         servicesIds: paquete.services!.map(service => service.id!),
         specialityId: paquete.speciality!.id!
       }
+    }).afterClosed().subscribe(() => {
+      setTimeout(() => {
+        this.loadPaquetes();
+      }, 1500);
     });
   }
 
@@ -90,6 +104,10 @@ export class ListadoPaquetesComponent {
       minWidth: '350px',
       maxWidth: '90vw',
       data: {}
+    }).afterClosed().subscribe(() => {
+      setTimeout(() => {
+        this.loadPaquetes();
+      }, 1500);
     });
   }
 
@@ -124,9 +142,13 @@ export class ListadoPaquetesComponent {
 
   deletePaquete(id: number) {
     this.packageService.deletePackage(id).subscribe(response => {
+      this.snackbar.open('Paquete eliminado exitosamente', 'Cerrar', { duration: 1000 });
       console.log(response)
+
+      setTimeout(() => {
+        this.loadPaquetes();
+      }, 1500);
     });
-    window.location.reload();
   }
 
   applyFilter(event: Event) {

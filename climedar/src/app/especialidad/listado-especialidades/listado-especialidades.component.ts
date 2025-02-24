@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from "../../shared/components";
 import { MatButtonModule } from "@angular/material/button";
 import {
@@ -22,6 +22,7 @@ import { InfoEspecialidadComponent } from '../info-especialidad/info-especialida
 import { PageInfo } from '../../shared/models/extras.models';
 import { map } from 'rxjs';
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listado-especialidades',
@@ -51,7 +52,7 @@ import { LoaderComponent } from "../../shared/components/loader/loader.component
     MatHeaderCellDef,
     MatNoDataRow,
     LoaderComponent
-],
+  ],
   templateUrl: './listado-especialidades.component.html',
   styleUrl: './listado-especialidades.component.scss'
 })
@@ -61,12 +62,12 @@ export class ListadoEspecialidadesComponent {
   especialidades = signal<Especialidad[]>([]);
   displayedColumns: string[] = ["nombre", "edit"];
   filterValue = signal<string>('');
+  snackbar = inject(MatSnackBar);
 
   constructor(private dialog: MatDialog, private especialidadService: EspecialidadService) { };
 
   ngOnInit() {
     this.loadEspecialidades();
-    this.isLoading = false;
   }
 
   pageChange(page: number) {
@@ -85,9 +86,10 @@ export class ListadoEspecialidadesComponent {
   }
 
   loadEspecialidades() {
-    this.especialidadService.getEspecailidadesFiltered(this.pageInfo().currentPage, this.filterValue().trim().toLowerCase()).subscribe(response => {
+    this.especialidadService.getEspecialidadesFiltered(this.pageInfo().currentPage, this.filterValue().trim().toLowerCase()).subscribe(response => {
       this.especialidades.set(response.especialidades);
       this.pageInfo.set(response.pageInfo);
+      this.isLoading = false;
     });
   }
 
@@ -98,7 +100,7 @@ export class ListadoEspecialidadesComponent {
 
   info_especialidad(especialidad: Especialidad) {
     console.log(especialidad);
-    const dialogRef = this.dialog.open(InfoEspecialidadComponent, {
+    this.dialog.open(InfoEspecialidadComponent, {
       maxWidth: '330px',
       height: 'auto',
       data: { id: especialidad.id, name: especialidad.name, code: especialidad.code, description: especialidad.description }
@@ -106,11 +108,13 @@ export class ListadoEspecialidadesComponent {
   }
 
   editEspecialidad(especialidad: Especialidad) {
-    const dialogRef = this.dialog.open(DialogEspecialidadComponent, {
+    this.dialog.open(DialogEspecialidadComponent, {
       width: '670px',
       minWidth: '350px',
       maxWidth: '90vw',
       data: { id: especialidad.id, name: especialidad.name, code: especialidad.code, description: especialidad.description }
+    }).afterClosed().subscribe(() => {
+      this.pageChange(1);
     });
   }
 
@@ -120,6 +124,8 @@ export class ListadoEspecialidadesComponent {
       minWidth: '350px',
       maxWidth: '90vw',
       data: {}
+    }).afterClosed().subscribe(() => {
+      this.pageChange(1);
     });
   }
 
@@ -127,7 +133,8 @@ export class ListadoEspecialidadesComponent {
     this.especialidadService.deleteEspecialidad(id)
       .subscribe(success => {
         if (success) {
-          window.location.reload();
+          this.snackbar.open('Especialidad eliminada con éxito', 'Cerrar', { duration: 1000 });
+          this.loadEspecialidades();
         } else {
           console.log('Error al eliminar la especialidad');
         }

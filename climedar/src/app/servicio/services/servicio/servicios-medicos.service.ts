@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {PageInfo} from '../../../shared/models/extras.models';
-import {MedicalService, MedicalServiceResponse} from '../../models/services.models';
-import {map, Observable} from 'rxjs';
-import {Apollo, gql} from 'apollo-angular';
-import {PackageResponse} from '../../../paquetes/models/package.models';
+import { Injectable } from '@angular/core';
+import { PageInfo } from '../../../shared/models/extras.models';
+import { MedicalService, MedicalServiceResponse } from '../../models/services.models';
+import { map, Observable } from 'rxjs';
+import { Apollo, gql } from 'apollo-angular';
+import { PackageResponse } from '../../../paquetes/models/package.models';
 
 @Injectable({
   providedIn: 'root',
@@ -146,7 +146,41 @@ export class ServiciosMedicosService {
         name: name
       }
     }).pipe(
-      map(response => response.data!.getAllMedicalServices)
+      map(response => response.data.getAllMedicalServices)
+    );
+  }
+
+  public getAllServicios(page:number): Observable<{ pageInfo: PageInfo, services: MedicalServiceResponse[] }> {
+    const query = gql`
+      query getAllMedicalServices {
+        getAllMedicalServices(
+          pageRequest: { page: ${page}, size: 5, order: {field: "name", direction: ASC}}
+        ) {
+          services {
+            serviceType
+            price
+            speciality {
+              id
+            }
+            name
+            estimatedDuration
+            id
+            description
+            code
+          }
+          pageInfo {
+            currentPage
+            totalItems
+            totalPages
+          }
+        }
+      }
+    `;
+
+    return this.apollo.query<{ getAllMedicalServices: { pageInfo: PageInfo, services: MedicalServiceResponse[] } }>({
+      query
+    }).pipe(
+      map(response => response.data.getAllMedicalServices)
     );
   }
 
