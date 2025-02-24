@@ -30,11 +30,6 @@ export class AuthService {
       responseType: 'token id_token'
     });
     this.loadSession();
-    if (this.isAuthenticated()) {
-      this.router.navigate(['/']);
-    } else {
-      this.router.navigate(['/login']);
-    }
   }
 
   // Método de Login
@@ -73,7 +68,6 @@ export class AuthService {
         console.log("entramos a handleauth");
         
         await this.setSession(accessToken, expiresIn, idToken);
-        this.router.navigate(['/']);
       } catch (error) {
         console.error(error);
       }

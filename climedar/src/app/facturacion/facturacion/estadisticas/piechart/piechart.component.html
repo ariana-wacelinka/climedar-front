@@ -1,12 +1,16 @@
 <div class="pie-chart">
     <ngx-charts-pie-chart
     [view]="view"
+    [doughnut]="true"
+    [margins]="[0, 0, 0, 0]"
+    [trimLabels]="false"
+    [explodeSlices]="true"
     [customColors]="colorScheme"
     [results]="single()"
     [gradient]="gradient"
-    [legend]="false"
+    [legend]="true"
     [legendPosition]="legendPosition"
-    [legendTitle]="'Ganancias'"
+    [legendTitle]="''"
     (select)="onSelect($event)">
   </ngx-charts-pie-chart>
   <div class="form">
