@@ -1,15 +1,9 @@
 @use '@angular/material' as mat;
 
-// Customize the entire app. Change :root to your selector if you want to scope the styles.
-
 mat-toolbar {
-    // padding-top: 10px;
     color: #f9f9f9;
-    // flex: 0 0 auto; /* Mantiene su tamaño natural */
     z-index: 2;
-    // background-color: rgba(0, 0, 0, 0.1);
     height: 10vh;
-    // position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -25,20 +19,20 @@ mat-toolbar {
     user-select: none;
 }
 
-.izquierda{
+.izquierda {
     display: flex;
     flex-direction: row;
     align-content: center;
     align-items: center;
 }
 
-.derecha{
+.derecha {
     display: flex;
     height: 100%;
     flex-direction: column;
     justify-content: center;
 
-    button{
+    button {
         border: 1px solid #F9F9F9;
         border-radius: 10px;
         color: #F9F9F9;
@@ -46,36 +40,34 @@ mat-toolbar {
 }
 
 .menu {
-    // margin-top: 13px;
     display: flex;
     gap: 16px;
     height: 100%;
 
     div[mat-button] {
-    cursor: pointer;
-    font-size: 18px;
+        cursor: pointer;
+        font-size: 18px;
     }
 }
 
-.row{
+.row {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
 }
 
-.not_menu{
+.not_menu {
     margin-right: 10px;
 }
 
-mat-icon{
+mat-icon {
     font-size: 18px;
     align-content: center;
     text-align: center;
 }
 
-.logo{
-    // padding-top: 10px;
+.logo {
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.231));
     margin-right: 10px;
     max-width: 250px;
@@ -90,4 +82,9 @@ mat-icon {
 mat-icon.rotate {
     transform: rotate(180deg);
 }
-  
+
+.button {
+    margin-right: 10px;
+    cursor: pointer;
+    font-size: 18px
+}

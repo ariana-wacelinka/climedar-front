@@ -4,18 +4,26 @@
     </ng-container>
     <ng-container main-content>
         <form [formGroup]="formgroup">
-        <mat-form-field [appearance]="'outline'" class="full-width">
-            <mat-label>Correo electrónico</mat-label>
-            <input formControlName="email" matInput type="email" placeholder="climedar@climedar.com" name="email" required>
-        </mat-form-field>
-        <mat-form-field [appearance]="'outline'" class="full-width">
-            <mat-label>Contraseña</mat-label>
-            <input formControlName="password" matInput type="password" placeholder="Password" name="password" required>
-        </mat-form-field>
-        <div class="full-width forgot-pass">
-            <a href="">¿olvidaste tu contraseña?</a>
-        </div>
-    </form>
+            <mat-form-field [appearance]="'outline'" class="full-width email">
+                <mat-label>Correo electrónico</mat-label>
+                <input formControlName="email" matInput type="email" placeholder="user@climedar.com" name="email"
+                    required>
+                @if (formgroup.get('email')!.hasError('email') && !formgroup.get('email')!.hasError('required')) {
+                <mat-error style="font-size: 12px;">Por favor, ingrese un email válido</mat-error>
+                }
+                @if (formgroup.get('email')!.hasError('required')) {
+                <mat-error style="font-size: 12px;">Por favor, ingrese su email</mat-error>
+                }
+            </mat-form-field>
+            <mat-form-field [appearance]="'outline'" class="full-width">
+                <mat-label>Contraseña</mat-label>
+                <input formControlName="password" matInput type="password" placeholder="Password" name="password"
+                    required>
+                @if (formgroup.get('password')!.hasError('required')) {
+                <mat-error style="font-size: 12px;">Por favor, ingrese su contraseña</mat-error>
+                }
+            </mat-form-field>
+        </form>
     </ng-container>
     <ng-container main-actions>
         <button mat-flat-button (click)="login()" class="full-width login-button">Iniciar sesión</button>

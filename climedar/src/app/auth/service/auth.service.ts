@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { ErrorDialogComponent } from "../../shared/components/error-dialog/error-dialog.component";
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +43,14 @@ export class AuthService {
     }, (err: any, result: any) => {
       if (err?.code === "access_denied") {
         console.log("Usuario o contraseña incorrectos");
+        this.dialog.open(ErrorDialogComponent, {
+          data: { message: "Usuario o contraseña incorrectos" }
+        });
       } else if (err) {
         console.log("error");
+        this.dialog.open(ErrorDialogComponent, {
+          data: { message: "Ha ocurrido un error" }
+        });
       }
       if (result) {
         console.log("result: ", result);

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../auth/service/auth.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -21,7 +22,13 @@ export class ToolbarComponent {
   pacientesMenuOpen = false;
   consultasMenuOpen = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+    private auth: AuthService
+  ) { }
+
+  isAuth(): boolean {
+    return this.auth.isAuthenticated();
+  }
 
   toggleMenu(menu: string) {
     if (menu === 'medicos') {
@@ -83,5 +90,9 @@ export class ToolbarComponent {
 
   login() {
     this.router.navigate(['login']);
+  }
+
+  logout() {
+    this.auth.logout();
   }
 }
