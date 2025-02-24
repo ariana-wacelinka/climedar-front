@@ -15,7 +15,6 @@ import { ListadoPacientesComponent } from './patients/listado-pacientes/listado-
 import { ListadoDoctoresComponent } from './doctors/listado-doctores/listado-doctores.component';
 import { PersonInfoComponent } from './shared/components/person-info/person-info.component';
 import { FacturacionComponent } from './facturacion/facturacion/facturacion.component';
-import {authGuard} from './auth/guard/auth.guard';
 import { authGuard } from './auth/guard/auth.guard';
 
 export const routes: Routes = [

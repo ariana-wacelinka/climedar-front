@@ -80,10 +80,14 @@ export class AltaDoctorComponent {
       this.doctorService.updateDoctor((this.doctorForm.value as Doctor)).subscribe(
         (response) => {
           console.log('Doctor actualizado', response);
-          this.router.navigate(['/medico/listado']);
+          this.snackBar.open('Doctor actualizado correctamente', 'Cerrar', { duration: 1000 });
+          setTimeout(() => {
+            this.router.navigate(['/medico/listado']);
+          }, 1000);
         },
         (error) => {
           console.error('Error al actualizar doctor', error);
+          this.dialog.open(ErrorDialogComponent, { data: { message: 'Ha habido un error al actualizar el doctor' } });
         }
       );
     } else {
@@ -92,7 +96,9 @@ export class AltaDoctorComponent {
         (response) => {
           console.log('Doctor creado', response);
           this.snackBar.open('Doctor creado correctamente', 'Cerrar', { duration: 1000 })
-          this.router.navigate(['/medico/listado']);
+          setTimeout(() => {
+            this.router.navigate(['/medico/listado']);
+          });
         },
         (error) => {
           this.dialog.open(ErrorDialogComponent, { data: { message: 'Ha habido un error al crear el doctor' } });
