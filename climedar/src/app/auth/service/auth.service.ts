@@ -13,8 +13,8 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 })
 export class AuthService {
   private auth0Client: auth0.WebAuth;
-  isAuthenticated = signal<boolean>(false);
-  userInfo = signal<any>(null);
+  // isAuthenticated = signal<boolean>(false);
+  // userInfo = signal<any>(null);
 
   constructor(
     private dialog: MatDialog,
@@ -32,6 +32,8 @@ export class AuthService {
     this.loadSession();
     if (this.isAuthenticated()) {
       this.router.navigate(['/']);
+    } else {
+      this.router.navigate(['/login']);
     }
   }
 
@@ -82,7 +84,7 @@ export class AuthService {
   public logout(): void {
     console.log("Entra al logout");
     this.clearSession();
-    this.isAuthenticated.set(false);
+    // this.isAuthenticated.set(false);
     this.auth0Client.logout({
       returnTo: 'http://localhost:4200/login'
     });
@@ -97,8 +99,8 @@ export class AuthService {
       document.cookie = `access_token=${accessToken};expires=${new Date(parseInt(expiresAt)).toUTCString()};path=/;SameSite=Strict;Secure`;
       document.cookie = `idToken=${idToken};expires=${new Date(parseInt(expiresAt)).toUTCString()};path=/;SameSite=Strict;Secure`;
 
-      this.isAuthenticated.set(true);
-      this.setUserInfo(idToken);
+      // this.isAuthenticated.set(true);
+      // this.setUserInfo(idToken);
       this.router.navigate(['/']);
     });
   }
@@ -108,14 +110,14 @@ export class AuthService {
     // Limpia las cookies al desloguear
     document.cookie = "access_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;";
     document.cookie = "idToken=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;";
-    this.isAuthenticated.set(false);
+    // this.isAuthenticated.set(false);
   }
 
   // Método para configurar la información del usuario
-  public setUserInfo(idToken: any) {
-    console.log("Entra a setUserInfo: ", jwtDecode(idToken));
-    this.userInfo.set(jwtDecode(idToken));
-  }
+  // public setUserInfo(idToken: any) {
+  //   console.log("Entra a setUserInfo: ", jwtDecode(idToken));
+  //   // this.userInfo.set(jwtDecode(idToken));
+  // }
 
   // Método para cargar la sesión
   private loadSession() {
@@ -123,11 +125,11 @@ export class AuthService {
     const accessToken = this.getCookie('access_token');
 
     if (accessToken && idToken) {
-      this.isAuthenticated.set(true);
-      this.setUserInfo(idToken);
+      // this.isAuthenticated.set(true);
+      // this.setUserInfo(idToken);
       console.log('Sesión restaurada con éxito.');
     } else {
-      this.isAuthenticated.set(false);
+      // this.isAuthenticated.set(false);
       console.log('No hay sesión activa almacenada.');
       // 🔴 Se quita el logout para evitar el bucle de recarga
     }
@@ -161,5 +163,10 @@ export class AuthService {
     });
 
     return this.http.get(`${environment.apiUrl}/${endpoint}`, { headers });
+  }
+
+  isAuthenticated(): boolean {
+    const accessToken = this.getCookie('access_token');
+    return !!accessToken; // Retorna true si hay un token, false si no
   }
 }
