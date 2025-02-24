@@ -20,10 +20,10 @@ registerLocaleData(localeEs, 'es');
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(),
-    provideRouter(routes), 
-    provideAnimationsAsync('noop'), 
+    provideRouter(routes),
+    provideAnimationsAsync('noop'),
     provideAuth0({
       domain: environment.auth0.domain,
       clientId: environment.auth0.clientId,
@@ -33,8 +33,8 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     { provide: LOCALE_ID, useValue: 'es' },
-    provideAnimationsAsync(), 
-    provideHttpClient(), 
+    provideAnimationsAsync(),
+    provideHttpClient(),
     provideApollo(() => {
       const httpLink = inject(HttpLink);
       const auth = inject(AuthService);
@@ -47,7 +47,7 @@ export const appConfig: ApplicationConfig = {
 
           operation.setContext({
             headers: {
-              // Authorization: token ? `Bearer ${token}` : ''
+               Authorization: token ? `Bearer ${token}` : ''
             }
           });
 
@@ -57,7 +57,7 @@ export const appConfig: ApplicationConfig = {
       });
       console.log('API URL:', environment.apiUrl);
       console.log('Token:', auth.getToken());
-      
+
       return {
         link: authLink.concat(httpLink.create({
           uri: environment.apiUrl,
