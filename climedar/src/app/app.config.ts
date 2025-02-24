@@ -28,7 +28,8 @@ export const appConfig: ApplicationConfig = {
       domain: environment.auth0.domain,
       clientId: environment.auth0.clientId,
       authorizationParams: {
-        redirect_uri: "https://climedar-front.vercel.app",
+        // redirect_uri: "https://climedar-front.vercel.app",
+        redirect_uri: "http://localhost:4200",
       }
     }),
     { provide: LOCALE_ID, useValue: 'es' },
@@ -42,11 +43,11 @@ export const appConfig: ApplicationConfig = {
       const authLink = new ApolloLink((operation, forward) => {
         return new Observable(observer => {
           const token = auth.getToken(); // Obtiene el token
-          console.log('Token:', token);
+          console.log('Token desde app.config:', token);
 
           operation.setContext({
             headers: {
-              Authorization: token ? `Bearer ${token}` : ''
+              // Authorization: token ? `Bearer ${token}` : ''
             }
           });
 
