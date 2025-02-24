@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
       domain: environment.auth0.domain,
       clientId: environment.auth0.clientId,
       authorizationParams: {
-        redirect_uri: "http://localhost:4200",
+        redirect_uri: "https://climedar-front.vercel.app",
       }
     }),
     { provide: LOCALE_ID, useValue: 'es' },
@@ -48,7 +48,6 @@ export const appConfig: ApplicationConfig = {
         operation.setContext({
           headers: {
             Authorization: token ? `Bearer ${token}` : '', // Agrega el token al header
-            'Custom-Header': 'valor-personalizado' // Puedes agregar otros headers si es necesario
           },
         });
 
