@@ -21,7 +21,13 @@ import { FormGroup, FormControl, FormsModule, ReactiveFormsModule, Validators, A
 })
 export class LoginComponent {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) { 
+    const queryParams = new URLSearchParams(window.location.hash.substring(1));
+    const urlParams = new URLSearchParams(queryParams);
+    if (urlParams.has('access_token')) {
+      this.authService.handleAuthentication();
+    }
+  }
 
   formgroup: FormGroup = new FormGroup({
     email: new FormControl('', Validators.email),

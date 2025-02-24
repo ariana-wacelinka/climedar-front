@@ -28,7 +28,7 @@ export class AuthService {
       domain: environment.auth0.domain,
       clientID: environment.auth0.clientId,
       audience: environment.auth0.audience,
-      redirectUri: "http://localhost:4200/home",
+      redirectUri: "https://climedar-front.vercel.app/login",
       responseType: 'token id_token'
     })
     this.loadSession();
@@ -70,7 +70,8 @@ export class AuthService {
         console.log("entramos a handleauth");
         
         await this.setSession(accessToken, expiresIn, idToken);
-        this.router.navigate(['/']);
+        console.log("Sesión iniciada con éxito.");
+        
       } catch (error) {
         console.error(error);
       }
@@ -87,7 +88,7 @@ export class AuthService {
     console.log("me Deslogea");
 
     this.auth0Client.logout({
-      returnTo: 'http://localhost:4200/login'
+      returnTo: 'https://climedar-front.vercel.app/login'
     })
 
   }
@@ -113,9 +114,13 @@ export class AuthService {
       localStorage.setItem('expires_at', expiresAt);
       localStorage.setItem('idToken', idToken);
 
+      console.log("Entra a setSession");
+
       this.isAuthenticated.set(true);
       this.setUserInfo(idToken);
 
+      console.log("se autentico?", this.isAuthenticated());
+      this.router.navigate(['/']);
       //this.isClient.set(true);
     });
   }

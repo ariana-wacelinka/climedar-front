@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "config": "node ./config/set-envs.config.js",
+    "start": "npm run config -- --environment=dev && ng serve",
+    "prebuild": "npm run config -- --environment=prod",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -24,14 +26,17 @@
     "@apollo/client": "^3.0.0",
     "@auth0/auth0-angular": "2.2.3",
     "@swimlane/ngx-charts": "^22.0.0-alpha.0",
+    "@types/yargs": "^17.0.33",
     "apollo-angular": "8.0.2",
     "auth0-js": "^9.28.0",
+    "dotenv": "^16.4.7",
     "graphql": "^16",
     "jwt-decode": "^4.0.0",
     "luxon": "^3.5.0",
     "ngx-mask": "^19.0.6",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "yargs": "^17.7.2",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
