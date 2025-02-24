@@ -54,7 +54,9 @@ export const appConfig: ApplicationConfig = {
           forward(operation).subscribe(observer);
         });
       });
-
+      console.log('API URL:', environment.apiUrl);
+      console.log('Token:', auth.getToken());
+      
       return {
         link: authLink.concat(httpLink.create({
           uri: environment.apiUrl,
