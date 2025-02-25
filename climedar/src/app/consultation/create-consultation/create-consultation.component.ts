@@ -1,5 +1,5 @@
 import { TurnosService } from './../../turnos/services/turnos-service/turnos.service';
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,7 +24,7 @@ import { Turno } from '../../turnos/models/turno.models';
 import { BrowserModule } from '@angular/platform-browser';
 import { Doctor } from '../../doctors/models/doctor.models';
 import { Especialidad } from '../../especialidad';
-import { Observable, startWith, filter, debounceTime, switchMap, map } from 'rxjs';
+import { Observable, startWith, filter, debounceTime, switchMap, map, timeout } from 'rxjs';
 import { DoctorService } from '../../doctors/service/doctor.service';
 import { Paciente } from '../../patients/models/paciente.models';
 import { ServiciosMedicosService } from '../../servicio/services/servicio/servicios-medicos.service';
@@ -38,6 +38,7 @@ import { PackageResponse } from '../../paquetes/models/package.models';
 import { PaymentDialogComponent } from '../../shared/components/payment-dialog/payment-dialog.component';
 import { PaymentService } from '../../shared/services/payment/payment.service';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-create-consultation',
   imports: [
@@ -108,6 +109,7 @@ export class CreateConsultationComponent implements OnInit {
   filteredDoctorOptions: Observable<Doctor[]> | undefined;
   servicioControl = new FormControl<string>("");
   paqueteControl = new FormControl<string>("");
+  snackbar = inject(MatSnackBar);
 
   constructor(private paymentService: PaymentService, private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService, private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
@@ -257,6 +259,7 @@ export class CreateConsultationComponent implements OnInit {
             (data: Consultation) => {
               console.log('data', data);
               if (data) {
+                this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 3000 });
                 console.log("se manda el pago: ", method);
                 this.paymentService.createPayment(method, data.id!).subscribe(
                   (blob) => {
@@ -270,6 +273,9 @@ export class CreateConsultationComponent implements OnInit {
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
+                    setTimeout(() => {
+                      this.router.navigate(['']);
+                    }, 1000);
                   },
                   (error) => {
                     console.log('error', error);
@@ -286,7 +292,11 @@ export class CreateConsultationComponent implements OnInit {
         console.log('no pago');
         this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
           (data) => {
+            this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 3000 });
             console.log('data', data);
+            setTimeout(() => {
+              this.router.navigate(['']);
+            }, 1000);
           },
           (error) => {
             console.log('error', error);
