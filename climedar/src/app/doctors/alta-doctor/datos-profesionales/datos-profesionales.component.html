@@ -2,6 +2,7 @@
   <h4>Informacion laboral</h4>
   <mat-divider></mat-divider>
   <div class="section">
+    @if (!edit) {
     <div class="inner-section-2">
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Especialidad</mat-label>
@@ -18,6 +19,8 @@
         }
       </mat-form-field>
     </div>
+    }
+
     <div class="inner-section-2">
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Sueldo mensual</mat-label>

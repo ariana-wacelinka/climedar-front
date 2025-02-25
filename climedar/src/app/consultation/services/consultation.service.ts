@@ -57,29 +57,33 @@ export class ConsultationService {
           pageRequest: {page: ${page}, size: 5}
           specification: {doctorId: "${doctorId}"}
         ) {
-          consultations {
-            isPaid
+          consultations{
             id
-            description
-            finalPrice
             startTime
             endTime
+            description
             date
+            isPaid
+            finalPrice
+            observation
             patient {
               id
               name
               surname
             }
-            doctor {
+            medicalServicesModel {
               id
-              name
-              surname
+              estimatedDuration
+              price
+            }
+            shift {
+              id
             }
           }
           pageInfo {
-            totalPages
-            totalItems
-            currentPage
+              totalPages
+              totalItems
+              currentPage
           }
         }
       }`
@@ -97,28 +101,33 @@ export class ConsultationService {
           pageRequest: {page: ${page}, size: 5}
           specification: {patientId: "${patientId}"}
         ) {
-          isPaid
+          consultations{
             id
-            description
-            finalPrice
             startTime
             endTime
+            description
             date
+            isPaid
+            finalPrice
+            observation
             patient {
               id
               name
               surname
             }
-            doctor {
+            medicalServicesModel {
               id
-              name
-              surname
+              estimatedDuration
+              price
+            }
+            shift {
+              id
             }
           }
           pageInfo {
-            totalPages
-            totalItems
-            currentPage
+              totalPages
+              totalItems
+              currentPage
           }
         }
       }`
@@ -135,29 +144,33 @@ export class ConsultationService {
         getAllConsultations(
           pageRequest: {page: ${page}, size: 5}
         ) {
-          consultations {
-            isPaid
+          consultations{
             id
-            description
-            finalPrice
             startTime
             endTime
+            description
             date
+            isPaid
+            finalPrice
+            observation
             patient {
               id
               name
               surname
             }
-            doctor {
+            medicalServicesModel {
               id
-              name
-              surname
+              estimatedDuration
+              price
+            }
+            shift {
+              id
             }
           }
           pageInfo {
-            totalPages
-            totalItems
-            currentPage
+              totalPages
+              totalItems
+              currentPage
           }
         }
       }`
@@ -192,7 +205,6 @@ export class ConsultationService {
           }
           medicalServicesModel {
             id
-            name
             estimatedDuration
             price
           }

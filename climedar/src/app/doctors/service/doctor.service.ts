@@ -1,4 +1,3 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Doctor } from '../models/doctor.models';
 import { map, Observable } from 'rxjs';
@@ -15,7 +14,7 @@ export class DoctorService {
     console.log('getDoctorsByName');
     console.log('name: ', name);
     const query = gql`
-      query {
+      query GetAllDoctors {
         getAllDoctors(pageRequest: {page: 1, size: 10, order: {field: "name", direction: ASC}}, specification: {fullName: "${name}", specialityId: "${specialityid}" }) {
           doctors {
             birthdate
@@ -86,7 +85,7 @@ export class DoctorService {
 
   getAllDoctors(page: number): Observable<{ doctors: Doctor[], pageInfo: PageInfo }> {
     const query = gql`
-      query {
+      query GetAllDoctors {
         getAllDoctors(pageRequest: {page: ${page}, size: 15, order: {field: "name", direction: ASC}}) {
           doctors {
             dni
@@ -122,7 +121,7 @@ export class DoctorService {
 
   getDoctorById(id: string): Observable<Doctor> {
     const query = gql`
-      query {
+      query GetDoctorById {
         getDoctorById(id: ${id}) {
             birthdate
             dni
@@ -189,28 +188,28 @@ export class DoctorService {
 
   getDoctorsFiltro(page: number, query: string): Observable<{ pageInfo: PageInfo, doctors: Doctor[] }> {
     const QUERY = gql`
-          query GetAllDoctors($dni: String, $fullName: String) {
-              getAllDoctors(
-                  pageRequest: { page: ${page}, size: 15, order: {field: "name", direction: ASC}},
-                  specification: {
-                      dni: $dni,
-                      fullName: $fullName
-                  }
-              ) {
-                  doctors {
-                    dni
-                    email
-                    id
-                    name
-                    surname
-                  }
-                  pageInfo {
-                    totalPages
-                    totalItems
-                    currentPage
-                  }
-                }
-              }`
+      query GetAllDoctors($dni: String, $fullName: String) {
+          getAllDoctors(
+              pageRequest: { page: ${page}, size: 15, order: {field: "name", direction: ASC}},
+              specification: {
+                  dni: $dni,
+                  fullName: $fullName
+              }
+          ) {
+              doctors {
+                dni
+                email
+                id
+                name
+                surname
+              }
+              pageInfo {
+                totalPages
+                totalItems
+                currentPage
+              }
+            }
+          }`
     const variables = /^\d+$/.test(query)
       ? { dni: query, fullName: "" }
       : { dni: "", fullName: query };

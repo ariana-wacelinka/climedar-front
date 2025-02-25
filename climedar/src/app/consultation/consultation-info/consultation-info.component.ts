@@ -28,6 +28,7 @@ registerLocaleData(localeEsAr, 'es-AR');
 })
 export class ConsultationInfoComponent {
   consultation = signal<ConsultationResponse>({} as ConsultationResponse);
+  estimatedDuration = 0;
 
   constructor(
     private dialog: MatDialog,
@@ -42,9 +43,30 @@ export class ConsultationInfoComponent {
     this.consultationService.getConsultationById(this.data.id).subscribe(
       (consultation) => {
         this.consultation.set(consultation);
+        for (const service of consultation.medicalServicesModel!) {
+          const duration = this.parseISODuration(service.estimatedDuration!);
+          if (!isNaN(duration)) {
+            this.estimatedDuration += duration;
+          }
+        }
+
+        console.log('consultation', consultation);
+        console.log('estimatedDuration', this.estimatedDuration);
+        const updatedConsultation = { ...this.consultation(), estimatedDuration: this.estimatedDuration.toString() };
+        this.consultation.set(updatedConsultation);
       }
     );
     console.log('consultation', this.consultation());
+  }
+
+  parseISODuration(duration: string): number {
+    const matches = duration.match(/PT(\d+H)?(\d+M)?/);
+    if (!matches) return NaN;
+
+    const hours = matches[1] ? parseInt(matches[1].replace('H', '')) : 0;
+    const minutes = matches[2] ? parseInt(matches[2].replace('M', '')) : 0;
+
+    return hours * 60 + minutes;
   }
 
   pagarConsultation() {

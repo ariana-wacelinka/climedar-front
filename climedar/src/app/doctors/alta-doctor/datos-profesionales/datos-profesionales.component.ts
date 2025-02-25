@@ -33,7 +33,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './datos-profesionales.component.scss'
 })
 export class DatosProfesionalesComponent implements OnInit {
-
+  @Input() edit = false;
   @Output() datosProfesionales = new EventEmitter<FormGroup>();
 
   filteredEspecialidadOptions: Observable<Especialidad[]> | undefined;

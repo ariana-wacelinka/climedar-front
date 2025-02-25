@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   // Método de Login
-  public login(email: string | undefined, password: string | undefined): Observable<boolean> {
+  public login(email: string | undefined, password: string): Observable<boolean> {
     this.auth0Client.login({
       email: email,
       password: password,
@@ -43,18 +43,15 @@ export class AuthService {
       audience: environment.auth0.audience
     }, (err: any, result: any) => {
       if (err?.code === "access_denied") {
-        console.log("Usuario o contraseña incorrectos");
         this.dialog.open(ErrorDialogComponent, {
           data: { message: "Usuario o contraseña incorrectos" }
         });
       } else if (err) {
-        console.log("error");
         this.dialog.open(ErrorDialogComponent, {
           data: { message: "Ha ocurrido un error" }
         });
       }
       if (result) {
-        console.log("result: ", result);
       }
     });
     return new Observable<false>();
@@ -65,7 +62,6 @@ export class AuthService {
     const queryParams = new URLSearchParams(window.location.hash.substring(1));
     const urlParams = new URLSearchParams(queryParams);
 
-    console.log("Entra a handleauth");
 
     if (urlParams.get("access_token")) {
       try {
@@ -73,8 +69,6 @@ export class AuthService {
         const expiresIn = urlParams.get("expires_in");
         const idToken = urlParams.get("id_token");
 
-        console.log("accessToken: ", accessToken);
-        console.log("entramos a handleauth");
         
         await this.setSession(accessToken, expiresIn, idToken);
       } catch (error) {
@@ -85,7 +79,6 @@ export class AuthService {
 
   // Método para hacer logout
   public logout(): void {
-    console.log("Entra al logout");
     this.clearSession();
     // this.isAuthenticated.set(false);
     this.auth0Client.logout({
@@ -118,7 +111,6 @@ export class AuthService {
 
   // Método para configurar la información del usuario
   // public setUserInfo(idToken: any) {
-  //   console.log("Entra a setUserInfo: ", jwtDecode(idToken));
   //   // this.userInfo.set(jwtDecode(idToken));
   // }
 
@@ -130,10 +122,8 @@ export class AuthService {
     if (accessToken && idToken) {
       // this.isAuthenticated.set(true);
       // this.setUserInfo(idToken);
-      console.log('Sesión restaurada con éxito.');
     } else {
       // this.isAuthenticated.set(false);
-      console.log('No hay sesión activa almacenada.');
       // 🔴 Se quita el logout para evitar el bucle de recarga
     }
   }
@@ -152,9 +142,7 @@ export class AuthService {
 
   // Método para obtener el token
   getToken() {
-    console.log("Entra a getToken");
     const token = this.getCookie('access_token');
-    console.log(token);
     return token;
   }
 

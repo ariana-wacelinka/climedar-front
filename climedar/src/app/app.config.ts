@@ -43,7 +43,6 @@ export const appConfig: ApplicationConfig = {
       const authLink = new ApolloLink((operation, forward) => {
         return new Observable(observer => {
           const token = auth.getToken(); // Obtiene el token
-          console.log('Token desde app.config:', token);
 
           operation.setContext({
             headers: {
@@ -55,8 +54,6 @@ export const appConfig: ApplicationConfig = {
           forward(operation).subscribe(observer);
         });
       });
-      console.log('API URL:', environment.apiUrl);
-      console.log('Token:', auth.getToken());
 
       return {
         link: authLink.concat(httpLink.create({

@@ -14,7 +14,7 @@
             <app-datos-personales (datosPersonales)="onFormChanges($event)"></app-datos-personales>
             <app-datos-contacto (datosContacto)="onFormChanges($event)"></app-datos-contacto>
             <app-datos-direccion (datosDireccion)="onFormChanges($event)"></app-datos-direccion>
-            <app-datos-profesionales (datosProfesionales)="onFormChanges($event)"></app-datos-profesionales>
+            <app-datos-profesionales [edit]="this.isNumber(this.doctorId())" (datosProfesionales)="onFormChanges($event)"></app-datos-profesionales>
         </div>
     </ng-container>
     <ng-container main-actions>
