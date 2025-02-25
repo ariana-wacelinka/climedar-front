@@ -200,7 +200,7 @@ export class PiechartComponent implements OnInit, OnChanges {
         (response) => {
           console.log('response', response);
           this.single.set(response.map((revenue) => {
-            return {name: revenue.name, value: revenue.value + 1000}
+            return {name: revenue.name, value: revenue.value}
           }))
         }
       );
