@@ -29,7 +29,7 @@ export const appConfig: ApplicationConfig = {
       clientId: environment.auth0.clientId,
       authorizationParams: {
         // redirect_uri: "https://climedar-front.vercel.app",
-        redirect_uri: "http://localhost:4200",
+        redirect_uri: "https://climedar-front.vercel.app",
       }
     }),
     { provide: LOCALE_ID, useValue: 'es' },
