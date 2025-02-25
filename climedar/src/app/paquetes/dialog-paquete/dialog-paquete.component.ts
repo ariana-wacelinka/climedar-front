@@ -73,7 +73,7 @@ export class DialogPaqueteComponent {
   paquete = new FormGroup({
     id: new FormControl<string>(""),
     name: new FormControl<string>("", Validators.required),
-    servicesIds: new FormControl<string[]>([]),
+    servicesIds: new FormControl<string[]>([], [Validators.required, Validators.minLength(2)]),
     specialityId: new FormControl<string>("", Validators.required)
   });
 
@@ -135,12 +135,7 @@ export class DialogPaqueteComponent {
   }
 
   getServices() {
-    if (this.data.id == null) {
-      this.medicalService.getAllServiciosMedicos(this.pageInfo().currentPage).subscribe((data) => {
-        this.servicios.set(data.services);
-        this.pageInfo.set(data.pageInfo);
-      });
-    } else {
+    if (this.data.id == null) {} else {
       console.log(this.data.specialityId);
       this.medicalService.getAllServiciosMedicosByEspecialidad(this.pageInfo().currentPage, this.data.specialityId!).subscribe((data) => {
         this.servicios.set(data.services);
@@ -199,6 +194,11 @@ export class DialogPaqueteComponent {
   }
 
   onSubmit() {
+    if (!this.paquete.controls.servicesIds.valid || this.paquete.controls.servicesIds.value!.length < 2) {
+      this.dialog.open(ErrorDialogComponent, { data: { message: 'Debes seleccionar al menos dos servicios' } });
+      return;
+    }
+
     if (this.data.id == null) {
       if (this.paquete.valid) {
         const paquete: PackageRequest = {
