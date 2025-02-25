@@ -1,4 +1,7 @@
 <app-centered-card>
+  <button (click)="volver()" mat-icon-button class="arrow-back">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
   <ng-container main-header>
     <h1>Crear consulta</h1>
   </ng-container>
@@ -183,7 +186,7 @@
   </ng-container>
   <ng-container main-actions>
     <div class="actions">
-      <button mat-flat-button class="warn">
+      <button mat-flat-button (click)="volver()" class="warn">
         Cancelar
       </button>
       <button mat-flat-button [disabled]="!canBeCreated()" (click)="createConsultation()">

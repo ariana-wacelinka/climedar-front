@@ -37,6 +37,7 @@ import { ConsultationService } from '../services/consultation.service';
 import { PackageResponse } from '../../paquetes/models/package.models';
 import { PaymentDialogComponent } from '../../shared/components/payment-dialog/payment-dialog.component';
 import { PaymentService } from '../../shared/services/payment/payment.service';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 @Component({
   selector: 'app-create-consultation',
   imports: [
@@ -469,4 +470,15 @@ export class CreateConsultationComponent implements OnInit {
     return this.totalTime() > 0 && this.consultationFG.controls.medicalServicesId.value!.length > 0 && this.consultationFG.controls.patientId.value !== "" && ((this.consultationFG.get("shiftId") != null && this.consultationFG.controls.shiftId.value !== "") || (this.consultationFG.get("doctorId") != null && this.consultationFG.get("doctorId")!.value != "")) && (this.isSobreTurno || this.totalTime() <= availableTime) && this.isMedicoSelected() && this.isPatientSelected();
   }
 
+  volver() {
+    if (this.consultationFG.dirty) {
+      this.dialog.open(ConfirmationDialogComponent, { data: { message: '¿Estás seguro de que deseas cancelar? Los cambios se perderán.' } }).afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          window.history.back();
+        }
+      });
+    } else {
+      window.history.back();
+    }
+  }
 }
