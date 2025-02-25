@@ -44,18 +44,7 @@ export class DatosObraSocialComponent implements OnInit {
     }),
   })
 
-  public nueva_obra_social() {
-    this.dialog.open(DialogObrasocialComponent, {
-      width: '670px',
-      minWidth: '350px',
-      maxWidth: '90vw',
-      data: {}
-    });
-  }
-
-  constructor(private obraSocialService: ObraSocialService,
-    private dialog: MatDialog,
-  ) { }
+  constructor(private obraSocialService: ObraSocialService) {}
 
   ngOnInit() {
     this.datosObraSocial.emit(this.infoObraSocial);

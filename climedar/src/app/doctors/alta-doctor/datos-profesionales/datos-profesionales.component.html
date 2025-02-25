@@ -2,13 +2,14 @@
   <h4>Informacion laboral</h4>
   <mat-divider></mat-divider>
   <div class="section">
-    <div class="inner-section-1">
+    <div class="inner-section-2">
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Especialidad</mat-label>
         <input type="text" matInput [formControl]="infoLaboral.controls.speciality" [matAutocomplete]="autoEsp">
-        <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad" (optionSelected)="selectedEspeciality($event)">
+        <mat-autocomplete #autoEsp="matAutocomplete" [displayWith]="displayEspecialidad"
+          (optionSelected)="selectedEspeciality($event)">
           @for (option of filteredEspecialidadOptions | async; track option?.code) {
-            <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
+          <mat-option [value]="option" style="padding: 8px">{{option.name}}</mat-option>
           }
         </mat-autocomplete>
         @if (!infoLaboral.controls.speciality.valid &&
@@ -16,23 +17,11 @@
         <mat-error>Por favor, seleccione la especialidad</mat-error>
         }
       </mat-form-field>
-      
-      <button
-        mat-flat-button
-        class="nueva-especialidad"
-        (click)="nueva_especialidad()"
-      >
-        Crear especialidad
-      </button>
     </div>
     <div class="inner-section-2">
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Sueldo mensual</mat-label>
-        <input
-          type="number"
-          [formControl]="infoLaboral.controls.salary"
-          matInput
-        />
+        <input type="number" [formControl]="infoLaboral.controls.salary" matInput />
         @if (!infoLaboral.controls.salary.valid &&
         infoLaboral.controls.salary.touched) {
         <mat-error>Por favor, especifique el sueldo</mat-error>

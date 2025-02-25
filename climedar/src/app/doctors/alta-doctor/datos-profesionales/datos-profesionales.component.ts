@@ -43,15 +43,6 @@ export class DatosProfesionalesComponent implements OnInit {
     salary: new FormControl('', [Validators.required, Validators.min(0)]),
   })
 
-  public nueva_especialidad() {
-    this.dialog.open(DialogEspecialidadComponent, {
-      width: '670px',
-      minWidth: '350px',
-      maxWidth: '90vw',
-      data: {}
-    });
-  }
-
   constructor(private especialidadService: EspecialidadService,
     private dialog: MatDialog
   ) { }

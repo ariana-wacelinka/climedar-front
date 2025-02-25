@@ -166,8 +166,10 @@ export class DoctorService {
         email: "${doctor.email}", 
         name: "${doctor.name}", 
         phone: "${doctor.phone}", 
-        salary: ${doctor.salary}, 
-        specialityId: "${doctor.speciality?.id}", 
+        salary: ${doctor.salary},
+        speciality: {
+            id: "${doctor.speciality?.id}"
+          },
         surname: "${doctor.surname}"}
         id: "${doctor.id}"
           ) {

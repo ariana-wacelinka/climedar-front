@@ -42,7 +42,11 @@ export class ListadoDoctoresComponent {
   ) { }
 
   ngOnInit() {
-    this.doctorService.getAllDoctors(1).subscribe(response => {
+    this.loadDoctors(1);
+  }
+
+  loadDoctors(page: number) {
+    this.doctorService.getAllDoctors(page).subscribe(response => {
       this.doctors.set(response.doctors);
       this.pageInfo.set(response.pageInfo);
       this.isLoading = false;

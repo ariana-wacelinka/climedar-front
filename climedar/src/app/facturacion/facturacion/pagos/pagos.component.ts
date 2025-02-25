@@ -65,22 +65,32 @@ export class PagosComponent {
   ) { }
 
   ngOnInit() {
+    this.loadPayments(1);
   }
 
-  cancelarPago(pago: Payment) {
-    this.paymentService.cancelPayment(pago).subscribe(() => {
-    });
-  }
+  loadPayments(page: number) {
+    var startDate = this.startDate != "" ? new Date(this.startDate).toISOString().split('T')[0] : "";
+    var endDate = this.endDate != "" ? new Date(this.endDate).toISOString().split('T')[0] : "";
+    console.log("startDate", startDate);
+    console.log("endDate", endDate);
 
-  pageChange(page: number) {
-    this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
-
-    this.paymentService.getAllPayments(page, "", "").pipe(
+    this.paymentService.getAllPayments(page, startDate, endDate).pipe(
       map(response => response)
     ).subscribe(response => {
       this.payments.set(response.payments);
       this.pageInfo.set(response.pageInfo);
     });
+  }
+
+  cancelarPago(pago: Payment) {
+    this.paymentService.cancelPayment(pago).subscribe(() => {
+      this.loadPayments(this.pageInfo().currentPage);
+    });
+  }
+
+  pageChange(page: number) {
+    this.pageInfo.set({ ...this.pageInfo(), currentPage: page });
+    this.loadPayments(page);
   }
 
   currentPage(): WritableSignal<number> {
@@ -95,11 +105,6 @@ export class PagosComponent {
     console.log("startDate", startDate);
     console.log("endDate", endDate);
 
-    this.paymentService.getAllPayments(this.pageInfo().currentPage, startDate, endDate).pipe(
-      map(response => response)
-    ).subscribe(response => {
-      this.payments.set(response.payments);
-      this.pageInfo.set(response.pageInfo);
-    });
+    this.loadPayments(this.pageInfo().currentPage);
   }
 }
