@@ -275,15 +275,15 @@ export class CreateConsultationComponent implements OnInit {
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
-                    setTimeout(() => {
-                      this.router.navigate(['/home']);
-                    }, 1050);
                   },
                   (error) => {
                     console.log('error', error);
                     this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al realizar el pago' } });
                   }
                 );
+                setTimeout(() => {
+                  this.router.navigate(['']);
+                }, 1050);
               }
             },
             (error) => {
@@ -299,7 +299,7 @@ export class CreateConsultationComponent implements OnInit {
             console.log('data', data);
             this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 1000 });
             setTimeout(() => {
-              this.router.navigate(['/home']);
+              this.router.navigate(['']);
             }, 1050);
           },
           (error) => {

@@ -30,7 +30,7 @@ export class PaymentService {
 
   getRevenues(fromDate: String = '', toDate: String = '', revenueType: string = '', originName: string = '', date: String = '', serviceType: string = '', specialityName: string = ''): Observable<{ name: string, value: number }[]> {
     const REVENUES = `
-          query MyQuery {
+          query GetAllRevenuesPieChart {
           getAllRevenuesPieChart(
               specification: {
                   ${date && `date: "${date}",`}
@@ -47,7 +47,6 @@ export class PaymentService {
           }
       }
     `
-    console.log(REVENUES);
     return this.apollo.query<{ getAllRevenuesPieChart: { name: string, value: number }[] }>({
       query: gql(REVENUES)
     }).pipe(
@@ -77,7 +76,7 @@ export class PaymentService {
 
   getAllPayments(page: number, startDate: string, endDate: string): Observable<{ payments: Payment[], pageInfo: PageInfo }> {
     const query = gql`
-        query MyQuery {
+        query GetAllPayments {
           getAllPayments(
             pageRequest: {page: ${page}, size: 5}
             specification: {fromDate: "${startDate}", toDate: "${endDate}"}
@@ -101,6 +100,40 @@ export class PaymentService {
             }
           }
         }`;
+    console.log(query);
+    return this.apollo.query<{ getAllPayments: { payments: Payment[], pageInfo: PageInfo } }>({
+      query: query
+    }).pipe(
+      map(response => response.data.getAllPayments)
+    );
+  }
+
+  loadPayments(page: number): Observable<{ payments: Payment[], pageInfo: PageInfo }> {
+    const query = gql`
+        query GetAllPayments {
+          getAllPayments(
+            pageRequest: {page: ${page}, size: 5}
+          ) {
+            payments {
+              paymentMethod
+              paymentDate
+              amount
+              consultation{
+                id
+                patient{
+                    name
+                    surname
+                }
+              }
+            }
+            pageInfo {
+              totalPages
+              totalItems
+              currentPage
+            }
+          }
+        }`;
+    console.log(query);
     return this.apollo.query<{ getAllPayments: { payments: Payment[], pageInfo: PageInfo } }>({
       query: query
     }).pipe(

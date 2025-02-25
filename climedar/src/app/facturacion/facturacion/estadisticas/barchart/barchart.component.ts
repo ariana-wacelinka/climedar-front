@@ -64,26 +64,20 @@ export class BarchartComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes', changes);
   }
 
   onSelect(event: Event) {
-    console.log(event);
-    console.log(this.pieChartRevenueControl.value)
   }
 
   onSelectRevenueType(event: string) {
-    console.log(this.pieChartRevenueControl.value.revenueType);
     this.pieChartRevenueControl.controls.revenueType.setValue(event);
     if (event === 'DAILY') {
-      console.log('entra a DAILY')
       this.pieChartRevenueControl.controls.fromDate.clearValidators();
       this.pieChartRevenueControl.controls.fromDate.updateValueAndValidity();
       this.pieChartRevenueControl.controls.toDate.clearValidators();
       this.pieChartRevenueControl.controls.toDate.updateValueAndValidity();
     }
     if (event === 'MONTHLY') {
-      console.log('entra a MONTHLY')
       const now = new Date();
       this.pieChartRevenueControl.controls.fromDate.setValidators(Validators.required);
       this.pieChartRevenueControl.controls.fromDate.updateValueAndValidity();
@@ -91,7 +85,6 @@ export class BarchartComponent implements OnInit, OnChanges {
       this.pieChartRevenueControl.controls.toDate.updateValueAndValidity();
     }
     if (event === 'RANGE') {
-      console.log('entra a RANGE')
       const now = new Date();
       this.pieChartRevenueControl.controls.fromDate.setValidators(Validators.required);
       this.pieChartRevenueControl.controls.fromDate.updateValueAndValidity();
@@ -106,8 +99,6 @@ export class BarchartComponent implements OnInit, OnChanges {
       if (this.pieChartRevenueControl.invalid) {
         this.pieChartRevenueControl.markAllAsTouched();
         this.pieChartRevenueControl.markAsDirty();
-        console.log('invalid', this.pieChartRevenueControl.errors);
-        console.log('invalid', this.pieChartRevenueControl.invalid);
         return;
       }
       this.paymentService.getDatesRevenues(
@@ -116,7 +107,6 @@ export class BarchartComponent implements OnInit, OnChanges {
         this.pieChartRevenueControl.value.revenueType!
       ).subscribe(
         (response) => {
-          console.log('response', response);
           this.single.set(response.map((revenue) => {
             return {name: revenue.date, value: revenue.value}
           }))
@@ -125,14 +115,10 @@ export class BarchartComponent implements OnInit, OnChanges {
     }
 
     onSelectedDate(event: Moment, dp: MatDatepicker<Date>, control: number) {
-      console.log(event);
-      console.log(dp);
-      console.log(control);
       let date = new Date();
       date.setFullYear(event.year());
       date.setMonth(control === 1 ? event.month() : event.month() + 1);
       date.setDate(control === 1 ? 1 : 0);
-      console.log(date);
       if (control === 1) {
         this.pieChartRevenueControl.controls.fromDate.setValue(date);
       }
@@ -144,8 +130,6 @@ export class BarchartComponent implements OnInit, OnChanges {
     }
 
     selectDate() {
-      console.log('selectDate');
-      console.log(this.pieChartRevenueControl.value);
       this.fetchRevenues();
     }
 }

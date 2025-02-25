@@ -92,20 +92,14 @@ export class PiechartComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes', changes);
   }
 
   onSelect(event: Event) {
-    console.log(event);
-    console.log(this.pieChartRevenueControl.value.originName)
-    console.log(this.pieChartRevenueControl.value)
   }
 
   onSelectRevenueType(event: string) {
     this.pieChartRevenueControl.patchValue({revenueType: event});
-    console.log(this.pieChartRevenueControl.value.revenueType)
     if (event === 'DAILY') {
-      console.log('entra a DAILY')
       this.pieChartRevenueControl.patchValue({date: new Date(), fromDate: null, toDate: null});
       this.pieChartRevenueControl.controls.date.setValidators(Validators.required);
       this.pieChartRevenueControl.controls.date.updateValueAndValidity();
@@ -115,7 +109,6 @@ export class PiechartComponent implements OnInit, OnChanges {
       this.pieChartRevenueControl.controls.toDate.updateValueAndValidity();
     }
     if (event === 'MONTHLY') {
-      console.log('entra a MONTHLY')
       const now = new Date();
       this.pieChartRevenueControl.patchValue({date: null, fromDate: new Date(now.getFullYear() - 1, now.getMonth(), 1), toDate: new Date(now.getFullYear(), now.getMonth(), 1)});
       this.pieChartRevenueControl.controls.date.clearValidators();
@@ -126,7 +119,6 @@ export class PiechartComponent implements OnInit, OnChanges {
       this.pieChartRevenueControl.controls.toDate.updateValueAndValidity();
     }
     if (event === 'RANGE') {
-      console.log('entra a RANGE')
       const now = new Date();
       this.pieChartRevenueControl.patchValue({date: null, fromDate: new Date(now.getFullYear(), now.getMonth(), 1), toDate: new Date(now.getFullYear(), now.getMonth(), 7)});
       this.pieChartRevenueControl.controls.date.clearValidators();
@@ -151,7 +143,6 @@ export class PiechartComponent implements OnInit, OnChanges {
 
   selectedEspeciality(event: MatAutocompleteSelectedEvent) {
       //filtrado de medicos por especialidad y busqueda de turnos
-      console.log('selected', event.option.value);
       this.especialidadControl.setValue((event.option.value));
       this.pieChartRevenueControl.patchValue({specialityName: (event.option.value as Especialidad).name
       });
@@ -160,7 +151,6 @@ export class PiechartComponent implements OnInit, OnChanges {
 
     changeOrigin(event: MatButtonToggleChange) {
       this.pieChartRevenueControl.patchValue({originName: event.value});
-      console.log('originName', this.pieChartRevenueControl.value.originName)
       if (event.value === 'SPECIALITY') {
         this.especialidadControl.setValue(this.especialidades[0]);
         this.pieChartRevenueControl.patchValue({specialityName: '', serviceType: ''});
@@ -184,8 +174,6 @@ export class PiechartComponent implements OnInit, OnChanges {
       if (this.pieChartRevenueControl.invalid) {
         this.pieChartRevenueControl.markAllAsTouched();
         this.pieChartRevenueControl.markAsDirty();
-        console.log('invalid', this.pieChartRevenueControl.errors);
-        console.log('invalid', this.pieChartRevenueControl.invalid);
         return;
       }
       this.paymentService.getRevenues(
@@ -198,7 +186,6 @@ export class PiechartComponent implements OnInit, OnChanges {
         this.pieChartRevenueControl.value.specialityName!
       ).subscribe(
         (response) => {
-          console.log('response', response);
           this.single.set(response.map((revenue) => {
             return {name: revenue.name, value: revenue.value}
           }))
@@ -211,14 +198,10 @@ export class PiechartComponent implements OnInit, OnChanges {
     }
 
     onSelectedMonth(event: Moment, dp: MatDatepicker<Date>, control: number) {
-          console.log(event);
-          console.log(dp);
-          console.log(control);
           let date = new Date();
           date.setFullYear(event.year());
           date.setMonth(control === 1 ? event.month() : event.month() + 1);
           date.setDate(control === 1 ? 1 : 0);
-          console.log(date);
           if (control === 1) {
             this.pieChartRevenueControl.controls.fromDate.setValue(date);
           }
