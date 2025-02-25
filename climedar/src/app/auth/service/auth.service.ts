@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ErrorDialogComponent } from "../../shared/components/error-dialog/error-dialog.component";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -36,25 +36,37 @@ export class AuthService {
 
   // Método de Login
   public login(email: string | undefined, password: string): Observable<boolean> {
-    this.auth0Client.login({
-      email: email,
-      password: password,
-      realm: environment.auth0.database,
-      audience: environment.auth0.audience
-    }, (err: any, result: any) => {
-      if (err?.code === "access_denied") {
-        this.dialog.open(ErrorDialogComponent, {
-          data: { message: "Usuario o contraseña incorrectos" }
-        });
-      } else if (err) {
-        this.dialog.open(ErrorDialogComponent, {
-          data: { message: "Ha ocurrido un error" }
-        });
-      }
-      if (result) {
-      }
+    return new Observable<boolean>(subscriber => {
+      this.auth0Client.login({
+        email: email,
+        password: password,
+        realm: environment.auth0.database,
+        audience: environment.auth0.audience
+      }, (err: any, result: any) => {
+        if (err?.code === "access_denied") {
+          const d = this.dialog.open(ErrorDialogComponent, {
+            data: { message: "Usuario o contraseña incorrectos" }
+          });
+          d.afterClosed().subscribe(() => {
+            console.log("Dialog closed");
+            subscriber.next(false);
+            subscriber.complete();
+          });
+        } else if (err) {
+          this.dialog.open(ErrorDialogComponent, {
+            data: { message: "Ha ocurrido un error" }
+          });
+          subscriber.next(false);
+          subscriber.complete();
+        } else if (result) {
+          subscriber.next(true);
+          subscriber.complete();
+        } else {
+          subscriber.next(false);
+          subscriber.complete();
+        }
+      });
     });
-    return new Observable<false>();
   }
 
   // Método para manejar la autenticación
