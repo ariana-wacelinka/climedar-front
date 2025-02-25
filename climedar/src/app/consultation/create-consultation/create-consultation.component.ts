@@ -1,5 +1,5 @@
 import { TurnosService } from './../../turnos/services/turnos-service/turnos.service';
-import { Component, inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,26 +17,26 @@ import { MatTimepickerModule } from '@angular/material/timepicker';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatListModule } from '@angular/material/list';
-import { MedicalService } from '../../servicio/models/services.models';
+import { MatListModule, MatListOption } from '@angular/material/list';
+import { MedicalPackage, MedicalService, Services } from '../../servicio/models/services.models';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { Turno } from '../../turnos/models/turno.models';
+import { BrowserModule } from '@angular/platform-browser';
 import { Doctor } from '../../doctors/models/doctor.models';
-import { Observable, startWith, filter, debounceTime, switchMap, map, timestamp } from 'rxjs';
+import { Especialidad } from '../../especialidad';
+import { Observable, startWith, filter, debounceTime, switchMap, map } from 'rxjs';
 import { DoctorService } from '../../doctors/service/doctor.service';
 import { Paciente } from '../../patients/models/paciente.models';
 import { ServiciosMedicosService } from '../../servicio/services/servicio/servicios-medicos.service';
-import { PageInfo } from '../../shared/models/extras.models';
+import { PageInfo, PaymentMethods } from '../../shared/models/extras.models';
 import { Duration } from 'luxon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PatientService } from '../../patients/services/patient.service';
-import { Consultation, ConsultationResponse, CreateConsultation } from '../models/consultation.model';
+import { Consultation, CreateConsultation } from '../models/consultation.model';
 import { ConsultationService } from '../services/consultation.service';
 import { PackageResponse } from '../../paquetes/models/package.models';
 import { PaymentDialogComponent } from '../../shared/components/payment-dialog/payment-dialog.component';
 import { PaymentService } from '../../shared/services/payment/payment.service';
-import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 @Component({
   selector: 'app-create-consultation',
   imports: [
@@ -70,7 +70,6 @@ import { ErrorDialogComponent } from '../../shared/components/error-dialog/error
   styleUrl: './create-consultation.component.scss'
 })
 export class CreateConsultationComponent implements OnInit {
-  snackbar = inject(MatSnackBar);
   isSobreTurno = false;
   pago = false;
   consultationPrice = signal<number>(0);
@@ -108,61 +107,35 @@ export class CreateConsultationComponent implements OnInit {
   filteredDoctorOptions: Observable<Doctor[]> | undefined;
   servicioControl = new FormControl<string>("");
   paqueteControl = new FormControl<string>("");
-  consultation = signal<boolean>(false);
-  consultationId = signal<string>('');
 
   constructor(private paymentService: PaymentService, private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService, private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
-
     const id = navigation?.extras?.state?.['turnoId'] || null;
-    console.log('turnoId', id);
-
     var consultation = navigation?.extras?.state?.['consultaData'] || null;
-    console.log('consultaData', consultation);
-
     var turno = navigation?.extras?.state?.['turno'] || null;
-    if (id !== null) {
+    if (id) {
       this.turnoId.set(id);
       this.consultationFG.controls.shiftId.setValue(id);
     } else {
       if (consultation) {
-        this.consultation.set(true);
-        this.consultationId.set(consultation.id);
         this.doctorControl.setValue(consultation.doctor);
-        this.consultationFG.controls.doctorId.setValue(consultation.doctor.id);
-        this.pacienteControl.setValue(consultation.patient);
-        this.consultationFG.controls.observation.setValue(consultation.observation);
-
-        this.pago = consultation.isPaid!;
-        for (let i = 0; i < consultation.medicalServicesModel.length; i++) {
-          this.consultationFG.controls.medicalServicesId.value!.push(consultation.medicalServicesModel[i].id);
-        }
-
-        if (consultation.shift.id) {
-          this.turnoId.set(consultation.shift.id);
-          this.consultationFG.controls.shiftId.setValue(consultation.shift.id);
-          this.consultationFG.controls.patientId.setValue(consultation.patient.id);
-          this.consultationFG.controls.description.setValue(consultation.description);
-          this.turno.patchValue({
-            id: consultation.shift.id,
-            date: consultation.shift.date ? new Date(consultation.shift.date + 'T00:00:00') : null,
-            startTime: consultation.shift.startTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.startTime.split(":")[0]), parseInt(turno.startTime.split(":")[1]))) : null,
-            endTime: consultation.shift.endTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.endTime.split(":")[0]), parseInt(turno.endTime.split(":")[1]))) : null,
-          });
-
-        } else {
-          this.consultationFG.controls.shiftId.setValue(turno.id);
-          console.log('Turno', turno);
-          this.turno.patchValue({
-            id: turno.id,
-            date: turno.date ? new Date(turno.date + 'T00:00:00') : null,
-            startTime: turno.startTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.startTime.split(":")[0]), parseInt(turno.startTime.split(":")[1]))) : null,
-            endTime: turno.endTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.endTime.split(":")[0]), parseInt(turno.endTime.split(":")[1]))) : null,
-          });
-        }
-        this.consultationFG.controls.patientId.setValue(consultation.patient.id);
+        this.pacienteControl.setValue(consultation.paciente);
+        this.consultationFG.controls.description.setValue(consultation.descripcion);
+        this.consultationFG.controls.observation.setValue(consultation.observacion);
+        this.consultationFG.controls.medicalServicesId.setValue(consultation.servicios);
+        this.consultationFG.controls.shiftId.setValue(turno.id);
+        console.log('consultation', consultation);
+        this.turno.patchValue({
+          id: turno.id,
+          date: turno.date ? new Date(turno.date + 'T00:00:00') : null,
+          startTime: turno.startTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.startTime.split(":")[0]), parseInt(turno.startTime.split(":")[1]))) : null,
+          endTime: turno.endTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.endTime.split(":")[0]), parseInt(turno.endTime.split(":")[1]))) : null,
+        });
+        this.consultationFG.controls.patientId.setValue(consultation.paciente.id);
       }
     }
+
+    console.log('turnoId ' + this.turnoId());
   }
 
 
@@ -281,7 +254,6 @@ export class CreateConsultationComponent implements OnInit {
           console.log('consultationFG', (this.consultationFG.value as CreateConsultation));
           this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
             (data: Consultation) => {
-              this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 1000 });
               console.log('data', data);
               if (data) {
                 console.log("se manda el pago: ", method);
@@ -300,16 +272,11 @@ export class CreateConsultationComponent implements OnInit {
                   },
                   (error) => {
                     console.log('error', error);
-                    this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al realizar el pago' } });
                   }
                 );
-                setTimeout(() => {
-                  this.router.navigate(['']);
-                }, 1050);
               }
             },
             (error) => {
-              this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear la consulta' } });
               console.log('error', error);
             }
           );
@@ -319,14 +286,9 @@ export class CreateConsultationComponent implements OnInit {
         this.consultationService.createConsultation(this.consultationFG.value as CreateConsultation).subscribe(
           (data) => {
             console.log('data', data);
-            this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 1000 });
-            setTimeout(() => {
-              this.router.navigate(['/home']);
-            }, 1050);
           },
           (error) => {
             console.log('error', error);
-            this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al crear la consulta' } });
           });
       }
     } else {
@@ -345,30 +307,9 @@ export class CreateConsultationComponent implements OnInit {
     }
   }
 
-  updateConsultation() {
-    this.consultationFG.controls.medicalServicesId.updateValueAndValidity();
-    console.log('consultationFG', this.consultationFG.value);
-    if (this.consultationFG.valid) {
-      this.consultationService.updateConsultation(this.consultationId(), this.consultationFG.value as CreateConsultation).subscribe(
-        (data) => {
-          console.log('data', data);
-          this.snackbar.open('Consulta actualizada con éxito', 'Cerrar', { duration: 1000 });
-          setTimeout(() => {
-            this.router.navigate(['/']);
-          }, 1050);
-        },
-        (error) => {
-          console.log('error', error);
-          this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al actualizar la consulta' } });
-        });
-    } else {
-      console.log('invalid');
-      console.log('consultationFG', this.consultationFG.value);
-    }
-  }
-
   getServices(name: string = this.servicioControl.value!, specialityId: string = ""): void {
     this.medicalService.getServiciosMedicos(name, specialityId).subscribe((data) => {
+      console.log('doctorControl', (this.doctorControl.value as Doctor));
       if ((this.doctorControl.value as Doctor).id) {
         this.servicios.set(data.services);
         this.pageInfo.set(data.pageInfo);
@@ -378,6 +319,7 @@ export class CreateConsultationComponent implements OnInit {
 
   getPackages(name: string = this.paqueteControl.value!, specialityId: string = ""): void {
     this.medicalService.getPaquetesMedicos(name, specialityId).subscribe((data) => {
+      console.log('doctorControl', (this.doctorControl.value as Doctor));
       if ((this.doctorControl.value as Doctor).id) {
         this.paquetes.set(data.packages);
         this.pageInfo.set(data.pageInfo);
@@ -527,15 +469,4 @@ export class CreateConsultationComponent implements OnInit {
     return this.totalTime() > 0 && this.consultationFG.controls.medicalServicesId.value!.length > 0 && this.consultationFG.controls.patientId.value !== "" && ((this.consultationFG.get("shiftId") != null && this.consultationFG.controls.shiftId.value !== "") || (this.consultationFG.get("doctorId") != null && this.consultationFG.get("doctorId")!.value != "")) && (this.isSobreTurno || this.totalTime() <= availableTime) && this.isMedicoSelected() && this.isPatientSelected();
   }
 
-  cancelar() {
-    if (this.consultationFG.dirty) {
-      this.dialog.open(ConfirmationDialogComponent, { data: { message: '¿Estás seguro de que deseas cancelar? Los cambios se perderán.' } }).afterClosed().subscribe((result: boolean) => {
-        if (result) {
-          window.history.back();
-        }
-      });
-    } else {
-      window.history.back();
-    }
-  }
 }

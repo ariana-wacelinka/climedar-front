@@ -18,6 +18,7 @@ export class PaymentService {
   }
 
   createPayment(paymentMethod: string, consultationId: string): Observable<Blob> {
+    const apiUrl = `${this.paymentUrl}/api/payments`;
     const HEADERS = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getToken()}`
     });
@@ -25,7 +26,7 @@ export class PaymentService {
       consultationId: consultationId,
       paymentMethod: paymentMethod,
     }
-    return this.http.post(this.paymentUrl, body, { responseType: 'blob', headers: HEADERS });
+    return this.http.post(apiUrl, body, { responseType: 'blob', headers: HEADERS });
   }
 
   getRevenues(fromDate: String = '', toDate: String = '', revenueType: string = '', originName: string = '', date: String = '', serviceType: string = '', specialityName: string = ''): Observable<{ name: string, value: number }[]> {
@@ -166,7 +167,7 @@ export class PaymentService {
     return this.http.get(apiUrl, { responseType: 'blob', headers: HEADERS });
   }
 
-  getReceiptByPayment(id: string): Observable<Blob>{
+  getReceiptByPayment(id: string): Observable<Blob> {
     const apiUrl = `${this.paymentUrl}/api/payments/${id}/receipt`;
     console.log('apiUrl', apiUrl);
     const HEADERS = new HttpHeaders({
