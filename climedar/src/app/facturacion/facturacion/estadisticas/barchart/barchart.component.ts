@@ -37,7 +37,7 @@ export class BarchartComponent implements OnInit, OnChanges {
   legendPosition = LegendPosition.Right;
   single = signal<{name: string, value: number}[]>([]);
 
-  view: [number,number] = [800, 500];
+  view: [number,number] = [900, 500];
 
   schemeType = ScaleType.Linear;
 
@@ -118,7 +118,7 @@ export class BarchartComponent implements OnInit, OnChanges {
         (response) => {
           console.log('response', response);
           this.single.set(response.map((revenue) => {
-            return {name: revenue.date, value: revenue.value + 1000}
+            return {name: revenue.date, value: revenue.value}
           }))
         }
       );
