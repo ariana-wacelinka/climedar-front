@@ -115,6 +115,7 @@ export class PaymentService {
             pageRequest: {page: ${page}, size: 5}
           ) {
             payments {
+              id
               paymentMethod
               paymentDate
               amount
@@ -154,5 +155,23 @@ export class PaymentService {
     }).pipe(
       map(response => response.data?.cancelPayment.success ?? false)
     );
+  }
+
+  getInvoiceByPayment(id: string): Observable<Blob> {
+    const apiUrl = `${this.paymentUrl}/api/invoices/payment/${id}`;
+    console.log('apiUrl', apiUrl);
+    const HEADERS = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(apiUrl, { responseType: 'blob', headers: HEADERS });
+  }
+
+  getReceiptByPayment(id: string): Observable<Blob>{
+    const apiUrl = `${this.paymentUrl}/api/payments/${id}/receipt`;
+    console.log('apiUrl', apiUrl);
+    const HEADERS = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(apiUrl, { responseType: 'blob', headers: HEADERS });
   }
 }

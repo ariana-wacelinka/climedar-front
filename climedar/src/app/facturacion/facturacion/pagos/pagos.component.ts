@@ -18,6 +18,8 @@ import { Payment } from '../../models/payment.model';
 import { PageInfo } from '../../../shared/models/extras.models';
 import { PaginatorComponent } from '../../../shared/components/paginator/paginator.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { ErrorDialogComponent } from '../../../shared/components/error-dialog/error-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -59,9 +61,9 @@ export class PagosComponent {
   startDate: string = "";
   endDate: string = "";
 
-
   constructor(private pacienteService: PatientService,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -115,5 +117,49 @@ export class PagosComponent {
     console.log("endDate", endDate);
 
     this.loadPayments(this.pageInfo().currentPage);
+  }
+
+  descargarFactura(pago: Payment) {
+    console.log('pago', pago);
+    this.paymentService.getInvoiceByPayment(pago.id).subscribe(
+      (blob) => {
+        console.log('blob', blob);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const nombrePaciente = pago.consultation.patient.name + "-" + pago.consultation.patient.surname;
+        a.download = `factura-${pago.id}-${nombrePaciente}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.log('error', error);
+        this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al descargar la factura' } });
+      }
+    );
+  }
+
+  descargarRecibo(pago: Payment) {
+    console.log('pago', pago);
+    this.paymentService.getReceiptByPayment(pago.id).subscribe(
+      (blob) => {
+        console.log('blob', blob);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const nombrePaciente = pago.consultation.patient.name + "-" + pago.consultation.patient.surname;
+        a.download = `recibo-${pago.id}-${nombrePaciente}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.log('error', error);
+        this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al descargar la factura' } });
+      }
+    );
   }
 }
