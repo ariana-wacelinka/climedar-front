@@ -50,6 +50,19 @@ table {
 }
 
 .content {
-    width: 1000px;
     min-height: 392px;
+}
+
+.container {
+    width: 1250px;
+    display: flex;
+    flex-direction: column;
+}
+
+.paginator {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    margin: 0;
+    padding: 0;
 }
