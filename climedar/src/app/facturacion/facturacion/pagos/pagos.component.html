@@ -22,7 +22,7 @@
 
             <ng-container matColumnDef="date">
                 <th mat-header-cell class="date" *matHeaderCellDef>Fecha</th>
-                <td mat-cell class="date" *matCellDef="let pago"> {{pago.paymentDate}} </td>
+                <td mat-cell class="date" *matCellDef="let pago"> {{pago.paymentDate.split('T')[0]}} </td>
             </ng-container>
 
             <ng-container matColumnDef="paciente">
@@ -53,8 +53,8 @@
                         </mat-icon></button>
                     <mat-menu #menu="matMenu">
                         <button (click)="cancelarPago(payment)" mat-menu-item>Cancelar</button>
-                        <button (click)="cancelarPago(payment)" mat-menu-item>Descargar factura</button>
-                        <button (click)="cancelarPago(payment)" mat-menu-item>Descargar recibo</button>
+                        <button (click)="descargarFactura(payment)" mat-menu-item>Descargar factura</button>
+                        <button (click)="descargarRecibo(payment)" mat-menu-item>Descargar recibo</button>
                     </mat-menu>
                 </td>
             </ng-container>
