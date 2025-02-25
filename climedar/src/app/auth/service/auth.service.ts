@@ -28,7 +28,7 @@ export class AuthService {
       domain: environment.auth0.domain,
       clientID: environment.auth0.clientId,
       audience: environment.auth0.audience,
-      redirectUri: "http://localhost:4200/login",
+      redirectUri: "https://climedar-front.vercel.app/login",
       responseType: 'token id_token'
     });
     this.loadSession();
@@ -94,7 +94,7 @@ export class AuthService {
     this.clearSession();
     // this.isAuthenticated.set(false);
     this.auth0Client.logout({
-      returnTo: 'http://localhost:4200/login'
+      returnTo: 'https://climedar-front.vercel.app/login'
     });
   }
 
