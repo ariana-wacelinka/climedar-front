@@ -1,4 +1,5 @@
-import { HttpClient } from '@angular/common/http';
+import { AuthService } from './../../../auth/service/auth.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments';
@@ -12,16 +13,19 @@ import { PageInfo } from '../../models/extras.models';
 export class PaymentService {
   private paymentUrl = environment.paymentUrl;
   constructor(private http: HttpClient,
-    private apollo: Apollo
+    private apollo: Apollo, private authService: AuthService
   ) {
   }
 
   createPayment(paymentMethod: string, consultationId: string): Observable<Blob> {
+    const HEADERS = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
     const body = {
       consultationId: consultationId,
-      paymentMethod: paymentMethod
+      paymentMethod: paymentMethod,
     }
-    return this.http.post(this.paymentUrl, body, { responseType: 'blob' });
+    return this.http.post(this.paymentUrl, body, { responseType: 'blob', headers: HEADERS });
   }
 
   getRevenues(fromDate: String = '', toDate: String = '', revenueType: string = '', originName: string = '', date: String = '', serviceType: string  = '', specialityName: string  = ''): Observable<{ name: string, value: number }[]> {
