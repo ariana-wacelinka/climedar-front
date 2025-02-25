@@ -110,7 +110,7 @@ export class ConsultationService {
             isPaid
             finalPrice
             observation
-            patient {
+            doctor {
               id
               name
               surname

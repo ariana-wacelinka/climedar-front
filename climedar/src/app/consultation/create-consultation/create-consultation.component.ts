@@ -3,8 +3,8 @@ import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core
 import { CenteredCardComponent } from '../../shared/components';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { NgIf, DatePipe, AsyncPipe, CommonModule, CurrencyPipe } from '@angular/common';
-import { ReactiveFormsModule, FormsModule, NgModel, FormGroup, FormControl, Validators } from '@angular/forms';
+import { DatePipe, AsyncPipe, CommonModule, CurrencyPipe } from '@angular/common';
+import { ReactiveFormsModule, FormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -17,18 +17,15 @@ import { MatTimepickerModule } from '@angular/material/timepicker';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatListModule, MatListOption } from '@angular/material/list';
-import { MedicalPackage, MedicalService, Services } from '../../servicio/models/services.models';
+import { MatListModule } from '@angular/material/list';
+import { MedicalService } from '../../servicio/models/services.models';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { Turno } from '../../turnos/models/turno.models';
-import { BrowserModule } from '@angular/platform-browser';
 import { Doctor } from '../../doctors/models/doctor.models';
-import { Especialidad } from '../../especialidad';
 import { Observable, startWith, filter, debounceTime, switchMap, map, timeout } from 'rxjs';
 import { DoctorService } from '../../doctors/service/doctor.service';
 import { Paciente } from '../../patients/models/paciente.models';
 import { ServiciosMedicosService } from '../../servicio/services/servicio/servicios-medicos.service';
-import { PageInfo, PaymentMethods } from '../../shared/models/extras.models';
+import { PageInfo } from '../../shared/models/extras.models';
 import { Duration } from 'luxon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PatientService } from '../../patients/services/patient.service';
@@ -259,7 +256,6 @@ export class CreateConsultationComponent implements OnInit {
             (data: Consultation) => {
               console.log('data', data);
               if (data) {
-                this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 3000 });
                 console.log("se manda el pago: ", method);
                 this.paymentService.createPayment(method, data.id!).subscribe(
                   (blob) => {
@@ -273,6 +269,8 @@ export class CreateConsultationComponent implements OnInit {
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
+                    
+                    this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 3000 });
                     setTimeout(() => {
                       this.router.navigate(['']);
                     }, 1000);

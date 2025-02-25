@@ -23,7 +23,7 @@ import { LoaderComponent } from "../loader/loader.component";
     MatButtonModule,
     MatIconModule,
     LoaderComponent
-],
+  ],
   templateUrl: './person-info.component.html',
   styleUrl: './person-info.component.scss'
 })

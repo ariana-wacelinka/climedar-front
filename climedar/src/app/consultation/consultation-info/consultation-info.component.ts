@@ -10,7 +10,6 @@ import { registerLocaleData } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
 import { ConsultationService } from '../services/consultation.service';
-import { Router } from '@angular/router';
 
 registerLocaleData(localeEsAr, 'es-AR');
 
@@ -20,7 +19,7 @@ registerLocaleData(localeEsAr, 'es-AR');
     MatIconModule,
     MatButtonModule,
     CommonModule
-  ],
+],
   templateUrl: './consultation-info.component.html',
   styleUrl: './consultation-info.component.scss',
   providers: [provideNativeDateAdapter(),
@@ -28,13 +27,12 @@ registerLocaleData(localeEsAr, 'es-AR');
 })
 export class ConsultationInfoComponent {
   consultation = signal<ConsultationResponse>({} as ConsultationResponse);
-  estimatedDuration = 0;
+  estimatedDuration = '';
 
   constructor(
     private dialog: MatDialog,
     private paymentService: PaymentService,
     public dialogRef: MatDialogRef<ConsultationInfoComponent>,
-    private router: Router,
     private consultationService: ConsultationService,
     @Inject(MAT_DIALOG_DATA) public data: {
       id: number,
@@ -51,7 +49,6 @@ export class ConsultationInfoComponent {
         }
 
         console.log('consultation', consultation);
-        console.log('estimatedDuration', this.estimatedDuration);
         const updatedConsultation = { ...this.consultation(), estimatedDuration: this.estimatedDuration.toString() };
         this.consultation.set(updatedConsultation);
       }
@@ -94,12 +91,4 @@ export class ConsultationInfoComponent {
       );
     });
   }
-
-//   modificarConsulta() {
-//     this.dialogRef.close();
-//     console.log('consultation before navigate', this.consultation());
-//     this.router.navigate(['/consulta/editar'],
-//       { state: { consultaData: this.consultation() } }
-//     );
-//   }
 }

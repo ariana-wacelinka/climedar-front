@@ -16,7 +16,7 @@
             <div class="info">
                 <div class="label">Hora de inicio</div>
                 <div class="value">
-                    {{consultation().startTime!.split(':')[0]}}:{{consultation().startTime!.split(':')[1]}}
+                    {{consultation().startTime}}
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <div class="contenedor_icon"><mat-icon>timer</mat-icon></div>
             <div class="info">
                 <div class="label">Duracion</div>
-                <div class="value">{{consultation().estimatedDuration?.toString()}} minutos</div>
+                <div class="value">{{consultation().estimatedDuration}} minutos</div>
             </div>
         </div>
     </div>
@@ -58,6 +58,4 @@
             </div>
         </div>
     </div>
-    <!-- <div class="divider"></div>
-    <button mat-flat-button (click)="modificarConsulta()">Modificar consulta</button> -->
 </div>
