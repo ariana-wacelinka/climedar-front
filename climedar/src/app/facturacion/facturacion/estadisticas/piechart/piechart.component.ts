@@ -43,7 +43,7 @@ export class PiechartComponent implements OnInit, OnChanges {
   legendPosition = LegendPosition.Right;
   single = signal<{name: string, value: number}[]>([]);
 
-  view: [number,number] = [800, 700];
+  view: [number,number] = [900, 650];
 
   // options
   showXAxis = true;
