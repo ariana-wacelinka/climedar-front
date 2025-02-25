@@ -7,10 +7,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { PiechartComponent } from "./piechart/piechart.component";
 import { BarchartComponent } from "./barchart/barchart.component";
+import { MatDivider } from '@angular/material/divider';
+
 
 @Component({
   selector: 'app-estadisticas',
-  imports: [PiechartComponent, BarchartComponent],
+  imports: [PiechartComponent, BarchartComponent, MatDivider],
   templateUrl: './estadisticas.component.html',
   styleUrl: './estadisticas.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

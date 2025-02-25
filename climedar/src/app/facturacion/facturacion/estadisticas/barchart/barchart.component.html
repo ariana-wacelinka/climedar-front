@@ -1,6 +1,6 @@
 <div class="pie-chart">
   <div class="form">
-    
+    <h1>Ganancias totales</h1>
       <mat-form-field appearance="outline">
         <mat-select placeholder="Periodo" [formControl]="pieChartRevenueControl.controls.revenueType" (valueChange)="onSelectRevenueType($event)">
           <mat-option value="DAILY">Diario</mat-option>
@@ -21,6 +21,7 @@
                 matEndDate
                 [formControl]="pieChartRevenueControl.controls.toDate"
                 placeholder="End date"
+                (dateChange)="selectDate()"
               />
             </mat-date-range-input>
             <mat-hint>MM/DD/AAAA – MM/DD/AAAA</mat-hint>
@@ -28,39 +29,36 @@
               matIconSuffix
               [for]="rangepicker"
             ></mat-datepicker-toggle>
-            <mat-date-range-picker #rangepicker startView="multi-year"></mat-date-range-picker>
+            <mat-date-range-picker #rangepicker></mat-date-range-picker>
             </mat-form-field>
       }
       @if (pieChartRevenueControl.controls.revenueType.value === 'MONTHLY') {
         <mat-form-field appearance="outline">
-            <mat-label>Meses</mat-label>
-            <mat-date-range-input [rangePicker]="monthpicker">
-              <input
-                matStartDate
-                [formControl]="pieChartRevenueControl.controls.fromDate"
-                placeholder="Start date"
-              />
-              <input
-                matEndDate
-                [formControl]="pieChartRevenueControl.controls.toDate"
-                placeholder="End date"
-              />
-            </mat-date-range-input>
-            <mat-hint>MM/DD/AAAA – MM/DD/AAAA</mat-hint>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="monthpicker"
-            ></mat-datepicker-toggle>
-            <mat-date-range-picker #monthpicker></mat-date-range-picker>
-            </mat-form-field>
+          <mat-label>Desde</mat-label>
+          <input matInput [matDatepicker]="startDatePicker" [formControl]="pieChartRevenueControl.controls.fromDate"
+              >
+          <mat-datepicker #startDatePicker [startView]="'multi-year'" (monthSelected)="onSelectedDate($event, startDatePicker, 1)"/>
+          <mat-datepicker-toggle [for]="startDatePicker" matSuffix />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+          <mat-label>Hasta</mat-label>
+          <input matInput [matDatepicker]="endDatePicker" [formControl]="pieChartRevenueControl.controls.toDate"
+              >
+          <mat-datepicker #endDatePicker [startView]="'multi-year'" (monthSelected)="onSelectedDate($event, endDatePicker, 2)"/>
+          <mat-datepicker-toggle [for]="endDatePicker" matSuffix />
+      </mat-form-field>
       }
   </div>
   <ngx-charts-bar-vertical
     [view]="view"
+    [xAxis]="true"
+    [yAxis]="true"
     [results]="single()"
     [gradient]="gradient"
-    [legend]="showLegend"
-    [legendPosition]="legendPosition"
+    [legend]="false"
+    [scheme]="'air'"
+    [schemeType]="schemeType"
     [legendTitle]="'Ganancias'"
     (select)="onSelect($event)">
   </ngx-charts-bar-vertical>

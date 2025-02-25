@@ -3,7 +3,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,6 +13,7 @@ import { debounceTime, filter, map, Observable, startWith, switchMap, tap } from
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { AsyncPipe } from '@angular/common';
 import { PaymentService } from '../../../../shared/services/payment/payment.service';
+import { Moment } from 'moment';
 
 @Component({
   selector: 'app-piechart',
@@ -42,7 +43,7 @@ export class PiechartComponent implements OnInit, OnChanges {
   legendPosition = LegendPosition.Right;
   single = signal<{name: string, value: number}[]>([]);
 
-  view: [number,number] = [700, 300];
+  view: [number,number] = [800, 700];
 
   // options
   showXAxis = true;
@@ -79,6 +80,7 @@ export class PiechartComponent implements OnInit, OnChanges {
               if (!this.especialidadControl.value && especialidades.length > 0) {
                 this.especialidadControl.setValue(especialidades[0]);
                 this.pieChartRevenueControl.patchValue({specialityName: especialidades[0].name});
+                this.fetchRevenues();
               }
             }),
             map((especialidades: Especialidad[]) => especialidades)
@@ -86,14 +88,7 @@ export class PiechartComponent implements OnInit, OnChanges {
         )
       );
 
-      this.fetchRevenues();
-
-      this.pieChartRevenueControl.valueChanges.subscribe(
-        (value) => {
-          console.log(value);
-          this.fetchRevenues();
-        }
-      );
+      
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -107,6 +102,7 @@ export class PiechartComponent implements OnInit, OnChanges {
   }
 
   onSelectRevenueType(event: string) {
+    this.pieChartRevenueControl.patchValue({revenueType: event});
     console.log(this.pieChartRevenueControl.value.revenueType)
     if (event === 'DAILY') {
       console.log('entra a DAILY')
@@ -141,6 +137,12 @@ export class PiechartComponent implements OnInit, OnChanges {
       this.pieChartRevenueControl.controls.toDate.updateValueAndValidity();
     }
     this.pieChartRevenueControl.updateValueAndValidity();
+    this.fetchRevenues();
+  }
+
+  onSelectServiceType(event: string) {
+    this.pieChartRevenueControl.patchValue({serviceType: event});
+    this.fetchRevenues();
   }
 
   displayEspecialidad(especialidad: Especialidad | null): string {
@@ -153,6 +155,7 @@ export class PiechartComponent implements OnInit, OnChanges {
       this.especialidadControl.setValue((event.option.value));
       this.pieChartRevenueControl.patchValue({specialityName: (event.option.value as Especialidad).name
       });
+      this.fetchRevenues();
     }
 
     changeOrigin(event: MatButtonToggleChange) {
@@ -173,6 +176,7 @@ export class PiechartComponent implements OnInit, OnChanges {
         this.pieChartRevenueControl.controls.serviceType.setValidators(Validators.required);
         this.pieChartRevenueControl.controls.serviceType.updateValueAndValidity();
       }
+      this.fetchRevenues();
     }
 
     fetchRevenues() {
@@ -187,7 +191,7 @@ export class PiechartComponent implements OnInit, OnChanges {
       this.paymentService.getRevenues(
         this.pieChartRevenueControl.value.fromDate?.toISOString().split('T')[0],
         this.pieChartRevenueControl.value.toDate?.toISOString().split('T')[0],
-        this.pieChartRevenueControl.value.revenueType ?? undefined,
+        this.pieChartRevenueControl.value.revenueType!,
         this.pieChartRevenueControl.value.originName!,
         this.pieChartRevenueControl.value.date?.toISOString().split('T')[0],
         this.pieChartRevenueControl.value.serviceType!,
@@ -201,4 +205,27 @@ export class PiechartComponent implements OnInit, OnChanges {
         }
       );
     }
+
+    onSelectedDate() {
+      this.fetchRevenues();
+    }
+
+    onSelectedMonth(event: Moment, dp: MatDatepicker<Date>, control: number) {
+          console.log(event);
+          console.log(dp);
+          console.log(control);
+          let date = new Date();
+          date.setFullYear(event.year());
+          date.setMonth(control === 1 ? event.month() : event.month() + 1);
+          date.setDate(control === 1 ? 1 : 0);
+          console.log(date);
+          if (control === 1) {
+            this.pieChartRevenueControl.controls.fromDate.setValue(date);
+          }
+          if (control === 2) {
+            this.pieChartRevenueControl.controls.toDate.setValue(date);
+          }
+          dp.close();
+          this.fetchRevenues();
+        }
 }
