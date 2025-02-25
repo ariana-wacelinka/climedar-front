@@ -30,5 +30,5 @@ export interface ConsultationResponse {
     doctor?: Doctor;
     patient?: Paciente;
     medicalServicesModel?: MedicalServiceResponse[];
-    shiftModel?: Turno;
+    shift?: Turno;
 }

@@ -1,5 +1,5 @@
 import { TurnosService } from './../../turnos/services/turnos-service/turnos.service';
-import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { CenteredCardComponent } from '../../shared/components';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,7 +29,7 @@ import { PageInfo } from '../../shared/models/extras.models';
 import { Duration } from 'luxon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PatientService } from '../../patients/services/patient.service';
-import { Consultation, CreateConsultation } from '../models/consultation.model';
+import { Consultation, ConsultationResponse, CreateConsultation } from '../models/consultation.model';
 import { ConsultationService } from '../services/consultation.service';
 import { PackageResponse } from '../../paquetes/models/package.models';
 import { PaymentDialogComponent } from '../../shared/components/payment-dialog/payment-dialog.component';
@@ -109,13 +109,17 @@ export class CreateConsultationComponent implements OnInit {
   servicioControl = new FormControl<string>("");
   paqueteControl = new FormControl<string>("");
   consultation = signal<boolean>(false);
+  consultationId = signal<string>('');
 
   constructor(private paymentService: PaymentService, private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService, private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
+
     const id = navigation?.extras?.state?.['turnoId'] || null;
     console.log('turnoId', id);
+
     var consultation = navigation?.extras?.state?.['consultaData'] || null;
     console.log('consultaData', consultation);
+
     var turno = navigation?.extras?.state?.['turno'] || null;
     if (id !== null) {
       this.turnoId.set(id);
@@ -123,24 +127,42 @@ export class CreateConsultationComponent implements OnInit {
     } else {
       if (consultation) {
         this.consultation.set(true);
+        this.consultationId.set(consultation.id);
         this.doctorControl.setValue(consultation.doctor);
-        this.pacienteControl.setValue(consultation.paciente);
-        this.consultationFG.controls.description.setValue(consultation.descripcion);
-        this.consultationFG.controls.observation.setValue(consultation.observacion);
-        this.consultationFG.controls.medicalServicesId.setValue(consultation.servicios);
-        this.consultationFG.controls.shiftId.setValue(turno.id);
-        console.log('consultation', consultation);
-        this.turno.patchValue({
-          id: turno.id,
-          date: turno.date ? new Date(turno.date + 'T00:00:00') : null,
-          startTime: turno.startTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.startTime.split(":")[0]), parseInt(turno.startTime.split(":")[1]))) : null,
-          endTime: turno.endTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.endTime.split(":")[0]), parseInt(turno.endTime.split(":")[1]))) : null,
-        });
-        this.consultationFG.controls.patientId.setValue(consultation.paciente.id);
+        this.consultationFG.controls.doctorId.setValue(consultation.doctor.id);
+        this.pacienteControl.setValue(consultation.patient);
+        this.consultationFG.controls.observation.setValue(consultation.observation);
+
+        this.pago = consultation.isPaid!;
+        for (let i = 0; i < consultation.medicalServicesModel.length; i++) {
+          this.consultationFG.controls.medicalServicesId.value!.push(consultation.medicalServicesModel[i].id);
+        }
+
+        if (consultation.shift.id) {
+          this.turnoId.set(consultation.shift.id);
+          this.consultationFG.controls.shiftId.setValue(consultation.shift.id);
+          this.consultationFG.controls.patientId.setValue(consultation.patient.id);
+          this.consultationFG.controls.description.setValue(consultation.description);
+          this.turno.patchValue({
+            id: consultation.shift.id,
+            date: consultation.shift.date ? new Date(consultation.shift.date + 'T00:00:00') : null,
+            startTime: consultation.shift.startTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.startTime.split(":")[0]), parseInt(turno.startTime.split(":")[1]))) : null,
+            endTime: consultation.shift.endTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.endTime.split(":")[0]), parseInt(turno.endTime.split(":")[1]))) : null,
+          });
+
+        } else {
+          this.consultationFG.controls.shiftId.setValue(turno.id);
+          console.log('Turno', turno);
+          this.turno.patchValue({
+            id: turno.id,
+            date: turno.date ? new Date(turno.date + 'T00:00:00') : null,
+            startTime: turno.startTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.startTime.split(":")[0]), parseInt(turno.startTime.split(":")[1]))) : null,
+            endTime: turno.endTime ? new Date(new Date(this.turno.controls.date.value!).setHours(parseInt(turno.endTime.split(":")[0]), parseInt(turno.endTime.split(":")[1]))) : null,
+          });
+        }
+        this.consultationFG.controls.patientId.setValue(consultation.patient.id);
       }
     }
-
-    console.log('turnoId ' + this.turnoId());
   }
 
 
@@ -299,7 +321,7 @@ export class CreateConsultationComponent implements OnInit {
             console.log('data', data);
             this.snackbar.open('Consulta creada con éxito', 'Cerrar', { duration: 1000 });
             setTimeout(() => {
-              this.router.navigate(['']);
+              this.router.navigate(['/home']);
             }, 1050);
           },
           (error) => {
@@ -323,9 +345,30 @@ export class CreateConsultationComponent implements OnInit {
     }
   }
 
+  updateConsultation() {
+    this.consultationFG.controls.medicalServicesId.updateValueAndValidity();
+    console.log('consultationFG', this.consultationFG.value);
+    if (this.consultationFG.valid) {
+      this.consultationService.updateConsultation(this.consultationId(), this.consultationFG.value as CreateConsultation).subscribe(
+        (data) => {
+          console.log('data', data);
+          this.snackbar.open('Consulta actualizada con éxito', 'Cerrar', { duration: 1000 });
+          setTimeout(() => {
+            this.router.navigate(['/']);
+          }, 1050);
+        },
+        (error) => {
+          console.log('error', error);
+          this.dialog.open(ErrorDialogComponent, { data: { message: 'Error al actualizar la consulta' } });
+        });
+    } else {
+      console.log('invalid');
+      console.log('consultationFG', this.consultationFG.value);
+    }
+  }
+
   getServices(name: string = this.servicioControl.value!, specialityId: string = ""): void {
     this.medicalService.getServiciosMedicos(name, specialityId).subscribe((data) => {
-      console.log('doctorControl', (this.doctorControl.value as Doctor));
       if ((this.doctorControl.value as Doctor).id) {
         this.servicios.set(data.services);
         this.pageInfo.set(data.pageInfo);
@@ -335,7 +378,6 @@ export class CreateConsultationComponent implements OnInit {
 
   getPackages(name: string = this.paqueteControl.value!, specialityId: string = ""): void {
     this.medicalService.getPaquetesMedicos(name, specialityId).subscribe((data) => {
-      console.log('doctorControl', (this.doctorControl.value as Doctor));
       if ((this.doctorControl.value as Doctor).id) {
         this.paquetes.set(data.packages);
         this.pageInfo.set(data.pageInfo);

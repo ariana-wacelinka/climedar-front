@@ -3,7 +3,11 @@
     <button (click)="cancelar()" mat-icon-button class="arrow-back">
       <mat-icon>arrow_back</mat-icon>
     </button>
+    @if (consultation()) {
+    <h1>Modificar consulta</h1>
+    } @else {
     <h1>Crear consulta</h1>
+    }
   </ng-container>
   <ng-container main-content>
     <div class="content"></div>
@@ -36,11 +40,8 @@
 
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Medico</mat-label>
-        @if(!consultation()){
-        <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="autoDoc">
-        } @else {
-        <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="autoDoc" [disabled]="true" />
-        }
+        <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="autoDoc"
+          [disabled]="consultation()" />
         <mat-autocomplete #autoDoc="matAutocomplete" [displayWith]="displayDoctor"
           (optionSelected)="selectedDoctor($event)">
           @for (option of filteredDoctorOptions | async; track option.id) { @if
@@ -57,11 +58,8 @@
 
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>DNI del paciente</mat-label>
-        @if (!consultation()) {
-        <input type="text" matInput [formControl]="pacienteControl" [matAutocomplete]="autoPatient" />
-        } @else {
-        <input type="text" matInput [formControl]="pacienteControl" [matAutocomplete]="autoPatient" [disabled]="true" />
-        }
+        <input type="text" matInput [formControl]="pacienteControl" [matAutocomplete]="autoPatient"
+          [disabled]="consultation()" />
         <mat-autocomplete #autoPatient="matAutocomplete" [displayWith]="displayPatient"
           (optionSelected)="selectedPatient($event)">
           @for (option of filteredPatientOptions | async; track option.id) {
@@ -179,10 +177,11 @@
                   <mat-divider></mat-divider>
                   }
                 </mat-selection-list>
-              } @else {
+                } @else {
                 <mat-selection-list class="lista" #servicioList [multiple]="true" disabled="true">
                   @for (paquete of paquetes(); track paquete.id) {
-                  <mat-list-option checkboxPosition="before" [value]="paquete.id" [selected]="isServicioSelected(paquete.id!)"
+                  <mat-list-option checkboxPosition="before" [value]="paquete.id"
+                    [selected]="isServicioSelected(paquete.id!)"
                     (selectedChange)="selectionChange($event, paquete.id!)">
                     <div class="list-item">
                       <div class="packageDescription">
@@ -200,7 +199,7 @@
                   <mat-divider></mat-divider>
                   }
                 </mat-selection-list>
-              }
+                }
               </div>
             </div>
           </mat-tab>
@@ -243,7 +242,7 @@
           <span>{{ consultationPrice() | currency : "ARS" }}</span>
         </div>
         <span class="slider">
-          <mat-slide-toggle labelPosition="before" [(ngModel)]="pago">Pago</mat-slide-toggle>
+          <mat-slide-toggle labelPosition="before" [(ngModel)]="pago" [disabled]="true">Pago</mat-slide-toggle>
         </span>
       </div>
     </div>
@@ -253,9 +252,15 @@
       <button (clicl)="cancelar()" mat-flat-button class="warn">
         Cancelar
       </button>
+      @if (!consultation()) {
       <button mat-flat-button [disabled]="!canBeCreated()" (click)="createConsultation()">
         Agendar consulta
       </button>
+      } @else {
+      <button mat-flat-button [disabled]="!canBeCreated()" (click)="updateConsultation()">
+        Modificar consulta
+      </button>
+      }
     </div>
   </ng-container>
 </app-centered-card>

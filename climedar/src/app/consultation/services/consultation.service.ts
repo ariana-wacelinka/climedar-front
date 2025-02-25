@@ -219,4 +219,27 @@ export class ConsultationService {
       map(response => response.data.getConsultationById)
     );
   }
+
+  updateConsultation(id: string, consultation: CreateConsultation): Observable<ConsultationResponse> {
+    console.log("updateConsultation", id);
+    const ids = consultation.medicalServicesId.map(id => `"${id}"`).join(',');
+
+    const UPDATE_CONSULTATION_MUTATION = `
+      mutation UpdateConsultation {
+        updateConsultation(id: "${id}", consultation: {
+          description: "${consultation.description}",
+          medicalServicesId: [${ids}],
+          observation: "${consultation.observation}",
+          patientId: "${consultation.patientId}"
+        }) {
+          id
+          finalPrice
+        }
+      }
+    `;
+    console.log(UPDATE_CONSULTATION_MUTATION);
+    return this.apollo.mutate({
+      mutation: gql`${UPDATE_CONSULTATION_MUTATION}`
+    }).pipe(map((result: any) => result.data.updateConsultation));
+  }
 }
