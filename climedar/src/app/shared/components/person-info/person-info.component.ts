@@ -69,6 +69,7 @@ export class PersonInfoComponent {
     this.consultationService.getConsultasByDoctorId(page, this.doctor()?.id || "").subscribe(consultas => {
       this.consultas.set(consultas.consultations);
       this.pageInfo.set(consultas.pageInfo);
+      console.log(consultas);
     });
   }
 
@@ -93,7 +94,7 @@ export class PersonInfoComponent {
       width: '670px',
       minWidth: '350px',
       maxWidth: '90vw',
-      data: { consultation: consultation }
+      data: { id: consultation.id }
     });
   }
 

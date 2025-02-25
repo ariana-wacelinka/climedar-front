@@ -1,5 +1,7 @@
 import { Doctor } from "../../doctors/models/doctor.models";
 import { Paciente } from "../../patients/models/paciente.models";
+import { MedicalServiceResponse } from "../../servicio/models/services.models";
+import { Turno } from "../../turnos/models/turno.models";
 
 export interface CreateConsultation {
     description: string;
@@ -20,10 +22,13 @@ export interface ConsultationResponse {
     startTime?: string;
     endTime?: string;
     description?: string;
-    date: Date;
-    isPaid: boolean;
-    finalPrice: number;
+    date?: Date;
+    isPaid?: boolean;
+    finalPrice?: number;
+    estimatedDuration?: string;
+    observation?: string;
     doctor?: Doctor;
     patient?: Paciente;
-    shiftId?: String;
+    medicalServicesModel?: MedicalServiceResponse[];
+    shiftModel?: Turno;
 }

@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -12,6 +12,7 @@ import { DoctorService } from '../service/doctor.service';
 import { Router } from '@angular/router';
 import { PageInfo } from '../../shared/models/extras.models';
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listado-doctores',
@@ -36,6 +37,7 @@ export class ListadoDoctoresComponent {
   displayedColumns: string[] = ["name", "surname", "dni", "edit"];
   doctors = signal<Doctor[]>([]);
   filterValue = signal<string>('');
+  snackbar = inject(MatSnackBar);
 
   constructor(private router: Router,
     private doctorService: DoctorService
@@ -65,7 +67,9 @@ export class ListadoDoctoresComponent {
 
   deleteDoctor(id: number) {
     this.doctorService.deleteDoctor(id).subscribe(() => {
-      console.log('Médico eliminado');
+      this.snackbar.open('Doctor eliminado correctamente', 'Cerrar', {
+        duration: 2000
+      });
     });
     this.applyFilter(new Event(''));
   }

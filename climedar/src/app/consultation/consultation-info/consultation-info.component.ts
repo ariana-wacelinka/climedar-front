@@ -34,11 +34,17 @@ export class ConsultationInfoComponent {
     private paymentService: PaymentService,
     public dialogRef: MatDialogRef<ConsultationInfoComponent>,
     private router: Router,
+    private consultationService: ConsultationService,
     @Inject(MAT_DIALOG_DATA) public data: {
-      consultation: ConsultationResponse,
+      id: number,
     },
   ) {
-    this.consultation.set(data.consultation);
+    this.consultationService.getConsultationById(this.data.id).subscribe(
+      (consultation) => {
+        this.consultation.set(consultation);
+      }
+    );
+    console.log('consultation', this.consultation());
   }
 
   pagarConsultation() {

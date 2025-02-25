@@ -167,4 +167,44 @@ export class ConsultationService {
       map(response => response.data.getAllConsultations)
     );
   }
+
+  getConsultationById(id: number): Observable<ConsultationResponse> {
+    const query = gql`
+      query GetConsultationById {
+        getConsultationById(id: ${id}) {
+          id
+          startTime
+          endTime
+          description
+          date
+          isPaid
+          finalPrice
+          observation
+          patient {
+            id
+            name
+            surname
+          }
+          doctor {
+            id
+            name
+            surname
+          }
+          medicalServicesModel {
+            id
+            name
+            estimatedDuration
+            price
+          }
+          shift {
+            id
+          }
+        }
+      }`
+    return this.apollo.query<{ getConsultationById: ConsultationResponse }>({
+      query
+    }).pipe(
+      map(response => response.data.getConsultationById)
+    );
+  }
 }

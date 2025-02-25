@@ -15,7 +15,8 @@
             <div class="contenedor_icon"><mat-icon>schedule</mat-icon></div>
             <div class="info">
                 <div class="label">Hora de inicio</div>
-                <div class="value">{{consultation().startTime!.split(':')[0]}}:{{consultation().startTime!.split(':')[1]}}
+                <div class="value">
+                    {{consultation().startTime!.split(':')[0]}}:{{consultation().startTime!.split(':')[1]}}
                 </div>
             </div>
         </div>
@@ -32,8 +33,7 @@
             <div class="contenedor_icon"><mat-icon>timer</mat-icon></div>
             <div class="info">
                 <div class="label">Duracion</div>
-                <div class="value">1hs 20mins</div>
-                <!-- <div class="value">{{consultation().estimatedDuration'}}</div> -->
+                <div class="value">{{consultation().estimatedDuration}}</div>
             </div>
         </div>
     </div>

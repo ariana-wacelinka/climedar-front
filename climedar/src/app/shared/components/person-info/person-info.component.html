@@ -106,7 +106,13 @@
                             <ng-container matColumnDef="estado">
                                 <th mat-header-cell class="estado" *matHeaderCellDef> Estado </th>
                                 <td mat-cell class="estado" *matCellDef="let consultation">
-                                    <div style="font-weight: 400; font-style: italic;">PAGADO</div>
+                                    <div style="font-weight: 400; font-style: italic;">
+                                        @if (consultation.isPaid) {
+                                            PAGADO
+                                        } @else {
+                                            PENDIENTE
+                                        }
+                                    </div>
                                 </td>
                             </ng-container>
 

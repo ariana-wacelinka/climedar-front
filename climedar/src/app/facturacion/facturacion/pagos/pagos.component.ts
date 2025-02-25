@@ -71,13 +71,13 @@ export class PagosComponent {
   loadPayments(page: number) {
     var startDate = this.startDate != "" ? new Date(this.startDate).toISOString().split('T')[0] : "";
     var endDate = this.endDate != "" ? new Date(this.endDate).toISOString().split('T')[0] : "";
-    console.log("startDate", startDate);
-    console.log("endDate", endDate);
+    console.log("Entra aca")
 
     this.paymentService.getAllPayments(page, startDate, endDate).pipe(
       map(response => response)
     ).subscribe(response => {
       this.payments.set(response.payments);
+      console.log('Respuesta de pagos', response.payments);
       this.pageInfo.set(response.pageInfo);
     });
   }
