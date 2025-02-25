@@ -37,7 +37,7 @@ export class BarchartComponent implements OnInit, OnChanges {
   legendPosition = LegendPosition.Right;
   single = signal<{name: string, value: number}[]>([]);
 
-  view: [number,number] = [800, 500];
+  view: [number,number] = [900, 500];
 
   schemeType = ScaleType.Linear;
 
