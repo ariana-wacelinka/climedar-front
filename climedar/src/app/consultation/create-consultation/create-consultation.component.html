@@ -36,7 +36,11 @@
 
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Medico</mat-label>
-        <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="autoDoc" />
+        @if(!consultation()){
+        <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="autoDoc">
+        } @else {
+        <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="autoDoc" [disabled]="true" />
+        }
         <mat-autocomplete #autoDoc="matAutocomplete" [displayWith]="displayDoctor"
           (optionSelected)="selectedDoctor($event)">
           @for (option of filteredDoctorOptions | async; track option.id) { @if
@@ -53,7 +57,11 @@
 
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>DNI del paciente</mat-label>
+        @if (!consultation()) {
         <input type="text" matInput [formControl]="pacienteControl" [matAutocomplete]="autoPatient" />
+        } @else {
+        <input type="text" matInput [formControl]="pacienteControl" [matAutocomplete]="autoPatient" [disabled]="true" />
+        }
         <mat-autocomplete #autoPatient="matAutocomplete" [displayWith]="displayPatient"
           (optionSelected)="selectedPatient($event)">
           @for (option of filteredPatientOptions | async; track option.id) {
@@ -69,7 +77,11 @@
     <div class="elementos-inferiores">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Descripción</mat-label>
+        @if (!consultation()) {
         <textarea matInput rows="4" [formControl]="consultationFG.controls.description"></textarea>
+        } @else {
+        <textarea matInput rows="4" [formControl]="consultationFG.controls.description" [disabled]="true"></textarea>
+        }
       </mat-form-field>
 
       <mat-card class="full-width card-tab" appearance="outlined">
@@ -78,12 +90,17 @@
             <div class="tab-content">
               <mat-form-field class="full-width" appearance="outline">
                 <mat-label>Ingrese el nombre del servicio</mat-label>
+                @if (!consultation()) {
                 <input type="text" matInput [formControl]="servicioControl" />
+                } @else {
+                <input type="text" matInput [formControl]="servicioControl" [disabled]="true" />
+                }
                 <div matSuffix style="margin-right: 10px">
                   <mat-icon>search</mat-icon>
                 </div>
               </mat-form-field>
 
+              @if (!consultation()) {
               <mat-selection-list class="lista" #servicioList [multiple]="true">
                 @for (servicio of servicios(); track servicio.id) {
                 <mat-list-option checkboxPosition="before" [value]="servicio.id"
@@ -102,6 +119,26 @@
                 <mat-divider></mat-divider>
                 }
               </mat-selection-list>
+              } @else {
+              <mat-selection-list class="lista" #servicioList [multiple]="true" [disabled]="true">@for (servicio of
+                servicios(); track servicio.id) {
+                <mat-list-option checkboxPosition="before" [value]="servicio.id"
+                  [selected]="isServicioSelected(servicio.id!)"
+                  (selectedChange)="selectionChange($event, servicio.id!)">
+                  <div class="list-item">
+                    <div class="titulo">
+                      <span class="servicioNombre">{{ servicio.name }}</span>
+                      <span class="servicioTiempo">{{
+                        formatDurationTime(servicio.estimatedDuration!)
+                        }}</span>
+                    </div>
+                    <span>{{ servicio.price | currency : "ARS" }}</span>
+                  </div>
+                </mat-list-option>
+                <mat-divider></mat-divider>
+                }
+              </mat-selection-list>
+              }
             </div>
           </mat-tab>
 
@@ -110,12 +147,17 @@
               <div class="tab-content">
                 <mat-form-field class="full-width" appearance="outline">
                   <mat-label>Ingrese el nombre del paquete</mat-label>
+                  @if (consultation()) {
                   <input type="text" matInput [formControl]="paqueteControl" />
+                  } @else {
+                  <input type="text" matInput [formControl]="paqueteControl" [disabled]="true" />
+                  }
                   <div matSuffix style="margin-right: 10px">
                     <mat-icon>search</mat-icon>
                   </div>
                 </mat-form-field>
 
+                @if (!consultation()) {
                 <mat-selection-list class="lista" #servicioList [multiple]="true">
                   @for (paquete of paquetes(); track paquete.id) {
                   <mat-list-option checkboxPosition="before" [value]="paquete.id"
@@ -137,6 +179,28 @@
                   <mat-divider></mat-divider>
                   }
                 </mat-selection-list>
+              } @else {
+                <mat-selection-list class="lista" #servicioList [multiple]="true" disabled="true">
+                  @for (paquete of paquetes(); track paquete.id) {
+                  <mat-list-option checkboxPosition="before" [value]="paquete.id" [selected]="isServicioSelected(paquete.id!)"
+                    (selectedChange)="selectionChange($event, paquete.id!)">
+                    <div class="list-item">
+                      <div class="packageDescription">
+                        <div class="paqueteTitulo">
+                          <span class="servicioNombre">{{ paquete.name }}</span>
+                          <span class="servicioTiempo">{{
+                            formatDurationTime(paquete.estimatedDuration!)
+                            }}</span>
+                        </div>
+                        <span class="servicios-del-paquete">{{serviciosDelPaquete(paquete)}}</span>
+                      </div>
+                      <span>{{ paquete.price | currency : "ARS" }}</span>
+                    </div>
+                  </mat-list-option>
+                  <mat-divider></mat-divider>
+                  }
+                </mat-selection-list>
+              }
               </div>
             </div>
           </mat-tab>

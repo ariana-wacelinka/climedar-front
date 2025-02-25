@@ -108,6 +108,7 @@ export class CreateConsultationComponent implements OnInit {
   filteredDoctorOptions: Observable<Doctor[]> | undefined;
   servicioControl = new FormControl<string>("");
   paqueteControl = new FormControl<string>("");
+  consultation = signal<boolean>(false);
 
   constructor(private paymentService: PaymentService, private medicalService: ServiciosMedicosService, private route: ActivatedRoute, private router: Router, private turnosService: TurnosService, private doctorService: DoctorService, private pacienteService: PatientService, private consultationService: ConsultationService, private dialog: MatDialog) {
     const navigation = this.router.getCurrentNavigation();
@@ -121,6 +122,7 @@ export class CreateConsultationComponent implements OnInit {
       this.consultationFG.controls.shiftId.setValue(id);
     } else {
       if (consultation) {
+        this.consultation.set(true);
         this.doctorControl.setValue(consultation.doctor);
         this.pacienteControl.setValue(consultation.paciente);
         this.consultationFG.controls.description.setValue(consultation.descripcion);
